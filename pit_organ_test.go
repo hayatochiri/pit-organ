@@ -50,3 +50,7 @@ func newConnection(t *testing.T, env OandaEnvironment) *Connection {
 
 	return connection
 }
+
+func Getenv(k string) string {
+	return os.Getenv(k)
+}
