@@ -30,6 +30,14 @@ func init() {
 	if err != nil {
 		panic(xerrors.Errorf("Error loading .env file: %w", err))
 	}
+
+	if os.Getenv("TOKEN") == "" {
+		panic(xerrors.Errorf("Env 'TOKEN' is empty"))
+	}
+
+	if os.Getenv("ACCOUNT_ID") == "" {
+		panic(xerrors.Errorf("Env 'ACCOUNT_ID' is empty"))
+	}
 }
 
 func newConnection(t *testing.T, env OandaEnvironment) *Connection {
