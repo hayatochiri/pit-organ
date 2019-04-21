@@ -43,10 +43,14 @@ func init() {
 func newConnection(t *testing.T, env OandaEnvironment) *Connection {
 
 	connection := &Connection{
-		Token:       os.Getenv("TOKEN"),
+		Token:       Getenv("TOKEN"),
 		Environemnt: env,
 		Timeout:     time.Second * 10,
 	}
 
 	return connection
+}
+
+func Getenv(k string) string {
+	return os.Getenv(k)
 }
