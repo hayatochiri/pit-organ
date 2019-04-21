@@ -1,0 +1,11 @@
+---
+
+version: '3'
+services:
+  pit-organ:
+    image: pit-organ
+    build: ./
+    container_name: pit-organ
+    volumes:
+      - .:/go/src/github.com/hayatochiri/pit-organ
+    working_dir: /go/src/github.com/hayatochiri/pit-organ
