@@ -31,6 +31,11 @@ type GetAccountIDSchema struct {
 	LastTransactionID TransactionIDDefinition `json:"lastTransactionID"`
 }
 
+type GetAccountSummarySchema struct {
+	Account           AccountSummaryDefinition `json:"account"`
+	LastTransactionID TransactionIDDefinition  `json:"lastTransactionID"`
+}
+
 func (c *Connection) Accounts() *ReceiverAccounts {
 	return &ReceiverAccounts{
 		Connection: c,
@@ -106,7 +111,34 @@ func (r *ReceiverAccountID) Summary() *ReceiverAccountSummary {
 	}
 }
 
-// TODO: GET /v3/accounts/{accountID}/summary
+// GET /v3/accounts/{accountID}/summary
+func (r *ReceiverAccountSummary) Get() (*GetAccountSummarySchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "GET",
+			endPoint: "/v3/accounts/" + r.AccountID + "/summary",
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Get account summary canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		data = new(GetAccountSummarySchema)
+	}
+
+	data, err = parseResponse(resp, data)
+	if err != nil {
+		return nil, xerrors.Errorf("Get account summary failed: %w", err)
+	}
+	return data.(*GetAccountSummarySchema), nil
+}
 
 // TODO: GET /v3/accounts/{accountID}/instruments
 
