@@ -1,6 +1,7 @@
 package pitOrgan
 
 import (
+	. "github.com/MakeNowJust/heredoc/dot"
 	"github.com/joho/godotenv"
 	"golang.org/x/xerrors"
 	"os"
@@ -9,6 +10,22 @@ import (
 )
 
 func init() {
+	if _, err := os.Stat("./.env"); err != nil {
+		file, fErr := os.OpenFile("./.env", os.O_WRONLY|os.O_CREATE, 0644)
+		if fErr != nil {
+			panic(xerrors.Errorf("Create .env failed: %w", err))
+		}
+		_, fErr = file.WriteString(D(`
+			TOKEN=
+			ACCOUNT_ID=
+		`))
+		if fErr != nil {
+			panic(xerrors.Errorf("Write .env failed: %w", err))
+		}
+
+		panic(xerrors.Errorf(".env file not exist: %w", err))
+	}
+
 	err := godotenv.Load()
 	if err != nil {
 		panic(xerrors.Errorf("Error loading .env file: %w", err))
