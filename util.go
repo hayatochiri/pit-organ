@@ -9,6 +9,23 @@ import (
 	"path"
 )
 
+type JsonBool byte
+
+const (
+	JsonFalse JsonBool = iota + 1
+	JsonTrue
+)
+
+func (b JsonBool) string() (string, error) {
+	switch b {
+	case JsonFalse:
+		return "false", nil
+	case JsonTrue:
+		return "true", nil
+	}
+	return "false", xerrors.Errorf("Unexpected reciever(%d)", b)
+}
+
 type header struct {
 	key   string
 	value string
