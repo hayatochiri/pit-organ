@@ -177,3 +177,7 @@ func (r *ReceiverPricingStream) Get(params *GetPricingStreamParams) (*PriceChann
 		resp:  resp,
 	}, nil
 }
+
+func (ch *PriceChannels) Close() {
+	close(ch.close)
+}
