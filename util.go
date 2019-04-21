@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"golang.org/x/xerrors"
+	"io/ioutil"
 	"net/http"
 	"path"
 )
@@ -95,4 +96,53 @@ func (c *Connection) stream(params *requestParams) (*http.Response, error) {
 	}
 
 	return resp, nil
+}
+
+func parseResponse(resp *http.Response, data interface{}) (interface{}, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, xerrors.Errorf("Read response body failed: %w", err)
+	}
+
+	var errMessage string
+	switch resp.StatusCode {
+	case 200, 201:
+		errMessage = ""
+		if data == nil {
+			return nil, xerrors.New("Variable that receives the response is nil")
+		}
+	case 400:
+		errMessage = "400 bad request"
+		if data == nil {
+			data = new(BadRequestError)
+		}
+	case 401:
+		errMessage = "401 unauthorized"
+		if data == nil {
+			data = new(UnauthorizedError)
+		}
+	case 403:
+		errMessage = "403 forbidden"
+		if data == nil {
+			data = new(ForbiddenError)
+		}
+	case 404:
+		errMessage = "404 not found"
+		if data == nil {
+			data = new(NotFoundError)
+		}
+	default:
+		return nil, xerrors.Errorf("Unexpected status code(%d)", resp.StatusCode)
+	}
+
+	err = json.Unmarshal(body, data)
+	if err != nil {
+		return nil, xerrors.Errorf("Unmarshal response body failed: %w", err)
+	}
+
+	if resp.StatusCode/100 != 2 {
+		return nil, xerrors.Errorf("%s: %w", errMessage, data)
+	}
+
+	return data, nil
 }
