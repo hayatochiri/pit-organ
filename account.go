@@ -1,5 +1,17 @@
 package pitOrgan
 
+// Receivers
+
+type ReceiverAccounts struct {
+	Connection *Connection
+}
+
+func (c *Connection) Accounts() *ReceiverAccounts {
+	return &ReceiverAccounts{
+		Connection: c,
+	}
+}
+
 // TODO: GET /v3/accounts
 
 // TODO: GET /v3/accounts/{accountID}
