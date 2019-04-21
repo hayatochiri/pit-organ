@@ -10,6 +10,11 @@ type ReceiverAccounts struct {
 	Connection *Connection
 }
 
+type ReceiverAccountID struct {
+	AccountID  string
+	Connection *Connection
+}
+
 // Schemas
 
 type GetAccountsSchema struct {
@@ -46,6 +51,13 @@ func (r *ReceiverAccounts) Get() (*GetAccountsSchema, error) {
 		return nil, xerrors.Errorf("Get accounts failed: %w", err)
 	}
 	return data.(*GetAccountsSchema), nil
+}
+
+func (r *ReceiverAccounts) AccountID(id string) *ReceiverAccountID {
+	return &ReceiverAccountID{
+		AccountID:  id,
+		Connection: r.Connection,
+	}
 }
 
 // TODO: GET /v3/accounts/{accountID}
