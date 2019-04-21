@@ -57,4 +57,3 @@ func (r *ReceiverAccounts) Get() (*GetAccountsSchema, error) {
 // TODO: PATCH /v3/accounts/{accountID}/configuration
 
 // TODO: GET /v3/accounts/{accountID}/changes
-
