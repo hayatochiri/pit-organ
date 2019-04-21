@@ -29,3 +29,15 @@ func Test_AccountID(t *testing.T) {
 
 	t.Logf("Response:\n%s", spew.Sdump(data))
 }
+
+func Test_AccountSummary(t *testing.T) {
+	connection := newConnection(t, OandaPractice)
+	accountID := Getenv("ACCOUNT_ID")
+	data, err := connection.Accounts().AccountID(accountID).Summary().Get()
+
+	if err != nil {
+		t.Fatalf("Get account summary failed.\n%+v", err)
+	}
+
+	t.Logf("Response:\n%s", spew.Sdump(data))
+}
