@@ -20,6 +20,11 @@ type ReceiverAccountSummary struct {
 	Connection *Connection
 }
 
+type ReceiverAccountInstruments struct {
+	AccountID  string
+	Connection *Connection
+}
+
 // Schemas
 
 type GetAccountsSchema struct {
@@ -138,6 +143,13 @@ func (r *ReceiverAccountSummary) Get() (*GetAccountSummarySchema, error) {
 		return nil, xerrors.Errorf("Get account summary failed: %w", err)
 	}
 	return data.(*GetAccountSummarySchema), nil
+}
+
+func (r *ReceiverAccountID) Instruments() *ReceiverAccountInstruments {
+	return &ReceiverAccountInstruments{
+		AccountID:  r.AccountID,
+		Connection: r.Connection,
+	}
 }
 
 // TODO: GET /v3/accounts/{accountID}/instruments
