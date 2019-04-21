@@ -2,6 +2,7 @@ package pitOrgan
 
 import (
 	"golang.org/x/xerrors"
+	"strings"
 )
 
 // Receivers
@@ -25,6 +26,12 @@ type ReceiverAccountInstruments struct {
 	Connection *Connection
 }
 
+// Params
+
+type GetAccountInstrumentsParams struct {
+	Instruments []string
+}
+
 // Schemas
 
 type GetAccountsSchema struct {
@@ -39,6 +46,11 @@ type GetAccountIDSchema struct {
 type GetAccountSummarySchema struct {
 	Account           AccountSummaryDefinition `json:"account"`
 	LastTransactionID TransactionIDDefinition  `json:"lastTransactionID"`
+}
+
+type GetAccountInstrumentsSchema struct {
+	Instruments       []InstrumentDefinition  `json:"instruments"`
+	LastTransactionID TransactionIDDefinition `json:"lastTransactionID"`
 }
 
 func (c *Connection) Accounts() *ReceiverAccounts {
@@ -152,7 +164,37 @@ func (r *ReceiverAccountID) Instruments() *ReceiverAccountInstruments {
 	}
 }
 
-// TODO: GET /v3/accounts/{accountID}/instruments
+// GET /v3/accounts/{accountID}/instruments
+func (r *ReceiverAccountInstruments) Get(params *GetAccountInstrumentsParams) (*GetAccountInstrumentsSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "GET",
+			endPoint: "/v3/accounts/" + r.AccountID + "/instruments",
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+			queries: []query{
+				{key: "instruments", value: strings.Join(params.Instruments, ",")},
+			},
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Get account instruments canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		data = new(GetAccountInstrumentsSchema)
+	}
+
+	data, err = parseResponse(resp, data)
+	if err != nil {
+		return nil, xerrors.Errorf("Get account instruments failed: %w", err)
+	}
+	return data.(*GetAccountInstrumentsSchema), nil
+}
 
 // TODO: PATCH /v3/accounts/{accountID}/configuration
 
