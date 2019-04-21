@@ -2,6 +2,17 @@
 
 
 [[projects]]
+  branch = "master"
+  digest = "1:679ea829c66fe8c510025a401376e1a0b3e451c26b849451451f04bda2145748"
+  name = "github.com/MakeNowJust/heredoc"
+  packages = [
+    ".",
+    "dot",
+  ]
+  pruneopts = "UT"
+  revision = "e9091a26100e9cfb2b6a8f470085bfa541931a91"
+
+[[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
@@ -32,6 +43,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/MakeNowJust/heredoc/dot",
     "github.com/davecgh/go-spew/spew",
     "github.com/joho/godotenv",
     "golang.org/x/xerrors",
