@@ -127,7 +127,13 @@ func (r *ReceiverPricingStream) Get(params *GetPricingStreamParams) (*PriceChann
 		return nil, xerrors.Errorf("Get pricing stream canceled: %w", err)
 	}
 
-	// TODO: Catch Response code 401, 404, 405
+	if resp.StatusCode != 200 {
+		defer resp.Body.Close()
+		var err interface{}
+		_, err = parseResponse(resp, err)
+		return nil, xerrors.Errorf("Get pricing stream failed: %w", err)
+	}
+
 
 	priceCh := make(chan *PriceDefinition, params.BufferSize)
 	errorCh := make(chan error, 1)
