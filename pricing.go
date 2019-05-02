@@ -177,20 +177,33 @@ func (r *ReceiverPricingStream) Get(params *GetPricingStreamParams) (*PriceChann
 	}()
 
 	// readeerCh channleから受信した構造体をユーザーに渡すgoroutine
+	// heartbeat(5秒間隔)が途切れた場合を検知するためにタイムアウトも管理する。
 	go func() {
 		defer func() {
 			close(priceCh)
 		}()
+
+		timeout := time.NewTimer(0)
+		received := true
 
 		for {
 			select {
 			case _, _ = <-closeCh:
 				return
 			case data := <-readerCh:
+				received = true
 				if data.Type == "HEARTBEAT" {
 					continue
 				}
 				priceCh <- data
+			case <-timeout.C:
+				timeout.Reset(r.Connection.Timeout)
+				if !received {
+					var err error = &StreamHeartbeatBroken{ErrorMessage: "Heartbeat was broken"}
+					errorCh <- xerrors.Errorf("Get pricing stream heartbeat was broken: %w", err)
+					return
+				}
+				received = false
 			}
 		}
 	}()
