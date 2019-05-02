@@ -47,7 +47,7 @@ type GetPricingSchema struct {
 type PriceChannels struct {
 	Price <-chan *PriceDefinition
 	Error <-chan error
-	close chan<- interface{}
+	close chan<- struct{}
 }
 
 func (r *ReceiverAccountID) Pricing() *ReceiverPricing {
@@ -135,7 +135,8 @@ func (r *ReceiverPricingStream) Get(params *GetPricingStreamParams) (*PriceChann
 
 	priceCh := make(chan *PriceDefinition, params.BufferSize)
 	errorCh := make(chan error, 1)
-	closeCh := make(chan interface{})
+	closeCh := make(chan struct{})
+
 	go func() {
 		defer func() {
 			resp.Body.Close()
