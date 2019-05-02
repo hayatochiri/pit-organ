@@ -133,7 +133,7 @@ func (r *ReceiverPricingStream) Get(params *GetPricingStreamParams) (*PriceChann
 	}
 
 	priceCh := make(chan *PriceDefinition, params.BufferSize)
-	errorCh := make(chan error, 1)
+	errorCh := make(chan error, 2)
 	closeCh := make(chan struct{})
 
 	// closeChがcloseされたらstreamを終了するgoroutine
