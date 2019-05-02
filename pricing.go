@@ -136,6 +136,65 @@ func (r *ReceiverPricingStream) Get(params *GetPricingStreamParams) (*PriceChann
 	errorCh := make(chan error, 1)
 	closeCh := make(chan struct{})
 
+	// closeChがcloseされたらstreamを終了するgoroutine
+	// 下記の readre.ReadBytes はデータを受信しないと処理が進まないため
+	// streamの途中で途切れると永遠に待ち続けてしまうので終了用goroutineを用意。
+	go func() {
+		defer func() {
+			resp.Body.Close()
+		}()
+		_, _ = <-closeCh
+	}()
+
+	// 受信したデータ(JSON)を構造体にしてreaderCh channelに送信するgoroutine
+	readerCh := make(chan *PriceDefinition, params.BufferSize)
+	go func() {
+		defer func() {
+			close(readerCh)
+		}()
+
+		reader := bufio.NewReader(resp.Body)
+		for {
+			line, err := reader.ReadBytes('\n')
+			if err != nil {
+				select {
+				case _, _ = <-closeCh:
+				default:
+					errorCh <- xerrors.Errorf("Read response stream failed: %w", err)
+				}
+				return
+			}
+
+			data := new(PriceDefinition)
+			err = json.Unmarshal(line, data)
+			if err != nil {
+				errorCh <- xerrors.Errorf("Unmarshal response stream failed: %w", err)
+				return
+			}
+
+			readerCh <- data
+		}
+	}()
+
+	// readeerCh channleから受信した構造体をユーザーに渡すgoroutine
+	go func() {
+		defer func() {
+			close(priceCh)
+		}()
+
+		for {
+			select {
+			case _, _ = <-closeCh:
+				return
+			case data := <-readerCh:
+				if data.Type == "HEARTBEAT" {
+					continue
+				}
+				priceCh <- data
+			}
+		}
+	}()
+
 	return &PriceChannels{
 		Price: priceCh,
 		Error: errorCh,
