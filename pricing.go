@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"encoding/json"
 	"golang.org/x/xerrors"
-	"net/http"
 	"strings"
 	"time"
 )
@@ -49,7 +48,6 @@ type PriceChannels struct {
 	Price <-chan *PriceDefinition
 	Error <-chan error
 	close chan<- interface{}
-	resp  *http.Response // for test
 }
 
 func (r *ReceiverAccountID) Pricing() *ReceiverPricing {
@@ -180,7 +178,6 @@ func (r *ReceiverPricingStream) Get(params *GetPricingStreamParams) (*PriceChann
 		Price: priceCh,
 		Error: errorCh,
 		close: closeCh,
-		resp:  resp,
 	}, nil
 }
 
