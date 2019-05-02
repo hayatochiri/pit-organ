@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"golang.org/x/xerrors"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -45,9 +46,10 @@ type GetPricingSchema struct {
 // Types
 
 type PriceChannels struct {
-	Price <-chan *PriceDefinition
-	Error <-chan error
-	close chan<- struct{}
+	Price     <-chan *PriceDefinition
+	Error     <-chan error
+	close     chan<- struct{}
+	closeWait *sync.WaitGroup
 }
 
 func (r *ReceiverAccountID) Pricing() *ReceiverPricing {
@@ -132,6 +134,8 @@ func (r *ReceiverPricingStream) Get(params *GetPricingStreamParams) (*PriceChann
 		return nil, xerrors.Errorf("Get pricing stream failed: %w", err)
 	}
 
+	closeWait := new(sync.WaitGroup)
+
 	priceCh := make(chan *PriceDefinition, params.BufferSize)
 	errorCh := make(chan error, 2)
 	closeCh := make(chan struct{})
@@ -142,7 +146,9 @@ func (r *ReceiverPricingStream) Get(params *GetPricingStreamParams) (*PriceChann
 	go func() {
 		defer func() {
 			resp.Body.Close()
+			closeWait.Done()
 		}()
+		closeWait.Add(1)
 		_, _ = <-closeCh
 	}()
 
@@ -151,7 +157,9 @@ func (r *ReceiverPricingStream) Get(params *GetPricingStreamParams) (*PriceChann
 	go func() {
 		defer func() {
 			close(readerCh)
+			closeWait.Done()
 		}()
+		closeWait.Add(1)
 
 		reader := bufio.NewReader(resp.Body)
 		for {
@@ -181,7 +189,9 @@ func (r *ReceiverPricingStream) Get(params *GetPricingStreamParams) (*PriceChann
 	go func() {
 		defer func() {
 			close(priceCh)
+			closeWait.Done()
 		}()
+		closeWait.Add(1)
 
 		timeout := time.NewTimer(0)
 		received := true
@@ -209,9 +219,10 @@ func (r *ReceiverPricingStream) Get(params *GetPricingStreamParams) (*PriceChann
 	}()
 
 	return &PriceChannels{
-		Price: priceCh,
-		Error: errorCh,
-		close: closeCh,
+		Price:     priceCh,
+		Error:     errorCh,
+		close:     closeCh,
+		closeWait: closeWait,
 	}, nil
 }
 
