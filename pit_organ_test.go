@@ -71,6 +71,9 @@ func Test_oandaBaseURL(t *testing.T) {
 }
 
 func newConnection(t *testing.T, env OandaEnvironment) *Connection {
+	if env == OandaLive {
+		t.Fatal("Live environment for testing is prohibited.")
+	}
 
 	connection := &Connection{
 		Token:       Getenv("TOKEN"),
