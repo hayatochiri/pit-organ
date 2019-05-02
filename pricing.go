@@ -228,4 +228,5 @@ func (r *ReceiverPricingStream) Get(params *GetPricingStreamParams) (*PriceChann
 
 func (ch *PriceChannels) Close() {
 	close(ch.close)
+	ch.closeWait.Wait()
 }
