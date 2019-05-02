@@ -132,48 +132,9 @@ func (r *ReceiverPricingStream) Get(params *GetPricingStreamParams) (*PriceChann
 		return nil, xerrors.Errorf("Get pricing stream failed: %w", err)
 	}
 
-
 	priceCh := make(chan *PriceDefinition, params.BufferSize)
 	errorCh := make(chan error, 1)
 	closeCh := make(chan struct{})
-
-	go func() {
-		defer func() {
-			resp.Body.Close()
-			close(priceCh)
-		}()
-
-		reader := bufio.NewReader(resp.Body)
-
-		for {
-			select {
-			case _, ok := <-closeCh:
-				if ok == false {
-					return
-				}
-			default:
-			}
-
-			line, err := reader.ReadBytes('\n')
-			if err != nil {
-				errorCh <- xerrors.Errorf("TODO Error Message: %w", err)
-				return
-			}
-
-			data := new(PriceDefinition)
-			err = json.Unmarshal(line, data)
-			if err != nil {
-				errorCh <- xerrors.Errorf("TODO Error Message: %w", err)
-				return
-			}
-
-			if data.Type == "HEARTBEAT" {
-				continue
-			}
-
-			priceCh <- data
-		}
-	}()
 
 	return &PriceChannels{
 		Price: priceCh,
