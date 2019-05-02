@@ -4,7 +4,9 @@ import (
 	. "github.com/MakeNowJust/heredoc/dot"
 	"github.com/joho/godotenv"
 	"golang.org/x/xerrors"
+	"net/url"
 	"os"
+	"reflect"
 	"testing"
 	"time"
 )
@@ -40,7 +42,38 @@ func init() {
 	}
 }
 
+func Test_oandaBaseURL(t *testing.T) {
+	var expect *baseURLs
+
+	expect = new(baseURLs)
+	expect.rest, _ = url.Parse("https://api-fxpractice.oanda.com")
+	expect.stream, _ = url.Parse("https://stream-fxpractice.oanda.com")
+	if actual := oandaBaseURL(OandaPractice); !reflect.DeepEqual(actual, expect) {
+		if !reflect.DeepEqual(actual.rest, expect.rest) {
+			t.Errorf("\ngot:  %#v\nwant: %#v", actual.rest, expect.rest)
+		}
+		if !reflect.DeepEqual(actual.stream, expect.stream) {
+			t.Errorf("\ngot:  %#v\nwant: %#v", actual.stream, expect.stream)
+		}
+	}
+
+	expect = new(baseURLs)
+	expect.rest, _ = url.Parse("https://api-fxtrade.oanda.com")
+	expect.stream, _ = url.Parse("https://stream-fxtrade.oanda.com")
+	if actual := oandaBaseURL(OandaLive); !reflect.DeepEqual(actual, expect) {
+		if !reflect.DeepEqual(actual.rest, expect.rest) {
+			t.Errorf("\ngot:  %#v\nwant: %#v", actual.rest, expect.rest)
+		}
+		if !reflect.DeepEqual(actual.stream, expect.stream) {
+			t.Errorf("\ngot:  %#v\nwant: %#v", actual.stream, expect.stream)
+		}
+	}
+}
+
 func newConnection(t *testing.T, env OandaEnvironment) *Connection {
+	if env == OandaLive {
+		t.Fatal("Live environment for testing is prohibited.")
+	}
 
 	connection := &Connection{
 		Token:       Getenv("TOKEN"),
