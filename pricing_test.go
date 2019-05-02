@@ -46,4 +46,28 @@ func Test_PricingStream(t *testing.T) {
 		default:
 		}
 	})
+
+	t.Run("Unauthorized", func(t *testing.T) {
+		connection := newConnection(t, OandaPractice)
+		connection.Token = "foo"
+		accountID := Getenv("ACCOUNT_ID")
+
+		params := &GetPricingStreamParams{
+			BufferSize:  100,
+			Instruments: []string{"USD_JPY", "EUR_JPY", "EUR_USD"},
+		}
+
+		chs, err := connection.Accounts().AccountID(accountID).Pricing().Stream().Get(params)
+
+		if err == nil {
+			chs.Close()
+			t.Fatal("Got 200 OK but unauthorized.")
+		}
+
+		if _, ok := nakedError(err).(*UnauthorizedError); !ok {
+			t.Fatalf("Got unexpected error.\n%+v", err)
+		}
+
+		t.Logf("Error occurred as expected.\n%+v", err)
+	})
 }
