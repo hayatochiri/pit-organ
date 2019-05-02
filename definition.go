@@ -1,5 +1,9 @@
 package pitOrgan
 
+import (
+	"encoding/json"
+)
+
 //
 // Account Definitions
 //
@@ -1478,7 +1482,7 @@ type PriceValueDefinition string
 
 type PriceBucketDefinition struct {
 	Price     PriceValueDefinition `json:"price"`
-	Liquidity int                  `json:"liquidity"`
+	Liquidity json.Number          `json:"liquidity"`
 }
 
 type PriceStatusDefinition string

@@ -39,3 +39,13 @@ type NotFoundError struct {
 func (r *NotFoundError) Error() string {
 	return r.ErrorMessage
 }
+
+// Stream heartbeat broken
+
+type StreamHeartbeatBroken struct {
+	ErrorMessage string
+}
+
+func (r *StreamHeartbeatBroken) Error() string {
+	return r.ErrorMessage
+}
