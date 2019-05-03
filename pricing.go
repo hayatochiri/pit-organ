@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"golang.org/x/xerrors"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -26,8 +27,8 @@ type ReceiverPricingStream struct {
 type GetPricingParams struct {
 	Instruments            []string
 	Since                  time.Time
-	IncludeUnitsAvailable  JsonBool
-	IncludeHomeConversions JsonBool
+	IncludeUnitsAvailable  interface{} // bool or nil(default=true)
+	IncludeHomeConversions interface{} // bool or nil(default=false)
 }
 
 type GetPricingStreamParams struct {
@@ -71,11 +72,11 @@ func (r *ReceiverPricing) Get(params *GetPricingParams) (*GetPricingSchema, erro
 			queries: func() []query {
 				q := make([]query, 0, 4)
 				q = append(q, query{key: "instruments", value: strings.Join(params.Instruments, ",")})
-				if b, err := params.IncludeUnitsAvailable.string(); err == nil {
-					q = append(q, query{key: "includeUnitsAvailable", value: b})
+				if b, ok := params.IncludeUnitsAvailable.(bool); ok {
+					q = append(q, query{key: "includeUnitsAvailable", value: strconv.FormatBool(b)})
 				}
-				if b, err := params.IncludeHomeConversions.string(); err == nil {
-					q = append(q, query{key: "includeHomeConversions", value: b})
+				if b, ok := params.IncludeHomeConversions.(bool); ok {
+					q = append(q, query{key: "includeHomeConversions", value: strconv.FormatBool(b)})
 				}
 				if !params.Since.IsZero() {
 					q = append(q, query{key: "since", value: params.Since.Format(time.RFC3339Nano)})
