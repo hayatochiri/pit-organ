@@ -154,22 +154,56 @@ type PositionAggregationModeDefinition string
 
 type CandlestickGranularityDefinition string
 
+const (
+	S5  CandlestickGranularityDefinition = "S5"  // 5 second candlesticks, minute alignment
+	S10 CandlestickGranularityDefinition = "S10" // 10 second candlesticks, minute alignment
+	S15 CandlestickGranularityDefinition = "S15" // 15 second candlesticks, minute alignment
+	S30 CandlestickGranularityDefinition = "S30" // 30 second candlesticks, minute alignment
+	M1  CandlestickGranularityDefinition = "M1"  // 1 minute candlesticks, minute alignment
+	M2  CandlestickGranularityDefinition = "M2"  // 2 minute candlesticks, hour alignment
+	M4  CandlestickGranularityDefinition = "M4"  // 4 minute candlesticks, hour alignment
+	M5  CandlestickGranularityDefinition = "M5"  // 5 minute candlesticks, hour alignment
+	M10 CandlestickGranularityDefinition = "M10" // 10 minute candlesticks, hour alignment
+	M15 CandlestickGranularityDefinition = "M15" // 15 minute candlesticks, hour alignment
+	M30 CandlestickGranularityDefinition = "M30" // 30 minute candlesticks, hour alignment
+	H1  CandlestickGranularityDefinition = "H1"  // 1 hour candlesticks, hour alignment
+	H2  CandlestickGranularityDefinition = "H2"  // 2 hour candlesticks, day alignment
+	H3  CandlestickGranularityDefinition = "H3"  // 3 hour candlesticks, day alignment
+	H4  CandlestickGranularityDefinition = "H4"  // 4 hour candlesticks, day alignment
+	H6  CandlestickGranularityDefinition = "H6"  // 6 hour candlesticks, day alignment
+	H8  CandlestickGranularityDefinition = "H8"  // 8 hour candlesticks, day alignment
+	H12 CandlestickGranularityDefinition = "H12" // 12 hour candlesticks, day alignment
+	D   CandlestickGranularityDefinition = "D"   // 1 day candlesticks, day alignment
+	W   CandlestickGranularityDefinition = "W"   // 1 week candlesticks, aligned to start of week
+	M   CandlestickGranularityDefinition = "M"   // 1 month candlesticks, aligned to first day of the month
+)
+
 type WeeklyAlignmentDefinition string
 
+const (
+	Monday    WeeklyAlignmentDefinition = "Monday"
+	Tuesday   WeeklyAlignmentDefinition = "Tuesday"
+	Wednesday WeeklyAlignmentDefinition = "Wednesday"
+	Thursday  WeeklyAlignmentDefinition = "Thursday"
+	Friday    WeeklyAlignmentDefinition = "Friday"
+	Saturday  WeeklyAlignmentDefinition = "Saturday"
+	Sunday    WeeklyAlignmentDefinition = "Sunday"
+)
+
 type CandlestickDefinition struct {
-	Time     DateTimeDefinition        `json:"time"`
-	Bid      CandlestickDataDefinition `json:"bid"`
-	Ask      CandlestickDataDefinition `json:"ask"`
-	Mid      CandlestickDataDefinition `json:"mid"`
-	Volume   int                       `json:"volume"`
-	Complete bool                      `json:"complete"`
+	Time     DateTimeDefinition         `json:"time,omitempty"`
+	Bid      *CandlestickDataDefinition `json:"bid,omitempty"`
+	Ask      *CandlestickDataDefinition `json:"ask,omitempty"`
+	Mid      *CandlestickDataDefinition `json:"mid,omitempty"`
+	Volume   int                        `json:"volume,omitempty"`
+	Complete bool                       `json:"complete,omitempty"`
 }
 
 type CandlestickDataDefinition struct {
-	O PriceValueDefinition `json:"o"`
-	H PriceValueDefinition `json:"h"`
-	L PriceValueDefinition `json:"l"`
-	C PriceValueDefinition `json:"c"`
+	O PriceValueDefinition `json:"o,omitempty"`
+	H PriceValueDefinition `json:"h,omitempty"`
+	L PriceValueDefinition `json:"l,omitempty"`
+	C PriceValueDefinition `json:"c,omitempty"`
 }
 
 type OrderBookDefinition struct {

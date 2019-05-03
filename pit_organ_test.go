@@ -1,7 +1,7 @@
 package pitOrgan
 
 import (
-	. "github.com/MakeNowJust/heredoc/dot"
+	dot "github.com/MakeNowJust/heredoc/dot"
 	"github.com/joho/godotenv"
 	"golang.org/x/xerrors"
 	"net/url"
@@ -17,7 +17,7 @@ func init() {
 		if fErr != nil {
 			panic(xerrors.Errorf("Create .env failed: %w", err))
 		}
-		_, fErr = file.WriteString(D(`
+		_, fErr = file.WriteString(dot.D(`
 			TOKEN=
 			ACCOUNT_ID=
 		`))
