@@ -119,12 +119,12 @@ func (r *ReceiverInstrumentCandles) Get(params *GetInstrumentCandlesParams) (*Ge
 
 				// smooth
 				if b, ok := params.Smooth.(bool); ok {
-					q = append(q, query{key: "smooth", value: b})
+					q = append(q, query{key: "smooth", value: strconv.FormatBool(b)})
 				}
 
 				// includeFirst
 				if b, ok := params.IncludeFirst.(bool); ok {
-					q = append(q, query{key: "includeFirst", value: b})
+					q = append(q, query{key: "includeFirst", value: strconv.FormatBool(b)})
 				}
 
 				// dailyAlignment
