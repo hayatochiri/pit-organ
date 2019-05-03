@@ -191,19 +191,19 @@ const (
 )
 
 type CandlestickDefinition struct {
-	Time     DateTimeDefinition        `json:"time"`
-	Bid      CandlestickDataDefinition `json:"bid"`
-	Ask      CandlestickDataDefinition `json:"ask"`
-	Mid      CandlestickDataDefinition `json:"mid"`
-	Volume   int                       `json:"volume"`
-	Complete bool                      `json:"complete"`
+	Time     DateTimeDefinition         `json:"time,omitempty"`
+	Bid      *CandlestickDataDefinition `json:"bid,omitempty"`
+	Ask      *CandlestickDataDefinition `json:"ask,omitempty"`
+	Mid      *CandlestickDataDefinition `json:"mid,omitempty"`
+	Volume   int                        `json:"volume,omitempty"`
+	Complete bool                       `json:"complete,omitempty"`
 }
 
 type CandlestickDataDefinition struct {
-	O PriceValueDefinition `json:"o"`
-	H PriceValueDefinition `json:"h"`
-	L PriceValueDefinition `json:"l"`
-	C PriceValueDefinition `json:"c"`
+	O PriceValueDefinition `json:"o,omitempty"`
+	H PriceValueDefinition `json:"h,omitempty"`
+	L PriceValueDefinition `json:"l,omitempty"`
+	C PriceValueDefinition `json:"c,omitempty"`
 }
 
 type OrderBookDefinition struct {
