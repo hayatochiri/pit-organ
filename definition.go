@@ -180,6 +180,16 @@ const (
 
 type WeeklyAlignmentDefinition string
 
+const (
+	Monday    WeeklyAlignmentDefinition = "Monday"
+	Tuesday   WeeklyAlignmentDefinition = "Tuesday"
+	Wednesday WeeklyAlignmentDefinition = "Wednesday"
+	Thursday  WeeklyAlignmentDefinition = "Thursday"
+	Friday    WeeklyAlignmentDefinition = "Friday"
+	Saturday  WeeklyAlignmentDefinition = "Saturday"
+	Sunday    WeeklyAlignmentDefinition = "Sunday"
+)
+
 type CandlestickDefinition struct {
 	Time     DateTimeDefinition        `json:"time"`
 	Bid      CandlestickDataDefinition `json:"bid"`
