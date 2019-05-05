@@ -1,12 +1,14 @@
 package pitOrgan
 
 import (
+	"bufio"
 	"encoding/json"
 	"golang.org/x/xerrors"
 	"io/ioutil"
 	"net/url"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -42,6 +44,10 @@ type GetTransactionsIdrangeParams struct {
 	Type []TransactionFilterDefinition
 }
 
+type GetTransactionsStreamParams struct {
+	BufferSize int
+}
+
 // Schemas
 
 type GetTransactionsSchema struct {
@@ -64,6 +70,13 @@ type getTransactionsIdrangeParser struct {
 }
 type getTransactionsIdrangeRawMessage struct {
 	Message []json.RawMessage `json:"transactions"`
+}
+
+type TransactionsChannels struct {
+	Transaction <-chan interface{}
+	Error       <-chan error
+	close       chan<- struct{}
+	closeWait   *sync.WaitGroup
 }
 
 func (r *ReceiverAccountID) Transactions() *ReceiverTransactions {
@@ -227,7 +240,133 @@ func (r *ReceiverTransactionsIdrange) Get(params *GetTransactionsIdrangeParams) 
 
 // TODO: GET /v3/accounts/{accountID}/transactions/sinceid
 
-// TODO: GET /v3/accounts/{accountID}/transactions/stream
+// GET /v3/accounts/{accountID}/transactions/stream
+//
+// Get a stream of Transactions for an Account starting from when the request is made.
+func (r *ReceiverTransactionsStream) Get(params *GetTransactionsStreamParams) (*TransactionsChannels, error) {
+	resp, err := r.Connection.stream(
+		&requestParams{
+			method:   "GET",
+			endPoint: "/v3/accounts/" + r.AccountID + "/transactions/stream",
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Get transactions stream canceled: %w", err)
+	}
+
+	if resp.StatusCode != 200 {
+		defer resp.Body.Close()
+		var err interface{}
+		_, err = parseResponse(resp, err)
+		return nil, xerrors.Errorf("Get transactions stream failed: %w", err)
+	}
+
+	closeWait := new(sync.WaitGroup)
+
+	transactionCh := make(chan interface{}, params.BufferSize)
+	errorCh := make(chan error, 2)
+	closeCh := make(chan struct{})
+
+	// closeChがcloseされたらstreamを終了するgoroutine
+	// 下記の readre.ReadBytes はデータを受信しないと処理が進まないため
+	// streamの途中で途切れると永遠に待ち続けてしまうので終了用goroutineを用意。
+	go func() {
+		defer func() {
+			resp.Body.Close()
+			closeWait.Done()
+		}()
+		closeWait.Add(1)
+		_, _ = <-closeCh
+	}()
+
+	// 受信したデータ(JSON)を構造体にしてreaderCh channelに送信するgoroutine
+	readerCh := make(chan []byte, params.BufferSize)
+	go func() {
+		defer func() {
+			close(readerCh)
+			closeWait.Done()
+		}()
+		closeWait.Add(1)
+
+		reader := bufio.NewReader(resp.Body)
+		for {
+			line, err := reader.ReadBytes('\n')
+			if err != nil {
+				select {
+				case _, _ = <-closeCh:
+				default:
+					errorCh <- xerrors.Errorf("Read response stream failed: %w", err)
+				}
+				return
+			}
+			readerCh <- line
+		}
+	}()
+
+	// readeerCh channleから受信した構造体をユーザーに渡すgoroutine
+	// heartbeat(5秒間隔)が途切れた場合を検知するためにタイムアウトも管理する。
+	go func() {
+		defer func() {
+			close(transactionCh)
+			closeWait.Done()
+		}()
+		closeWait.Add(1)
+
+		timeout := time.NewTimer(0)
+		received := true
+
+		for {
+			select {
+			case _, _ = <-closeCh:
+				return
+			case line := <-readerCh:
+				received = true
+
+				data := new(TransactionDefinition)
+				if err := json.Unmarshal(line, data); err != nil {
+					errorCh <- xerrors.Errorf("Unmarshal response stream failed: %w", err)
+					return
+				}
+
+				if data.Type == "HEARTBEAT" {
+					continue
+				}
+
+				var tData interface{}
+				tData, err := unmarshalTransaction(line, data.Type)
+				if err != nil {
+					errorCh <- xerrors.Errorf("Unmarshal response body failed(type=%s): %w", data.Type, err)
+					return
+				}
+
+				transactionCh <- tData
+			case <-timeout.C:
+				timeout.Reset(r.Connection.Timeout)
+				if !received {
+					var err error = &StreamHeartbeatBroken{ErrorMessage: "Heartbeat was broken"}
+					errorCh <- xerrors.Errorf("Get pricing stream heartbeat was broken: %w", err)
+					return
+				}
+				received = false
+			}
+		}
+	}()
+
+	return &TransactionsChannels{
+		Transaction: transactionCh,
+		Error:       errorCh,
+		close:       closeCh,
+		closeWait:   closeWait,
+	}, nil
+}
+
+func (ch *TransactionsChannels) Close() {
+	close(ch.close)
+	ch.closeWait.Wait()
+}
 
 func (s *GetTransactionsSchema) IdrangeParams() ([]*GetTransactionsIdrangeParams, error) {
 	params := make([]*GetTransactionsIdrangeParams, 0, len(s.Pages))
