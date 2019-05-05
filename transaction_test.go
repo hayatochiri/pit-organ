@@ -3,6 +3,7 @@ package pitOrgan
 import (
 	"github.com/davecgh/go-spew/spew"
 	"testing"
+	"time"
 )
 
 func Test_Transactions(t *testing.T) {
@@ -109,4 +110,45 @@ func Test_IdrangeParams(t *testing.T) {
 	})
 }
 
+func Test_TransactionsStream(t *testing.T) {
+	t.Run("Success", func(t *testing.T) {
+		connection := newConnection(t, OandaPractice)
+		accountID := Getenv("ACCOUNT_ID")
+		api := connection.Accounts().AccountID(accountID)
+
+		orderParams := &PostOrdersParams{
+			Body: PostOrdersBodyParams{
+				Order: MarketOrderRequestDefinition{
+					Type:        "MARKET",
+					Instrument:  "EUR_USD",
+					Units:       "100",
+					TimeInForce: "FOK",
+				},
+			},
+		}
+
+		params := &GetTransactionsStreamParams{
+			BufferSize: 100,
+		}
+		chs, err := api.Transactions().Stream().Get(params)
+		if err != nil {
+			t.Fatalf("Error occurred.\n%+v", err)
+		}
+		defer chs.Close()
+
+		for i := 1; i <= 5; {
+			select {
+			case transaction := <-chs.Transaction:
+				t.Logf("Stream:\n%s", spew.Sdump(transaction))
+				i++
+			case err := <-chs.Error:
+				t.Fatalf("Error occurred.\n%+v", err)
+			default:
+				if _, err := api.Orders().Post(orderParams); err != nil {
+					t.Fatalf("Error occurred.\n%+v", err)
+				}
+				time.Sleep(time.Second)
+			}
+		}
+	})
 }
