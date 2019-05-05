@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"golang.org/x/xerrors"
 	"io/ioutil"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -227,6 +228,43 @@ func (r *ReceiverTransactionsIdrange) Get(params *GetTransactionsIdrangeParams) 
 // TODO: GET /v3/accounts/{accountID}/transactions/sinceid
 
 // TODO: GET /v3/accounts/{accountID}/transactions/stream
+
+func (s *GetTransactionsSchema) IdrangeParams() ([]*GetTransactionsIdrangeParams, error) {
+	params := make([]*GetTransactionsIdrangeParams, 0, len(s.Pages))
+
+	for _, page := range s.Pages {
+		u, err := url.Parse(page)
+		if err != nil {
+			return nil, xerrors.Errorf("Parse transactions idrange params failed: %w", err)
+		}
+		query := u.Query()
+
+		param := new(GetTransactionsIdrangeParams)
+		if v, ok := query["from"]; ok {
+			param.From, err = strconv.Atoi(v[0])
+			if err != nil {
+				return nil, xerrors.Errorf("Parse transactions idrange from query failed: %w", err)
+			}
+		}
+		if v, ok := query["to"]; ok {
+			param.To, err = strconv.Atoi(v[0])
+			if err != nil {
+				return nil, xerrors.Errorf("Parse transactions idrange to query failed: %w", err)
+			}
+		}
+		if v, ok := query["type"]; ok {
+			filters := strings.Split(v[0], ",")
+			param.Type = make([]TransactionFilterDefinition, 0, len(filters))
+			for _, f := range filters {
+				param.Type = append(param.Type, TransactionFilterDefinition(f))
+			}
+		}
+
+		params = append(params, param)
+	}
+
+	return params, nil
+}
 
 func unmarshalTransaction(data []byte, tType TransactionTypeDefinition) (interface{}, error) {
 	var v interface{}
