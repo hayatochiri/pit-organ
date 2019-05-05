@@ -3,6 +3,7 @@ package pitOrgan
 import (
 	"encoding/json"
 	"golang.org/x/xerrors"
+	"io/ioutil"
 	"strconv"
 	"strings"
 	"time"
@@ -34,6 +35,12 @@ type GetTransactionsParams struct {
 	Type     []TransactionFilterDefinition
 }
 
+type GetTransactionsIdrangeParams struct {
+	From int
+	To   int
+	Type []TransactionFilterDefinition
+}
+
 // Schemas
 
 type GetTransactionsSchema struct {
@@ -46,6 +53,17 @@ type GetTransactionsSchema struct {
 	LastTransactionID TransactionIDDefinition       `json:"lastTransactionID"`
 }
 
+type GetTransactionsIdrangeSchema struct {
+	Transactions      []interface{}           `json:"transactions"`
+	LastTransactionID TransactionIDDefinition `json:"lastTransactionID"`
+}
+
+type getTransactionsIdrangeParser struct {
+	Transactions []TransactionDefinition `json:"transactions"`
+}
+type getTransactionsIdrangeRawMessage struct {
+	Message []json.RawMessage `json:"transactions"`
+}
 
 func (r *ReceiverAccountID) Transactions() *ReceiverTransactions {
 	return &ReceiverTransactions{
@@ -130,7 +148,81 @@ func (r *ReceiverTransactions) Get(params *GetTransactionsParams) (*GetTransacti
 
 // TODO: GET /v3/accounts/{accountID}/transactions/{transactionID}
 
-// TODO: GET /v3/accounts/{accountID}/transactions/idrange
+// GET /v3/accounts/{accountID}/transactions/idrange
+//
+// Get a range of Transactions for an Account based on the Transaction IDs.
+func (r *ReceiverTransactionsIdrange) Get(params *GetTransactionsIdrangeParams) (*GetTransactionsIdrangeSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "GET",
+			endPoint: "/v3/accounts/" + r.AccountID + "/transactions/idrange",
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+			queries: func() []query {
+				q := make([]query, 0, 3)
+
+				// from
+				q = append(q, query{key: "from", value: strconv.Itoa(params.From)})
+
+				// to
+				q = append(q, query{key: "to", value: strconv.Itoa(params.To)})
+
+				// type
+				if params.Type != nil {
+					types := make([]string, len(params.Type))
+					for n, t := range params.Type {
+						types[n] = string(t)
+					}
+					q = append(q, query{key: "type", value: strings.Join(types, ",")})
+				}
+
+				return q
+			}(),
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Get transactions idrange canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, xerrors.Errorf("Read response body failed: %w", err)
+	}
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		data = new(GetTransactionsIdrangeSchema)
+	}
+	data, err = parseBody(body, resp.StatusCode, data)
+	// HTTPステータスコードが200以外ならエラーとしてreturnされる
+	if err != nil {
+		return nil, xerrors.Errorf("Get transactions idrange failed: %w", err)
+	}
+
+	var parser = new(getTransactionsIdrangeParser)
+	if err := json.Unmarshal(body, parser); err != nil {
+		return nil, xerrors.Errorf("Unmarshal response body failed: %w", err)
+	}
+
+	var rawMessage = new(getTransactionsIdrangeRawMessage)
+	if err := json.Unmarshal(body, rawMessage); err != nil {
+		return nil, xerrors.Errorf("Unmarshal response body failed: %w", err)
+	}
+
+	data.(*GetTransactionsIdrangeSchema).Transactions = make([]interface{}, len(parser.Transactions), len(parser.Transactions))
+	for n, transaction := range parser.Transactions {
+		var tData interface{}
+		if tData, err = unmarshalTransaction(rawMessage.Message[n], transaction.Type); err != nil {
+			return nil, xerrors.Errorf("Unmarshal response body failed(type=%s): %w", transaction.Type, err)
+		}
+		data.(*GetTransactionsIdrangeSchema).Transactions[n] = tData
+	}
+
+	return data.(*GetTransactionsIdrangeSchema), nil
+}
 
 // TODO: GET /v3/accounts/{accountID}/transactions/sinceid
 
