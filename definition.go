@@ -18,7 +18,7 @@ type AccountDefinition struct {
 	CreatedByUserID             int                                   `json:"createdByUserID"`
 	CreatedTime                 DateTimeDefinition                    `json:"createdTime"`
 	GuaranteedStopLossOrderMode GuaranteedStopLossOrderModeDefinition `json:"guaranteedStopLossOrderMode"`
-	Pl                          AccountUnitsDefinition                `json:"pl"`
+	PL                          AccountUnitsDefinition                `json:"pl"`
 	ResettablePL                AccountUnitsDefinition                `json:"resettablePL"`
 	ResettablePLTime            DateTimeDefinition                    `json:"resettablePLTime"`
 	Financing                   AccountUnitsDefinition                `json:"financing"`
@@ -86,7 +86,7 @@ type AccountSummaryDefinition struct {
 	CreatedByUserID             int                                   `json:"createdByUserID"`
 	CreatedTime                 DateTimeDefinition                    `json:"createdTime"`
 	GuaranteedStopLossOrderMode GuaranteedStopLossOrderModeDefinition `json:"guaranteedStopLossOrderMode"`
-	Pl                          AccountUnitsDefinition                `json:"pl"`
+	PL                          AccountUnitsDefinition                `json:"pl"`
 	ResettablePL                AccountUnitsDefinition                `json:"resettablePL"`
 	ResettablePLTime            DateTimeDefinition                    `json:"resettablePLTime"`
 	Financing                   AccountUnitsDefinition                `json:"financing"`
@@ -684,7 +684,7 @@ type TradePLDefinition string
 
 type PositionDefinition struct {
 	Instrument              InstrumentNameDefinition `json:"instrument"`
-	Pl                      AccountUnitsDefinition   `json:"pl"`
+	PL                      AccountUnitsDefinition   `json:"pl"`
 	UnrealizedPL            AccountUnitsDefinition   `json:"unrealizedPL"`
 	MarginUsed              AccountUnitsDefinition   `json:"marginUsed"`
 	ResettablePL            AccountUnitsDefinition   `json:"resettablePL"`
@@ -699,7 +699,7 @@ type PositionSideDefinition struct {
 	Units                   DecimalNumberDefinition `json:"units"`
 	AveragePrice            PriceValueDefinition    `json:"averagePrice"`
 	TradeIDs                []TradeIDDefinition     `json:"tradeIDs"`
-	Pl                      AccountUnitsDefinition  `json:"pl"`
+	PL                      AccountUnitsDefinition  `json:"pl"`
 	UnrealizedPL            AccountUnitsDefinition  `json:"unrealizedPL"`
 	ResettablePL            AccountUnitsDefinition  `json:"resettablePL"`
 	Financing               AccountUnitsDefinition  `json:"financing"`
@@ -1445,7 +1445,7 @@ type MarketOrderTradeCloseDefinition struct {
 }
 
 type MarketOrderMarginCloseoutDefinition struct {
-	reason MarketOrderMarginCloseoutReasonDefinition `json:"reason"`
+	Reason MarketOrderMarginCloseoutReasonDefinition `json:"reason"`
 }
 
 type MarketOrderMarginCloseoutReasonDefinition string

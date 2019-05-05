@@ -28,7 +28,6 @@ type requestParams struct {
 }
 
 func (c *Connection) request(params *requestParams) (*http.Response, error) {
-
 	destURL := oandaBaseURL(c.Environemnt).rest
 	destURL.Path = path.Join(destURL.Path, params.endPoint)
 
@@ -98,14 +97,9 @@ func (c *Connection) stream(params *requestParams) (*http.Response, error) {
 	return resp, nil
 }
 
-func parseResponse(resp *http.Response, data interface{}) (interface{}, error) {
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, xerrors.Errorf("Read response body failed: %w", err)
-	}
-
+func parseBody(body []byte, statusCode int, data interface{}) (interface{}, error) {
 	var errMessage string
-	switch resp.StatusCode {
+	switch statusCode {
 	case 200, 201:
 		errMessage = ""
 		if data == nil {
@@ -131,18 +125,28 @@ func parseResponse(resp *http.Response, data interface{}) (interface{}, error) {
 		if data == nil {
 			data = new(NotFoundError)
 		}
+	// TODO: 405
+	// TODO: 416
 	default:
-		return nil, xerrors.Errorf("Unexpected status code(%d)", resp.StatusCode)
+		return nil, xerrors.Errorf("Unexpected status code(%d)", statusCode)
 	}
 
-	err = json.Unmarshal(body, data)
-	if err != nil {
+	if err := json.Unmarshal(body, data); err != nil {
 		return nil, xerrors.Errorf("Unmarshal response body failed: %w", err)
 	}
 
-	if resp.StatusCode/100 != 2 {
+	if statusCode/100 != 2 {
 		return nil, xerrors.Errorf("%s: %w", errMessage, data)
 	}
 
 	return data, nil
+}
+
+func parseResponse(resp *http.Response, data interface{}) (interface{}, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, xerrors.Errorf("Read response body failed: %w", err)
+	}
+
+	return parseBody(body, resp.StatusCode, data)
 }

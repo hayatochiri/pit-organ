@@ -8,4 +8,6 @@ services:
     container_name: pit-organ
     volumes:
       - .:/go/src/github.com/hayatochiri/pit-organ
+    ports:
+      - '8080:8080'
     working_dir: /go/src/github.com/hayatochiri/pit-organ
