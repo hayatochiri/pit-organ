@@ -3,6 +3,9 @@ package pitOrgan
 import (
 	"encoding/json"
 	"golang.org/x/xerrors"
+	"strconv"
+	"strings"
+	"time"
 )
 
 // Receivers
@@ -20,6 +23,27 @@ type ReceiverTransactionsIdrange struct {
 type ReceiverTransactionsStream struct {
 	AccountID  string
 	Connection *Connection
+}
+
+// Params
+
+type GetTransactionsParams struct {
+	From     time.Time
+	To       time.Time
+	PageSize int
+	Type     []TransactionFilterDefinition
+}
+
+// Schemas
+
+type GetTransactionsSchema struct {
+	From              DateTimeDefinition            `json:"from"`
+	To                DateTimeDefinition            `json:"to"`
+	PageSize          int                           `json:"pageSize"`
+	Type              []TransactionFilterDefinition `json:"type"`
+	Count             int                           `json:"count"`
+	Pages             []string                      `json:"pages"`
+	LastTransactionID TransactionIDDefinition       `json:"lastTransactionID"`
 }
 
 
@@ -44,7 +68,65 @@ func (r *ReceiverTransactions) Stream() *ReceiverTransactionsStream {
 	}
 }
 
-// TODO: GET /v3/accounts/{accountID}/transactions
+// GET /v3/accounts/{accountID}/transactions
+//
+// Get a list of Transactions pages that satisfy a time-based Transaction query.
+func (r *ReceiverTransactions) Get(params *GetTransactionsParams) (*GetTransactionsSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "GET",
+			endPoint: "/v3/accounts/" + r.AccountID + "/transactions",
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+			queries: func() []query {
+				q := make([]query, 0, 4)
+
+				// from
+				if !params.From.IsZero() {
+					q = append(q, query{key: "from", value: params.From.Format(time.RFC3339Nano)})
+				}
+
+				// to
+				if !params.To.IsZero() {
+					q = append(q, query{key: "to", value: params.To.Format(time.RFC3339Nano)})
+				}
+
+				// pageSize
+				if params.PageSize != 0 {
+					q = append(q, query{key: "pageSize", value: strconv.Itoa(params.PageSize)})
+				}
+
+				// type
+				if params.Type != nil {
+					types := make([]string, len(params.Type))
+					for n, t := range params.Type {
+						types[n] = string(t)
+					}
+					q = append(q, query{key: "type", value: strings.Join(types, ",")})
+				}
+
+				return q
+			}(),
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Get transactions canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		data = new(GetTransactionsSchema)
+	}
+
+	data, err = parseResponse(resp, data)
+	if err != nil {
+		return nil, xerrors.Errorf("Get transactions failed: %w", err)
+	}
+	return data.(*GetTransactionsSchema), nil
+}
 
 // TODO: GET /v3/accounts/{accountID}/transactions/{transactionID}
 
