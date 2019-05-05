@@ -199,7 +199,3 @@ func (r *ReceiverAccountInstruments) Get(params *GetAccountInstrumentsParams) (*
 // TODO: PATCH /v3/accounts/{accountID}/configuration
 
 // TODO: GET /v3/accounts/{accountID}/changes
-
-func (id AccountIDDefinition) String() string {
-	return string(id)
-}
