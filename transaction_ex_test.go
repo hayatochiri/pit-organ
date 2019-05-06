@@ -126,14 +126,10 @@ func ExampleReceiverTransactionsIdrange_Get_idrangeParams() {
 	}
 	api := connection.Accounts().AccountID("accountID").Transactions()
 
-	params := &pitOrgan.GetTransactionsIdrangeParams{
-		From: 1,
-		To:   165,
-	}
 	data, err := api.Get(
-		&GetTransactionsParams{Type: []TransactionFilterDefinition{
-			OrderTransaction,
-			CloseTransaction,
+		&pitOrgan.GetTransactionsParams{Type: []pitOrgan.TransactionFilterDefinition{
+			pitOrgan.OrderTransaction,
+			pitOrgan.CloseTransaction,
 		}},
 	)
 	if err != nil {
@@ -146,7 +142,7 @@ func ExampleReceiverTransactionsIdrange_Get_idrangeParams() {
 	}
 
 	for _, param := range params {
-		data, err := transactionAPI.Idrange().Get(param)
+		data, err := api.Idrange().Get(param)
 		if err != nil {
 			log.Fatalf("%+v", err)
 		}
@@ -161,10 +157,10 @@ func ExampleReceiverTransactionsStream_Get() {
 		Timeout:     time.Second * 10,
 	}
 
-	params := &GetTransactionsStreamParams{
+	params := &pitOrgan.GetTransactionsStreamParams{
 		BufferSize: 100,
 	}
-	chs, err := connection.Accounts().AccountID("AccountID").Transactions().Get(params)
+	chs, err := connection.Accounts().AccountID("AccountID").Transactions().Stream().Get(params)
 	if err != nil {
 		log.Fatalf("%+v", err)
 	}
