@@ -597,15 +597,15 @@ type DynamicOrderStateDefinition struct {
 }
 
 type UnitsAvailableDetailsDefinition struct {
-	Long  DecimalNumberDefinition `json:"long"`
-	Short DecimalNumberDefinition `json:"short"`
+	Long  DecimalNumberDefinition `json:"long,omitempty"`
+	Short DecimalNumberDefinition `json:"short,omitempty"`
 }
 
 type UnitsAvailableDefinition struct {
-	Default     UnitsAvailableDetailsDefinition `json:"default"`
-	ReduceFirst UnitsAvailableDetailsDefinition `json:"reduceFirst"`
-	ReduceOnly  UnitsAvailableDetailsDefinition `json:"reduceOnly"`
-	OpenOnly    UnitsAvailableDetailsDefinition `json:"openOnly"`
+	Default     *UnitsAvailableDetailsDefinition `json:"default,omitempty"`
+	ReduceFirst *UnitsAvailableDetailsDefinition `json:"reduceFirst,omitempty"`
+	ReduceOnly  *UnitsAvailableDetailsDefinition `json:"reduceOnly,omitempty"`
+	OpenOnly    *UnitsAvailableDetailsDefinition `json:"openOnly,omitempty"`
 }
 
 type GuaranteedStopLossOrderEntryDataDefinition struct {
@@ -1543,31 +1543,31 @@ type TransactionHeartbeatDefinition struct {
 //
 
 type PriceDefinition struct {
-	Type                       string                               `json:"type"`
-	Instrument                 InstrumentNameDefinition             `json:"instrument"`
-	Time                       DateTimeDefinition                   `json:"time"`
-	Status                     PriceStatusDefinition                `json:"status"`
-	Tradeable                  bool                                 `json:"tradeable"`
-	Bids                       []PriceBucketDefinition              `json:"bids"`
-	Asks                       []PriceBucketDefinition              `json:"asks"`
-	CloseoutBid                PriceValueDefinition                 `json:"closeoutBid"`
-	CloseoutAsk                PriceValueDefinition                 `json:"closeoutAsk"`
-	QuoteHomeConversionFactors QuoteHomeConversionFactorsDefinition `json:"quoteHomeConversionFactors"`
-	UnitsAvailable             UnitsAvailableDefinition             `json:"unitsAvailable"`
+	Type                       string                                `json:"type,omitempty"`
+	Instrument                 InstrumentNameDefinition              `json:"instrument,omitempty"`
+	Time                       DateTimeDefinition                    `json:"time,omitempty"`
+	Status                     PriceStatusDefinition                 `json:"status,omitempty"`
+	Tradeable                  bool                                  `json:"tradeable,omitempty"`
+	Bids                       []*PriceBucketDefinition              `json:"bids,omitempty"`
+	Asks                       []*PriceBucketDefinition              `json:"asks,omitempty"`
+	CloseoutBid                PriceValueDefinition                  `json:"closeoutBid,omitempty"`
+	CloseoutAsk                PriceValueDefinition                  `json:"closeoutAsk,omitempty"`
+	QuoteHomeConversionFactors *QuoteHomeConversionFactorsDefinition `json:"quoteHomeConversionFactors,omitempty"`
+	UnitsAvailable             *UnitsAvailableDefinition             `json:"unitsAvailable,omitempty"`
 }
 
 type PriceValueDefinition string
 
 type PriceBucketDefinition struct {
-	Price     PriceValueDefinition `json:"price"`
-	Liquidity json.Number          `json:"liquidity"`
+	Price     PriceValueDefinition `json:"price,omitempty"`
+	Liquidity json.Number          `json:"liquidity,omitempty"`
 }
 
 type PriceStatusDefinition string
 
 type QuoteHomeConversionFactorsDefinition struct {
-	PositiveUnits DecimalNumberDefinition `json:"positiveUnits"`
-	NegativeUnits DecimalNumberDefinition `json:"negativeUnits"`
+	PositiveUnits DecimalNumberDefinition `json:"positiveUnits,omitempty"`
+	NegativeUnits DecimalNumberDefinition `json:"negativeUnits,omitempty"`
 }
 
 type HomeConversionsDefinition struct {
