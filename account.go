@@ -5,10 +5,16 @@ import (
 	"strings"
 )
 
-// Receivers
+/* Receivers */
 
 type ReceiverAccounts struct {
 	Connection *Connection
+}
+
+func (c *Connection) Accounts() *ReceiverAccounts {
+	return &ReceiverAccounts{
+		Connection: c,
+	}
 }
 
 type ReceiverAccountID struct {
@@ -16,9 +22,23 @@ type ReceiverAccountID struct {
 	Connection *Connection
 }
 
+func (r *ReceiverAccounts) AccountID(id string) *ReceiverAccountID {
+	return &ReceiverAccountID{
+		AccountID:  id,
+		Connection: r.Connection,
+	}
+}
+
 type ReceiverAccountSummary struct {
 	AccountID  string
 	Connection *Connection
+}
+
+func (r *ReceiverAccountID) Summary() *ReceiverAccountSummary {
+	return &ReceiverAccountSummary{
+		AccountID:  r.AccountID,
+		Connection: r.Connection,
+	}
 }
 
 type ReceiverAccountInstruments struct {
@@ -26,13 +46,20 @@ type ReceiverAccountInstruments struct {
 	Connection *Connection
 }
 
-// Params
+func (r *ReceiverAccountID) Instruments() *ReceiverAccountInstruments {
+	return &ReceiverAccountInstruments{
+		AccountID:  r.AccountID,
+		Connection: r.Connection,
+	}
+}
+
+/* Params */
 
 type GetAccountInstrumentsParams struct {
 	Instruments []string
 }
 
-// Schemas
+/* Schemas */
 
 type GetAccountsSchema struct {
 	Accounts []*AccountPropertiesDefinition `json:"accounts,omitempty"`
@@ -53,11 +80,7 @@ type GetAccountInstrumentsSchema struct {
 	LastTransactionID *TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
-func (c *Connection) Accounts() *ReceiverAccounts {
-	return &ReceiverAccounts{
-		Connection: c,
-	}
-}
+/* API */
 
 // GET /v3/accounts
 func (r *ReceiverAccounts) Get() (*GetAccountsSchema, error) {
@@ -83,13 +106,6 @@ func (r *ReceiverAccounts) Get() (*GetAccountsSchema, error) {
 		return nil, xerrors.Errorf("Get accounts failed: %w", err)
 	}
 	return data.(*GetAccountsSchema), nil
-}
-
-func (r *ReceiverAccounts) AccountID(id string) *ReceiverAccountID {
-	return &ReceiverAccountID{
-		AccountID:  id,
-		Connection: r.Connection,
-	}
 }
 
 // GET /v3/accounts/{accountID}
@@ -121,13 +137,6 @@ func (r *ReceiverAccountID) Get() (*GetAccountIDSchema, error) {
 	return data.(*GetAccountIDSchema), nil
 }
 
-func (r *ReceiverAccountID) Summary() *ReceiverAccountSummary {
-	return &ReceiverAccountSummary{
-		AccountID:  r.AccountID,
-		Connection: r.Connection,
-	}
-}
-
 // GET /v3/accounts/{accountID}/summary
 func (r *ReceiverAccountSummary) Get() (*GetAccountSummarySchema, error) {
 	resp, err := r.Connection.request(
@@ -155,13 +164,6 @@ func (r *ReceiverAccountSummary) Get() (*GetAccountSummarySchema, error) {
 		return nil, xerrors.Errorf("Get account summary failed: %w", err)
 	}
 	return data.(*GetAccountSummarySchema), nil
-}
-
-func (r *ReceiverAccountID) Instruments() *ReceiverAccountInstruments {
-	return &ReceiverAccountInstruments{
-		AccountID:  r.AccountID,
-		Connection: r.Connection,
-	}
 }
 
 // GET /v3/accounts/{accountID}/instruments

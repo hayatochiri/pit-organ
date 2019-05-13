@@ -4,11 +4,18 @@ import (
 	"golang.org/x/xerrors"
 )
 
-// Receivers
+/* Receivers */
 
 type ReceiverOrders struct {
 	AccountID  string
 	Connection *Connection
+}
+
+func (r *ReceiverAccountID) Orders() *ReceiverOrders {
+	return &ReceiverOrders{
+		AccountID:  r.AccountID,
+		Connection: r.Connection,
+	}
 }
 
 // Params
@@ -21,7 +28,7 @@ type PostOrdersParams struct {
 	Body PostOrdersBodyParams
 }
 
-// Schemas
+/* Schemas */
 
 type PostOrdersSchema struct {
 	OrderCreateTransaction        *TransactionDefinition            `json:"orderCreateTransaction,omitempty"`
@@ -33,7 +40,7 @@ type PostOrdersSchema struct {
 	LastTransactionID             TransactionIDDefinition           `json:"lastTransactionID,omitempty"`
 }
 
-// Errors
+/* Errors */
 
 type PostOrdersBadRequestError struct {
 	OrderRejectTransaction *TransactionDefinition    `json:"orderRejectTransaction,omitempty"`
@@ -61,12 +68,7 @@ func (r *PostOrdersNotFoundError) Error() string {
 	return r.ErrorMessage
 }
 
-func (r *ReceiverAccountID) Orders() *ReceiverOrders {
-	return &ReceiverOrders{
-		AccountID:  r.AccountID,
-		Connection: r.Connection,
-	}
-}
+/* API */
 
 // POST /v3/accounts/{accountID}/orders
 func (r *ReceiverOrders) Post(params *PostOrdersParams) (*PostOrdersSchema, error) {

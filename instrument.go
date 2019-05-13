@@ -8,10 +8,16 @@ import (
 	"time"
 )
 
-// Receivers
+/* Receivers */
 
 type ReceiverInstruments struct {
 	Connection *Connection
+}
+
+func (c *Connection) Instruments() *ReceiverInstruments {
+	return &ReceiverInstruments{
+		Connection: c,
+	}
 }
 
 type ReceiverInstrument struct {
@@ -19,9 +25,23 @@ type ReceiverInstrument struct {
 	Connection *Connection
 }
 
+func (r *ReceiverInstruments) Instrument(i string) *ReceiverInstrument {
+	return &ReceiverInstrument{
+		Instrument: i,
+		Connection: r.Connection,
+	}
+}
+
 type ReceiverInstrumentCandles struct {
 	Instrument string
 	Connection *Connection
+}
+
+func (r *ReceiverInstrument) Candles() *ReceiverInstrumentCandles {
+	return &ReceiverInstrumentCandles{
+		Instrument: r.Instrument,
+		Connection: r.Connection,
+	}
 }
 
 type ReceiverInstrumentOrderBook struct {
@@ -29,12 +49,26 @@ type ReceiverInstrumentOrderBook struct {
 	Connection *Connection
 }
 
+func (r *ReceiverInstrument) OrderBook() *ReceiverInstrumentOrderBook {
+	return &ReceiverInstrumentOrderBook{
+		Instrument: r.Instrument,
+		Connection: r.Connection,
+	}
+}
+
 type ReceiverInstrumentPositionBook struct {
 	Instrument string
 	Connection *Connection
 }
 
-// Params
+func (r *ReceiverInstrument) PositionBook() *ReceiverInstrumentPositionBook {
+	return &ReceiverInstrumentPositionBook{
+		Instrument: r.Instrument,
+		Connection: r.Connection,
+	}
+}
+
+/* Params */
 
 type GetInstrumentCandlesParams struct {
 	PriceMid          interface{} // bool or nil
@@ -59,7 +93,7 @@ type GetInstrumentPositionBookParams struct {
 	Time time.Time // The time of the snapshot to fetch. If not specified, then the most recent snapshot is fetched.
 }
 
-// Schemas
+/* Schemas */
 
 type GetInstrumentCandlesSchema struct {
 	Instrument  InstrumentNameDefinition         `json:"instrument,omitempty"`
@@ -91,25 +125,7 @@ type GetInstrumentPositionBookSchema struct {
 	}
 }
 
-func (c *Connection) Instruments() *ReceiverInstruments {
-	return &ReceiverInstruments{
-		Connection: c,
-	}
-}
-
-func (r *ReceiverInstruments) Instrument(i string) *ReceiverInstrument {
-	return &ReceiverInstrument{
-		Instrument: i,
-		Connection: r.Connection,
-	}
-}
-
-func (r *ReceiverInstrument) Candles() *ReceiverInstrumentCandles {
-	return &ReceiverInstrumentCandles{
-		Instrument: r.Instrument,
-		Connection: r.Connection,
-	}
-}
+/* API */
 
 // GET /v3/instruments/{instrument}/candles
 //
@@ -210,13 +226,6 @@ func (r *ReceiverInstrumentCandles) Get(params *GetInstrumentCandlesParams) (*Ge
 	return data.(*GetInstrumentCandlesSchema), nil
 }
 
-func (r *ReceiverInstrument) OrderBook() *ReceiverInstrumentOrderBook {
-	return &ReceiverInstrumentOrderBook{
-		Instrument: r.Instrument,
-		Connection: r.Connection,
-	}
-}
-
 // GET /v3/instruments/{instrument}/orderBook
 //
 // Fetch an order book for an instrument.
@@ -285,13 +294,6 @@ func (r *ReceiverInstrumentOrderBook) Get(params *GetInstrumentOrderBookParams) 
 		return nil, xerrors.Errorf("Get instrument order book failed: %w", err)
 	}
 	return data.(*GetInstrumentOrderBookSchema), nil
-}
-
-func (r *ReceiverInstrument) PositionBook() *ReceiverInstrumentPositionBook {
-	return &ReceiverInstrumentPositionBook{
-		Instrument: r.Instrument,
-		Connection: r.Connection,
-	}
 }
 
 // GET /v3/instruments/{instrument}/positionBook
@@ -363,6 +365,8 @@ func (r *ReceiverInstrumentPositionBook) Get(params *GetInstrumentPositionBookPa
 	}
 	return data.(*GetInstrumentPositionBookSchema), nil
 }
+
+/* Utils */
 
 func (s *GetInstrumentOrderBookSchema) PrevParams() *GetInstrumentOrderBookParams {
 	return &GetInstrumentOrderBookParams{Time: s.Headers.Link.Prev}

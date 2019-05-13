@@ -12,11 +12,18 @@ import (
 	"time"
 )
 
-// Receivers
+/* Receivers */
 
 type ReceiverTransactions struct {
 	AccountID  string
 	Connection *Connection
+}
+
+func (r *ReceiverAccountID) Transactions() *ReceiverTransactions {
+	return &ReceiverTransactions{
+		AccountID:  r.AccountID,
+		Connection: r.Connection,
+	}
 }
 
 type ReceiverTransactionsIdrange struct {
@@ -24,12 +31,26 @@ type ReceiverTransactionsIdrange struct {
 	Connection *Connection
 }
 
+func (r *ReceiverTransactions) Idrange() *ReceiverTransactionsIdrange {
+	return &ReceiverTransactionsIdrange{
+		AccountID:  r.AccountID,
+		Connection: r.Connection,
+	}
+}
+
 type ReceiverTransactionsStream struct {
 	AccountID  string
 	Connection *Connection
 }
 
-// Params
+func (r *ReceiverTransactions) Stream() *ReceiverTransactionsStream {
+	return &ReceiverTransactionsStream{
+		AccountID:  r.AccountID,
+		Connection: r.Connection,
+	}
+}
+
+/* Params */
 
 type GetTransactionsParams struct {
 	From     time.Time
@@ -48,7 +69,7 @@ type GetTransactionsStreamParams struct {
 	BufferSize int
 }
 
-// Schemas
+/* Schemas */
 
 type GetTransactionsSchema struct {
 	From              DateTimeDefinition            `json:"from,omitempty"`
@@ -72,6 +93,8 @@ type getTransactionsIdrangeRawMessage struct {
 	Message []json.RawMessage `json:"transactions,omitempty"`
 }
 
+/* Streams */
+
 type TransactionsChannels struct {
 	Transaction <-chan interface{}
 	Error       <-chan error
@@ -79,26 +102,7 @@ type TransactionsChannels struct {
 	closeWait   *sync.WaitGroup
 }
 
-func (r *ReceiverAccountID) Transactions() *ReceiverTransactions {
-	return &ReceiverTransactions{
-		AccountID:  r.AccountID,
-		Connection: r.Connection,
-	}
-}
-
-func (r *ReceiverTransactions) Idrange() *ReceiverTransactionsIdrange {
-	return &ReceiverTransactionsIdrange{
-		AccountID:  r.AccountID,
-		Connection: r.Connection,
-	}
-}
-
-func (r *ReceiverTransactions) Stream() *ReceiverTransactionsStream {
-	return &ReceiverTransactionsStream{
-		AccountID:  r.AccountID,
-		Connection: r.Connection,
-	}
-}
+/* API */
 
 // GET /v3/accounts/{accountID}/transactions
 //
@@ -363,6 +367,8 @@ func (r *ReceiverTransactionsStream) Get(params *GetTransactionsStreamParams) (*
 	}, nil
 }
 
+/* Utils */
+
 func (ch *TransactionsChannels) Close() {
 	close(ch.close)
 	ch.closeWait.Wait()
@@ -404,6 +410,8 @@ func (s *GetTransactionsSchema) IdrangeParams() ([]*GetTransactionsIdrangeParams
 
 	return params, nil
 }
+
+/* Privates */
 
 func unmarshalTransaction(data []byte, tType TransactionTypeDefinition) (interface{}, error) {
 	var v interface{}

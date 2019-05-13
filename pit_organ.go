@@ -13,15 +13,15 @@ const (
 	oandaDummy
 )
 
-type baseURLs struct {
-	rest   *url.URL
-	stream *url.URL
-}
-
 type Connection struct {
 	Token       string
 	Environemnt OandaEnvironment
 	Timeout     time.Duration
+}
+
+type baseURLs struct {
+	rest   *url.URL
+	stream *url.URL
 }
 
 func oandaBaseURL(env OandaEnvironment) *baseURLs {
