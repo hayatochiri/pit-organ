@@ -97,7 +97,7 @@ func (c *Connection) Instruments() *ReceiverInstruments {
 	}
 }
 
-func (r *ReceiverInstruments) Instruments(i string) *ReceiverInstrument {
+func (r *ReceiverInstruments) Instrument(i string) *ReceiverInstrument {
 	return &ReceiverInstrument{
 		Instrument: i,
 		Connection: r.Connection,

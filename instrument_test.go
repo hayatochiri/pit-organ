@@ -11,7 +11,7 @@ func Test_InstrumentCandles(t *testing.T) {
 		connection := newConnection(t, OandaPractice)
 		params := &GetInstrumentCandlesParams{}
 
-		data, err := connection.Instruments().Instruments("EUR_USD").Candles().Get(params)
+		data, err := connection.Instruments().Instrument("EUR_USD").Candles().Get(params)
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}
@@ -54,7 +54,7 @@ func Test_InstrumentCandles(t *testing.T) {
 		t.Run("SuccessPatterns"+pattern.name, func(t *testing.T) {
 			connection := newConnection(t, OandaPractice)
 
-			data, err := connection.Instruments().Instruments("USD_JPY").Candles().Get(pattern.params)
+			data, err := connection.Instruments().Instrument("USD_JPY").Candles().Get(pattern.params)
 			if err != nil {
 				t.Fatalf("Error occurred.\n%+v", err)
 			}
