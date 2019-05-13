@@ -3,6 +3,7 @@ package pitOrgan
 import (
 	"github.com/davecgh/go-spew/spew"
 	"testing"
+	"time"
 )
 
 func Test_InstrumentCandles(t *testing.T) {
@@ -62,4 +63,64 @@ func Test_InstrumentCandles(t *testing.T) {
 		})
 	}
 
+}
+
+func Test_InstrumentOrderBook(t *testing.T) {
+	t.Run("Success", func(t *testing.T) {
+		connection := newConnection(t, OandaPractice)
+		params := &GetInstrumentOrderBookParams{}
+
+		data, err := connection.Instruments().Instrument("USD_JPY").OrderBook().Get(params)
+		if err != nil {
+			t.Fatalf("Error occurred.\n%+v", err)
+		}
+
+		// TODO: 時刻(Prev/Next)の比較
+
+		t.Logf("Response:\n%s", spew.Sdump(data))
+	})
+
+	t.Run("LinkParams", func(t *testing.T) {
+		connection := newConnection(t, OandaPractice)
+		refTime := time.Date(2018, time.Month(8), 14, 9, 0, 0, 0, time.UTC)
+		params := &GetInstrumentOrderBookParams{Time: refTime}
+
+		data, err := connection.Instruments().Instrument("USD_JPY").OrderBook().Get(params)
+		if err != nil {
+			t.Fatalf("Error occurred.\n%+v", err)
+		}
+
+		t.Logf("Response:\n%s", spew.Sdump(data.PrevParams()))
+		t.Logf("Response:\n%s", spew.Sdump(data.NextParams()))
+	})
+}
+
+func Test_InstrumentPositionBook(t *testing.T) {
+	t.Run("Success", func(t *testing.T) {
+		connection := newConnection(t, OandaPractice)
+		params := &GetInstrumentPositionBookParams{}
+
+		data, err := connection.Instruments().Instrument("USD_JPY").PositionBook().Get(params)
+		if err != nil {
+			t.Fatalf("Error occurred.\n%+v", err)
+		}
+
+		// TODO: 時刻(Prev/Next)の比較
+
+		t.Logf("Response:\n%s", spew.Sdump(data))
+	})
+
+	t.Run("LinkParams", func(t *testing.T) {
+		connection := newConnection(t, OandaPractice)
+		refTime := time.Date(2018, time.Month(8), 14, 9, 0, 0, 0, time.UTC)
+		params := &GetInstrumentPositionBookParams{Time: refTime}
+
+		data, err := connection.Instruments().Instrument("USD_JPY").PositionBook().Get(params)
+		if err != nil {
+			t.Fatalf("Error occurred.\n%+v", err)
+		}
+
+		t.Logf("Response:\n%s", spew.Sdump(data.PrevParams()))
+		t.Logf("Response:\n%s", spew.Sdump(data.NextParams()))
+	})
 }
