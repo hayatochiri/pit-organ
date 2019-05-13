@@ -22,6 +22,16 @@ type ReceiverInstrumentCandles struct {
 	Connection *Connection
 }
 
+type ReceiverInstrumentOrderBook struct {
+	Instrument string
+	Connection *Connection
+}
+
+type ReceiverInstrumentPositionBook struct {
+	Instrument string
+	Connection *Connection
+}
+
 // Params
 
 type GetInstrumentCandlesParams struct {
@@ -164,6 +174,20 @@ func (r *ReceiverInstrumentCandles) Get(params *GetInstrumentCandlesParams) (*Ge
 	return data.(*GetInstrumentCandlesSchema), nil
 }
 
+func (r *ReceiverInstrument) OrderBook() *ReceiverInstrumentOrderBook {
+	return &ReceiverInstrumentOrderBook{
+		Instrument: r.Instrument,
+		Connection: r.Connection,
+	}
+}
+
 // TODO: GET /v3/instruments/{instrument}/orderBook
+
+func (r *ReceiverInstrument) PositionBook() *ReceiverInstrumentPositionBook {
+	return &ReceiverInstrumentPositionBook{
+		Instrument: r.Instrument,
+		Connection: r.Connection,
+	}
+}
 
 // TODO: GET /v3/instruments/{instrument}/positionBook
