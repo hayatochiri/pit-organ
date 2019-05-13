@@ -1,5 +1,7 @@
 # Pit-organ
 
+Golang OANDA v20 REST API wrapper.
+
 ## Development
 
 ```sh
