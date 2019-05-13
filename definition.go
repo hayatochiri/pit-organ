@@ -11,137 +11,137 @@ import (
 type AccountIDDefinition string
 
 type AccountDefinition struct {
-	ID                          AccountIDDefinition                   `json:"id"`
-	Alias                       string                                `json:"alias"`
-	Currency                    CurrencyDefinition                    `json:"currency"`
-	Balance                     AccountUnitsDefinition                `json:"balance"`
-	CreatedByUserID             int                                   `json:"createdByUserID"`
-	CreatedTime                 DateTimeDefinition                    `json:"createdTime"`
-	GuaranteedStopLossOrderMode GuaranteedStopLossOrderModeDefinition `json:"guaranteedStopLossOrderMode"`
-	PL                          AccountUnitsDefinition                `json:"pl"`
-	ResettablePL                AccountUnitsDefinition                `json:"resettablePL"`
-	ResettablePLTime            DateTimeDefinition                    `json:"resettablePLTime"`
-	Financing                   AccountUnitsDefinition                `json:"financing"`
-	Commission                  AccountUnitsDefinition                `json:"commission"`
-	GuaranteedExecutionFees     AccountUnitsDefinition                `json:"guaranteedExecutionFees"`
-	MarginRate                  DecimalNumberDefinition               `json:"marginRate"`
-	MarginCallEnterTime         DateTimeDefinition                    `json:"marginCallEnterTime"`
-	MarginCallExtensionCount    int                                   `json:"marginCallExtensionCount"`
-	LastMarginCallExtensionTime DateTimeDefinition                    `json:"lastMarginCallExtensionTime"`
-	OpenTradeCount              int                                   `json:"openTradeCount"`
-	OpenPositionCount           int                                   `json:"openPositionCount"`
-	PendingOrderCount           int                                   `json:"pendingOrderCount"`
-	HedgingEnabled              bool                                  `json:"hedgingEnabled"`
-	UnrealizedPL                AccountUnitsDefinition                `json:"unrealizedPL"`
-	NAV                         AccountUnitsDefinition                `json:"NAV"`
-	MarginUsed                  AccountUnitsDefinition                `json:"marginUsed"`
-	MarginAvailable             AccountUnitsDefinition                `json:"marginAvailable"`
-	PositionValue               AccountUnitsDefinition                `json:"positionValue"`
-	MarginCloseoutUnrealizedPL  AccountUnitsDefinition                `json:"marginCloseoutUnrealizedPL"`
-	MarginCloseoutNAV           AccountUnitsDefinition                `json:"marginCloseoutNAV"`
-	MarginCloseoutMarginUsed    AccountUnitsDefinition                `json:"marginCloseoutMarginUsed"`
-	MarginCloseoutPercent       DecimalNumberDefinition               `json:"marginCloseoutPercent"`
-	MarginCloseoutPositionValue DecimalNumberDefinition               `json:"marginCloseoutPositionValue"`
-	WithdrawalLimit             AccountUnitsDefinition                `json:"withdrawalLimit"`
-	MarginCallMarginUsed        AccountUnitsDefinition                `json:"marginCallMarginUsed"`
-	MarginCallPercent           DecimalNumberDefinition               `json:"marginCallPercent"`
-	LastTransactionID           TransactionIDDefinition               `json:"lastTransactionID"`
-	Trades                      []TradeSummaryDefinition              `json:"trades"`
-	Positions                   []PositionDefinition                  `json:"positions"`
-	Orders                      []OrderDefinition                     `json:"orders"`
+	ID                          AccountIDDefinition                   `json:"id,omitempty"`
+	Alias                       string                                `json:"alias,omitempty"`
+	Currency                    CurrencyDefinition                    `json:"currency,omitempty"`
+	Balance                     AccountUnitsDefinition                `json:"balance,omitempty"`
+	CreatedByUserID             int                                   `json:"createdByUserID,omitempty"`
+	CreatedTime                 DateTimeDefinition                    `json:"createdTime,omitempty"`
+	GuaranteedStopLossOrderMode GuaranteedStopLossOrderModeDefinition `json:"guaranteedStopLossOrderMode,omitempty"`
+	PL                          AccountUnitsDefinition                `json:"pl,omitempty"`
+	ResettablePL                AccountUnitsDefinition                `json:"resettablePL,omitempty"`
+	ResettablePLTime            DateTimeDefinition                    `json:"resettablePLTime,omitempty"`
+	Financing                   AccountUnitsDefinition                `json:"financing,omitempty"`
+	Commission                  AccountUnitsDefinition                `json:"commission,omitempty"`
+	GuaranteedExecutionFees     AccountUnitsDefinition                `json:"guaranteedExecutionFees,omitempty"`
+	MarginRate                  DecimalNumberDefinition               `json:"marginRate,omitempty"`
+	MarginCallEnterTime         DateTimeDefinition                    `json:"marginCallEnterTime,omitempty"`
+	MarginCallExtensionCount    int                                   `json:"marginCallExtensionCount,omitempty"`
+	LastMarginCallExtensionTime DateTimeDefinition                    `json:"lastMarginCallExtensionTime,omitempty"`
+	OpenTradeCount              int                                   `json:"openTradeCount,omitempty"`
+	OpenPositionCount           int                                   `json:"openPositionCount,omitempty"`
+	PendingOrderCount           int                                   `json:"pendingOrderCount,omitempty"`
+	HedgingEnabled              bool                                  `json:"hedgingEnabled,omitempty"`
+	UnrealizedPL                AccountUnitsDefinition                `json:"unrealizedPL,omitempty"`
+	NAV                         AccountUnitsDefinition                `json:"NAV,omitempty"`
+	MarginUsed                  AccountUnitsDefinition                `json:"marginUsed,omitempty"`
+	MarginAvailable             AccountUnitsDefinition                `json:"marginAvailable,omitempty"`
+	PositionValue               AccountUnitsDefinition                `json:"positionValue,omitempty"`
+	MarginCloseoutUnrealizedPL  AccountUnitsDefinition                `json:"marginCloseoutUnrealizedPL,omitempty"`
+	MarginCloseoutNAV           AccountUnitsDefinition                `json:"marginCloseoutNAV,omitempty"`
+	MarginCloseoutMarginUsed    AccountUnitsDefinition                `json:"marginCloseoutMarginUsed,omitempty"`
+	MarginCloseoutPercent       DecimalNumberDefinition               `json:"marginCloseoutPercent,omitempty"`
+	MarginCloseoutPositionValue DecimalNumberDefinition               `json:"marginCloseoutPositionValue,omitempty"`
+	WithdrawalLimit             AccountUnitsDefinition                `json:"withdrawalLimit,omitempty"`
+	MarginCallMarginUsed        AccountUnitsDefinition                `json:"marginCallMarginUsed,omitempty"`
+	MarginCallPercent           DecimalNumberDefinition               `json:"marginCallPercent,omitempty"`
+	LastTransactionID           TransactionIDDefinition               `json:"lastTransactionID,omitempty"`
+	Trades                      []*TradeSummaryDefinition             `json:"trades,omitempty"`
+	Positions                   []*PositionDefinition                 `json:"positions,omitempty"`
+	Orders                      []*OrderDefinition                    `json:"orders,omitempty"`
 }
 
 type AccountChangesStateDefinition struct {
-	UnrealizedPL                AccountUnitsDefinition              `json:"unrealizedPL"`
-	NAV                         AccountUnitsDefinition              `json:"NAV"`
-	MarginUsed                  AccountUnitsDefinition              `json:"marginUsed"`
-	MarginAvailable             AccountUnitsDefinition              `json:"marginAvailable"`
-	PositionValue               AccountUnitsDefinition              `json:"positionValue"`
-	MarginCloseoutUnrealizedPL  AccountUnitsDefinition              `json:"marginCloseoutUnrealizedPL"`
-	MarginCloseoutNAV           AccountUnitsDefinition              `json:"marginCloseoutNAV"`
-	MarginCloseoutMarginUsed    AccountUnitsDefinition              `json:"marginCloseoutMarginUsed"`
-	MarginCloseoutPercent       DecimalNumberDefinition             `json:"marginCloseoutPercent"`
-	MarginCloseoutPositionValue DecimalNumberDefinition             `json:"marginCloseoutPositionValue"`
-	WithdrawalLimit             AccountUnitsDefinition              `json:"withdrawalLimit"`
-	MarginCallMarginUsed        AccountUnitsDefinition              `json:"marginCallMarginUsed"`
-	MarginCallPercent           DecimalNumberDefinition             `json:"marginCallPercent"`
-	Orders                      []DynamicOrderStateDefinition       `json:"orders"`
-	Trades                      []CalculatedTradeStateDefinition    `json:"trades"`
-	Positions                   []CalculatedPositionStateDefinition `json:"positions"`
+	UnrealizedPL                AccountUnitsDefinition               `json:"unrealizedPL,omitempty"`
+	NAV                         AccountUnitsDefinition               `json:"NAV,omitempty"`
+	MarginUsed                  AccountUnitsDefinition               `json:"marginUsed,omitempty"`
+	MarginAvailable             AccountUnitsDefinition               `json:"marginAvailable,omitempty"`
+	PositionValue               AccountUnitsDefinition               `json:"positionValue,omitempty"`
+	MarginCloseoutUnrealizedPL  AccountUnitsDefinition               `json:"marginCloseoutUnrealizedPL,omitempty"`
+	MarginCloseoutNAV           AccountUnitsDefinition               `json:"marginCloseoutNAV,omitempty"`
+	MarginCloseoutMarginUsed    AccountUnitsDefinition               `json:"marginCloseoutMarginUsed,omitempty"`
+	MarginCloseoutPercent       DecimalNumberDefinition              `json:"marginCloseoutPercent,omitempty"`
+	MarginCloseoutPositionValue DecimalNumberDefinition              `json:"marginCloseoutPositionValue,omitempty"`
+	WithdrawalLimit             AccountUnitsDefinition               `json:"withdrawalLimit,omitempty"`
+	MarginCallMarginUsed        AccountUnitsDefinition               `json:"marginCallMarginUsed,omitempty"`
+	MarginCallPercent           DecimalNumberDefinition              `json:"marginCallPercent,omitempty"`
+	Orders                      []*DynamicOrderStateDefinition       `json:"orders,omitempty"`
+	Trades                      []*CalculatedTradeStateDefinition    `json:"trades,omitempty"`
+	Positions                   []*CalculatedPositionStateDefinition `json:"positions,omitempty"`
 }
 
 type AccountPropertiesDefinition struct {
-	ID           AccountIDDefinition `json:"id"`
-	MT4AccountID int                 `json:"mt4AccountID"`
-	Tags         []string            `json:"tags"`
+	ID           AccountIDDefinition `json:"id,omitempty"`
+	MT4AccountID int                 `json:"mt4AccountID,omitempty"`
+	Tags         []string            `json:"tags,omitempty"`
 }
 
 type GuaranteedStopLossOrderModeDefinition string
 
 type AccountSummaryDefinition struct {
-	Id                          AccountIDDefinition                   `json:"id"`
-	Alias                       string                                `json:"alias"`
-	Currency                    CurrencyDefinition                    `json:"currency"`
-	Balance                     AccountUnitsDefinition                `json:"balance"`
-	CreatedByUserID             int                                   `json:"createdByUserID"`
-	CreatedTime                 DateTimeDefinition                    `json:"createdTime"`
-	GuaranteedStopLossOrderMode GuaranteedStopLossOrderModeDefinition `json:"guaranteedStopLossOrderMode"`
-	PL                          AccountUnitsDefinition                `json:"pl"`
-	ResettablePL                AccountUnitsDefinition                `json:"resettablePL"`
-	ResettablePLTime            DateTimeDefinition                    `json:"resettablePLTime"`
-	Financing                   AccountUnitsDefinition                `json:"financing"`
-	Commission                  AccountUnitsDefinition                `json:"commission"`
-	GuaranteedExecutionFees     AccountUnitsDefinition                `json:"guaranteedExecutionFees"`
-	MarginRate                  DecimalNumberDefinition               `json:"marginRate"`
-	MarginCallEnterTime         DateTimeDefinition                    `json:"marginCallEnterTime"`
-	MarginCallExtensionCount    int                                   `json:"marginCallExtensionCount"`
-	LastMarginCallExtensionTime DateTimeDefinition                    `json:"lastMarginCallExtensionTime"`
-	OpenTradeCount              int                                   `json:"openTradeCount"`
-	OpenPositionCount           int                                   `json:"openPositionCount"`
-	PendingOrderCount           int                                   `json:"pendingOrderCount"`
-	HedgingEnabled              bool                                  `json:"hedgingEnabled"`
-	UnrealizedPL                AccountUnitsDefinition                `json:"unrealizedPL"`
-	NAV                         AccountUnitsDefinition                `json:"NAV"`
-	MarginUsed                  AccountUnitsDefinition                `json:"marginUsed"`
-	MarginAvailable             AccountUnitsDefinition                `json:"marginAvailable"`
-	PositionValue               AccountUnitsDefinition                `json:"positionValue"`
-	MarginCloseoutUnrealizedPL  AccountUnitsDefinition                `json:"marginCloseoutUnrealizedPL"`
-	MarginCloseoutNAV           AccountUnitsDefinition                `json:"marginCloseoutNAV"`
-	MarginCloseoutMarginUsed    AccountUnitsDefinition                `json:"marginCloseoutMarginUsed"`
-	MarginCloseoutPercent       DecimalNumberDefinition               `json:"marginCloseoutPercent"`
-	MarginCloseoutPositionValue DecimalNumberDefinition               `json:"marginCloseoutPositionValue"`
-	WithdrawalLimit             AccountUnitsDefinition                `json:"withdrawalLimit"`
-	MarginCallMarginUsed        AccountUnitsDefinition                `json:"marginCallMarginUsed"`
-	MarginCallPercent           DecimalNumberDefinition               `json:"marginCallPercent"`
-	LastTransactionID           TransactionIDDefinition               `json:"lastTransactionID"`
+	Id                          AccountIDDefinition                   `json:"id,omitempty"`
+	Alias                       string                                `json:"alias,omitempty"`
+	Currency                    CurrencyDefinition                    `json:"currency,omitempty"`
+	Balance                     AccountUnitsDefinition                `json:"balance,omitempty"`
+	CreatedByUserID             int                                   `json:"createdByUserID,omitempty"`
+	CreatedTime                 DateTimeDefinition                    `json:"createdTime,omitempty"`
+	GuaranteedStopLossOrderMode GuaranteedStopLossOrderModeDefinition `json:"guaranteedStopLossOrderMode,omitempty"`
+	PL                          AccountUnitsDefinition                `json:"pl,omitempty"`
+	ResettablePL                AccountUnitsDefinition                `json:"resettablePL,omitempty"`
+	ResettablePLTime            DateTimeDefinition                    `json:"resettablePLTime,omitempty"`
+	Financing                   AccountUnitsDefinition                `json:"financing,omitempty"`
+	Commission                  AccountUnitsDefinition                `json:"commission,omitempty"`
+	GuaranteedExecutionFees     AccountUnitsDefinition                `json:"guaranteedExecutionFees,omitempty"`
+	MarginRate                  DecimalNumberDefinition               `json:"marginRate,omitempty"`
+	MarginCallEnterTime         DateTimeDefinition                    `json:"marginCallEnterTime,omitempty"`
+	MarginCallExtensionCount    int                                   `json:"marginCallExtensionCount,omitempty"`
+	LastMarginCallExtensionTime DateTimeDefinition                    `json:"lastMarginCallExtensionTime,omitempty"`
+	OpenTradeCount              int                                   `json:"openTradeCount,omitempty"`
+	OpenPositionCount           int                                   `json:"openPositionCount,omitempty"`
+	PendingOrderCount           int                                   `json:"pendingOrderCount,omitempty"`
+	HedgingEnabled              bool                                  `json:"hedgingEnabled,omitempty"`
+	UnrealizedPL                AccountUnitsDefinition                `json:"unrealizedPL,omitempty"`
+	NAV                         AccountUnitsDefinition                `json:"NAV,omitempty"`
+	MarginUsed                  AccountUnitsDefinition                `json:"marginUsed,omitempty"`
+	MarginAvailable             AccountUnitsDefinition                `json:"marginAvailable,omitempty"`
+	PositionValue               AccountUnitsDefinition                `json:"positionValue,omitempty"`
+	MarginCloseoutUnrealizedPL  AccountUnitsDefinition                `json:"marginCloseoutUnrealizedPL,omitempty"`
+	MarginCloseoutNAV           AccountUnitsDefinition                `json:"marginCloseoutNAV,omitempty"`
+	MarginCloseoutMarginUsed    AccountUnitsDefinition                `json:"marginCloseoutMarginUsed,omitempty"`
+	MarginCloseoutPercent       DecimalNumberDefinition               `json:"marginCloseoutPercent,omitempty"`
+	MarginCloseoutPositionValue DecimalNumberDefinition               `json:"marginCloseoutPositionValue,omitempty"`
+	WithdrawalLimit             AccountUnitsDefinition                `json:"withdrawalLimit,omitempty"`
+	MarginCallMarginUsed        AccountUnitsDefinition                `json:"marginCallMarginUsed,omitempty"`
+	MarginCallPercent           DecimalNumberDefinition               `json:"marginCallPercent,omitempty"`
+	LastTransactionID           TransactionIDDefinition               `json:"lastTransactionID,omitempty"`
 }
 
 type CalculatedAccountStateDefinition struct {
-	UnrealizedPL                AccountUnitsDefinition  `json:"unrealizedPL"`
-	NAV                         AccountUnitsDefinition  `json:"NAV"`
-	MarginUsed                  AccountUnitsDefinition  `json:"marginUsed"`
-	MarginAvailable             AccountUnitsDefinition  `json:"marginAvailable"`
-	PositionValue               AccountUnitsDefinition  `json:"positionValue"`
-	MarginCloseoutUnrealizedPL  AccountUnitsDefinition  `json:"marginCloseoutUnrealizedPL"`
-	MarginCloseoutNAV           AccountUnitsDefinition  `json:"marginCloseoutNAV"`
-	MarginCloseoutMarginUsed    AccountUnitsDefinition  `json:"marginCloseoutMarginUsed"`
-	MarginCloseoutPercent       DecimalNumberDefinition `json:"marginCloseoutPercent"`
-	MarginCloseoutPositionValue DecimalNumberDefinition `json:"marginCloseoutPositionValue"`
-	WithdrawalLimit             AccountUnitsDefinition  `json:"withdrawalLimit"`
-	MarginCallMarginUsed        AccountUnitsDefinition  `json:"marginCallMarginUsed"`
-	MarginCallPercent           DecimalNumberDefinition `json:"marginCallPercent"`
+	UnrealizedPL                AccountUnitsDefinition  `json:"unrealizedPL,omitempty"`
+	NAV                         AccountUnitsDefinition  `json:"NAV,omitempty"`
+	MarginUsed                  AccountUnitsDefinition  `json:"marginUsed,omitempty"`
+	MarginAvailable             AccountUnitsDefinition  `json:"marginAvailable,omitempty"`
+	PositionValue               AccountUnitsDefinition  `json:"positionValue,omitempty"`
+	MarginCloseoutUnrealizedPL  AccountUnitsDefinition  `json:"marginCloseoutUnrealizedPL,omitempty"`
+	MarginCloseoutNAV           AccountUnitsDefinition  `json:"marginCloseoutNAV,omitempty"`
+	MarginCloseoutMarginUsed    AccountUnitsDefinition  `json:"marginCloseoutMarginUsed,omitempty"`
+	MarginCloseoutPercent       DecimalNumberDefinition `json:"marginCloseoutPercent,omitempty"`
+	MarginCloseoutPositionValue DecimalNumberDefinition `json:"marginCloseoutPositionValue,omitempty"`
+	WithdrawalLimit             AccountUnitsDefinition  `json:"withdrawalLimit,omitempty"`
+	MarginCallMarginUsed        AccountUnitsDefinition  `json:"marginCallMarginUsed,omitempty"`
+	MarginCallPercent           DecimalNumberDefinition `json:"marginCallPercent,omitempty"`
 }
 
 type AccountChangesDefinition struct {
-	OrdersCreated   []OrderDefinition        `json:"ordersCreated"`
-	OrdersCancelled []OrderDefinition        `json:"ordersCancelled"`
-	OrdersFilled    []OrderDefinition        `json:"ordersFilled"`
-	OrdersTriggered []OrderDefinition        `json:"ordersTriggered"`
-	TradesOpened    []TradeSummaryDefinition `json:"tradesOpened"`
-	TradesReduced   []TradeSummaryDefinition `json:"tradesReduced"`
-	TradesClosed    []TradeSummaryDefinition `json:"tradesClosed"`
-	Positions       []PositionDefinition     `json:"positions"`
-	Transactions    []TransactionDefinition  `json:"transactions"`
+	OrdersCreated   []*OrderDefinition        `json:"ordersCreated,omitempty"`
+	OrdersCancelled []*OrderDefinition        `json:"ordersCancelled,omitempty"`
+	OrdersFilled    []*OrderDefinition        `json:"ordersFilled,omitempty"`
+	OrdersTriggered []*OrderDefinition        `json:"ordersTriggered,omitempty"`
+	TradesOpened    []*TradeSummaryDefinition `json:"tradesOpened,omitempty"`
+	TradesReduced   []*TradeSummaryDefinition `json:"tradesReduced,omitempty"`
+	TradesClosed    []*TradeSummaryDefinition `json:"tradesClosed,omitempty"`
+	Positions       []*PositionDefinition     `json:"positions,omitempty"`
+	Transactions    []*TransactionDefinition  `json:"transactions,omitempty"`
 }
 
 type AccountFinancingModeDefinition string
@@ -207,31 +207,31 @@ type CandlestickDataDefinition struct {
 }
 
 type OrderBookDefinition struct {
-	Instrument  InstrumentNameDefinition    `json:"instrument,omitempty"`
-	Time        DateTimeDefinition          `json:"time,omitempty"`
-	Price       PriceValueDefinition        `json:"price,omitempty"`
-	BucketWidth PriceValueDefinition        `json:"bucketWidth,omitempty"`
-	Buckets     []OrderBookBucketDefinition `json:"buckets,omitempty"`
+	Instrument  InstrumentNameDefinition     `json:"instrument,omitempty"`
+	Time        DateTimeDefinition           `json:"time,omitempty"`
+	Price       PriceValueDefinition         `json:"price,omitempty"`
+	BucketWidth PriceValueDefinition         `json:"bucketWidth,omitempty"`
+	Buckets     []*OrderBookBucketDefinition `json:"buckets,omitempty"`
 }
 
 type OrderBookBucketDefinition struct {
-	Price             PriceValueDefinition    `json:"price"`
-	LongCountPercent  DecimalNumberDefinition `json:"longCountPercent"`
-	ShortCountPercent DecimalNumberDefinition `json:"shortCountPercent"`
+	Price             PriceValueDefinition    `json:"price,omitempty"`
+	LongCountPercent  DecimalNumberDefinition `json:"longCountPercent,omitempty"`
+	ShortCountPercent DecimalNumberDefinition `json:"shortCountPercent,omitempty"`
 }
 
 type PositionBookDefinition struct {
-	Instrument  InstrumentNameDefinition       `json:"instrument,omitempty"`
-	Time        DateTimeDefinition             `json:"time,omitempty"`
-	Price       PriceValueDefinition           `json:"price,omitempty"`
-	BucketWidth PriceValueDefinition           `json:"bucketWidth,omitempty"`
-	Buckets     []PositionBookBucketDefinition `json:"buckets,omitempty"`
+	Instrument  InstrumentNameDefinition        `json:"instrument,omitempty"`
+	Time        DateTimeDefinition              `json:"time,omitempty"`
+	Price       PriceValueDefinition            `json:"price,omitempty"`
+	BucketWidth PriceValueDefinition            `json:"bucketWidth,omitempty"`
+	Buckets     []*PositionBookBucketDefinition `json:"buckets,omitempty"`
 }
 
 type PositionBookBucketDefinition struct {
-	Price             PriceValueDefinition    `json:"price"`
-	LongCountPercent  DecimalNumberDefinition `json:"longCountPercent"`
-	ShortCountPercent DecimalNumberDefinition `json:"shortCountPercent"`
+	Price             PriceValueDefinition    `json:"price,omitempty"`
+	LongCountPercent  DecimalNumberDefinition `json:"longCountPercent,omitempty"`
+	ShortCountPercent DecimalNumberDefinition `json:"shortCountPercent,omitempty"`
 }
 
 //
@@ -241,223 +241,223 @@ type PositionBookBucketDefinition struct {
 // Orders
 
 type OrderDefinition struct {
-	Id               OrderIDDefinition          `json:"id"`
-	CreateTime       DateTimeDefinition         `json:"createTime"`
-	State            OrderStateDefinition       `json:"state"`
-	ClientExtensions ClientExtensionsDefinition `json:"clientExtensions"`
+	Id               OrderIDDefinition           `json:"id,omitempty"`
+	CreateTime       DateTimeDefinition          `json:"createTime,omitempty"`
+	State            OrderStateDefinition        `json:"state,omitempty"`
+	ClientExtensions *ClientExtensionsDefinition `json:"clientExtensions,omitempty"`
 }
 
 type MarketOrderDefinition struct {
-	Id                      OrderIDDefinition                      `json:"id"`
-	CreateTime              DateTimeDefinition                     `json:"createTime"`
-	State                   OrderStateDefinition                   `json:"state"`
-	ClientExtensions        ClientExtensionsDefinition             `json:"clientExtensions"`
-	Type                    OrderTypeDefinition                    `json:"type"`
-	Instrument              InstrumentNameDefinition               `json:"instrument"`
-	Units                   DecimalNumberDefinition                `json:"units"`
-	TimeInForce             TimeInForceDefinition                  `json:"timeInForce"`
-	PriceBound              PriceValueDefinition                   `json:"priceBound"`
-	PositionFill            OrderPositionFillDefinition            `json:"positionFill"`
-	TradeClose              MarketOrderTradeCloseDefinition        `json:"tradeClose"`
-	LongPositionCloseout    MarketOrderPositionCloseoutDefinition  `json:"longPositionCloseout"`
-	ShortPositionCloseout   MarketOrderPositionCloseoutDefinition  `json:"shortPositionCloseout"`
-	MarginCloseout          MarketOrderMarginCloseoutDefinition    `json:"marginCloseout"`
-	DelayedTradeClose       MarketOrderDelayedTradeCloseDefinition `json:"delayedTradeClose"`
-	TakeProfitOnFill        TakeProfitDetailsDefinition            `json:"takeProfitOnFill"`
-	StopLossOnFill          StopLossDetailsDefinition              `json:"stopLossOnFill"`
-	TrailingStopLossOnFill  TrailingStopLossDetailsDefinition      `json:"trailingStopLossOnFill"`
-	TradeClientExtensions   ClientExtensionsDefinition             `json:"tradeClientExtensions"`
-	FillingTransactionID    TransactionIDDefinition                `json:"fillingTransactionID"`
-	FilledTime              DateTimeDefinition                     `json:"filledTime"`
-	TradeOpenedID           TradeIDDefinition                      `json:"tradeOpenedID"`
-	TradeReducedID          TradeIDDefinition                      `json:"tradeReducedID"`
-	TradeClosedIDs          []TradeIDDefinition                    `json:"tradeClosedIDs"`
-	CancellingTransactionID TransactionIDDefinition                `json:"cancellingTransactionID"`
-	CancelledTime           DateTimeDefinition                     `json:"cancelledTime"`
+	Id                      OrderIDDefinition                       `json:"id,omitempty"`
+	CreateTime              DateTimeDefinition                      `json:"createTime,omitempty"`
+	State                   OrderStateDefinition                    `json:"state,omitempty"`
+	ClientExtensions        *ClientExtensionsDefinition             `json:"clientExtensions,omitempty"`
+	Type                    OrderTypeDefinition                     `json:"type,omitempty"`
+	Instrument              InstrumentNameDefinition                `json:"instrument,omitempty"`
+	Units                   DecimalNumberDefinition                 `json:"units,omitempty"`
+	TimeInForce             TimeInForceDefinition                   `json:"timeInForce,omitempty"`
+	PriceBound              PriceValueDefinition                    `json:"priceBound,omitempty"`
+	PositionFill            OrderPositionFillDefinition             `json:"positionFill,omitempty"`
+	TradeClose              *MarketOrderTradeCloseDefinition        `json:"tradeClose,omitempty"`
+	LongPositionCloseout    *MarketOrderPositionCloseoutDefinition  `json:"longPositionCloseout,omitempty"`
+	ShortPositionCloseout   *MarketOrderPositionCloseoutDefinition  `json:"shortPositionCloseout,omitempty"`
+	MarginCloseout          *MarketOrderMarginCloseoutDefinition    `json:"marginCloseout,omitempty"`
+	DelayedTradeClose       *MarketOrderDelayedTradeCloseDefinition `json:"delayedTradeClose,omitempty"`
+	TakeProfitOnFill        *TakeProfitDetailsDefinition            `json:"takeProfitOnFill,omitempty"`
+	StopLossOnFill          *StopLossDetailsDefinition              `json:"stopLossOnFill,omitempty"`
+	TrailingStopLossOnFill  *TrailingStopLossDetailsDefinition      `json:"trailingStopLossOnFill,omitempty"`
+	TradeClientExtensions   *ClientExtensionsDefinition             `json:"tradeClientExtensions,omitempty"`
+	FillingTransactionID    TransactionIDDefinition                 `json:"fillingTransactionID,omitempty"`
+	FilledTime              DateTimeDefinition                      `json:"filledTime,omitempty"`
+	TradeOpenedID           TradeIDDefinition                       `json:"tradeOpenedID,omitempty"`
+	TradeReducedID          TradeIDDefinition                       `json:"tradeReducedID,omitempty"`
+	TradeClosedIDs          []TradeIDDefinition                     `json:"tradeClosedIDs,omitempty"`
+	CancellingTransactionID TransactionIDDefinition                 `json:"cancellingTransactionID,omitempty"`
+	CancelledTime           DateTimeDefinition                      `json:"cancelledTime,omitempty"`
 }
 
 type FixedPriceOrderDefinition struct {
-	Id                      OrderIDDefinition                 `json:"id"`
-	CreateTime              DateTimeDefinition                `json:"createTime"`
-	State                   OrderStateDefinition              `json:"state"`
-	ClientExtensions        ClientExtensionsDefinition        `json:"clientExtensions"`
-	Type                    OrderTypeDefinition               `json:"type"`
-	Instrument              InstrumentNameDefinition          `json:"instrument"`
-	Units                   DecimalNumberDefinition           `json:"units"`
-	Price                   PriceValueDefinition              `json:"price"`
-	PositionFill            OrderPositionFillDefinition       `json:"positionFill"`
-	TradeState              string                            `json:"tradeState"`
-	TakeProfitOnFill        TakeProfitDetailsDefinition       `json:"takeProfitOnFill"`
-	StopLossOnFill          StopLossDetailsDefinition         `json:"stopLossOnFill"`
-	TrailingStopLossOnFill  TrailingStopLossDetailsDefinition `json:"trailingStopLossOnFill"`
-	TradeClientExtensions   ClientExtensionsDefinition        `json:"tradeClientExtensions"`
-	FillingTransactionID    TransactionIDDefinition           `json:"fillingTransactionID"`
-	FilledTime              DateTimeDefinition                `json:"filledTime"`
-	TradeOpenedID           TradeIDDefinition                 `json:"tradeOpenedID"`
-	TradeReducedID          TradeIDDefinition                 `json:"tradeReducedID"`
-	TradeClosedIDs          []TradeIDDefinition               `json:"tradeClosedIDs"`
-	CancellingTransactionID TransactionIDDefinition           `json:"cancellingTransactionID"`
-	CancelledTime           DateTimeDefinition                `json:"cancelledTime"`
+	Id                      OrderIDDefinition                  `json:"id,omitempty"`
+	CreateTime              DateTimeDefinition                 `json:"createTime,omitempty"`
+	State                   OrderStateDefinition               `json:"state,omitempty"`
+	ClientExtensions        *ClientExtensionsDefinition        `json:"clientExtensions,omitempty"`
+	Type                    OrderTypeDefinition                `json:"type,omitempty"`
+	Instrument              InstrumentNameDefinition           `json:"instrument,omitempty"`
+	Units                   DecimalNumberDefinition            `json:"units,omitempty"`
+	Price                   PriceValueDefinition               `json:"price,omitempty"`
+	PositionFill            OrderPositionFillDefinition        `json:"positionFill,omitempty"`
+	TradeState              string                             `json:"tradeState,omitempty"`
+	TakeProfitOnFill        *TakeProfitDetailsDefinition       `json:"takeProfitOnFill,omitempty"`
+	StopLossOnFill          *StopLossDetailsDefinition         `json:"stopLossOnFill,omitempty"`
+	TrailingStopLossOnFill  *TrailingStopLossDetailsDefinition `json:"trailingStopLossOnFill,omitempty"`
+	TradeClientExtensions   *ClientExtensionsDefinition        `json:"tradeClientExtensions,omitempty"`
+	FillingTransactionID    TransactionIDDefinition            `json:"fillingTransactionID,omitempty"`
+	FilledTime              DateTimeDefinition                 `json:"filledTime,omitempty"`
+	TradeOpenedID           TradeIDDefinition                  `json:"tradeOpenedID,omitempty"`
+	TradeReducedID          TradeIDDefinition                  `json:"tradeReducedID,omitempty"`
+	TradeClosedIDs          []TradeIDDefinition                `json:"tradeClosedIDs,omitempty"`
+	CancellingTransactionID TransactionIDDefinition            `json:"cancellingTransactionID,omitempty"`
+	CancelledTime           DateTimeDefinition                 `json:"cancelledTime,omitempty"`
 }
 
 type LimitOrderDefinition struct {
-	Id                      OrderIDDefinition                 `json:"id"`
-	CreateTime              DateTimeDefinition                `json:"createTime"`
-	State                   OrderStateDefinition              `json:"state"`
-	ClientExtensions        ClientExtensionsDefinition        `json:"clientExtensions"`
-	Type                    OrderTypeDefinition               `json:"type"`
-	Instrument              InstrumentNameDefinition          `json:"instrument"`
-	Units                   DecimalNumberDefinition           `json:"units"`
-	Price                   PriceValueDefinition              `json:"price"`
-	TimeInForce             TimeInForceDefinition             `json:"timeInForce"`
-	GtdTime                 DateTimeDefinition                `json:"gtdTime"`
-	PositionFill            OrderPositionFillDefinition       `json:"positionFill"`
-	TriggerCondition        OrderTriggerConditionDefinition   `json:"triggerCondition"`
-	TakeProfitOnFill        TakeProfitDetailsDefinition       `json:"takeProfitOnFill"`
-	StopLossOnFill          StopLossDetailsDefinition         `json:"stopLossOnFill"`
-	TrailingStopLossOnFill  TrailingStopLossDetailsDefinition `json:"trailingStopLossOnFill"`
-	TradeClientExtensions   ClientExtensionsDefinition        `json:"tradeClientExtensions"`
-	FillingTransactionID    TransactionIDDefinition           `json:"fillingTransactionID"`
-	FilledTime              DateTimeDefinition                `json:"filledTime"`
-	TradeOpenedID           TradeIDDefinition                 `json:"tradeOpenedID"`
-	TradeReducedID          TradeIDDefinition                 `json:"tradeReducedID"`
-	TradeClosedIDs          []TradeIDDefinition               `json:"tradeClosedIDs"`
-	CancellingTransactionID TransactionIDDefinition           `json:"cancellingTransactionID"`
-	CancelledTime           DateTimeDefinition                `json:"cancelledTime"`
-	ReplacesOrderID         OrderIDDefinition                 `json:"replacesOrderID"`
-	ReplacedByOrderID       OrderIDDefinition                 `json:"replacedByOrderID"`
+	Id                      OrderIDDefinition                  `json:"id,omitempty"`
+	CreateTime              DateTimeDefinition                 `json:"createTime,omitempty"`
+	State                   OrderStateDefinition               `json:"state,omitempty"`
+	ClientExtensions        *ClientExtensionsDefinition        `json:"clientExtensions,omitempty"`
+	Type                    OrderTypeDefinition                `json:"type,omitempty"`
+	Instrument              InstrumentNameDefinition           `json:"instrument,omitempty"`
+	Units                   DecimalNumberDefinition            `json:"units,omitempty"`
+	Price                   PriceValueDefinition               `json:"price,omitempty"`
+	TimeInForce             TimeInForceDefinition              `json:"timeInForce,omitempty"`
+	GtdTime                 DateTimeDefinition                 `json:"gtdTime,omitempty"`
+	PositionFill            OrderPositionFillDefinition        `json:"positionFill,omitempty"`
+	TriggerCondition        OrderTriggerConditionDefinition    `json:"triggerCondition,omitempty"`
+	TakeProfitOnFill        *TakeProfitDetailsDefinition       `json:"takeProfitOnFill,omitempty"`
+	StopLossOnFill          *StopLossDetailsDefinition         `json:"stopLossOnFill,omitempty"`
+	TrailingStopLossOnFill  *TrailingStopLossDetailsDefinition `json:"trailingStopLossOnFill,omitempty"`
+	TradeClientExtensions   *ClientExtensionsDefinition        `json:"tradeClientExtensions,omitempty"`
+	FillingTransactionID    TransactionIDDefinition            `json:"fillingTransactionID,omitempty"`
+	FilledTime              DateTimeDefinition                 `json:"filledTime,omitempty"`
+	TradeOpenedID           TradeIDDefinition                  `json:"tradeOpenedID,omitempty"`
+	TradeReducedID          TradeIDDefinition                  `json:"tradeReducedID,omitempty"`
+	TradeClosedIDs          []TradeIDDefinition                `json:"tradeClosedIDs,omitempty"`
+	CancellingTransactionID TransactionIDDefinition            `json:"cancellingTransactionID,omitempty"`
+	CancelledTime           DateTimeDefinition                 `json:"cancelledTime,omitempty"`
+	ReplacesOrderID         OrderIDDefinition                  `json:"replacesOrderID,omitempty"`
+	ReplacedByOrderID       OrderIDDefinition                  `json:"replacedByOrderID,omitempty"`
 }
 
 type StopOrderDefinition struct {
-	Id                      OrderIDDefinition                 `json:"id"`
-	CreateTime              DateTimeDefinition                `json:"createTime"`
-	State                   OrderStateDefinition              `json:"state"`
-	ClientExtensions        ClientExtensionsDefinition        `json:"clientExtensions"`
-	Type                    OrderTypeDefinition               `json:"type"`
-	Instrument              InstrumentNameDefinition          `json:"instrument"`
-	Units                   DecimalNumberDefinition           `json:"units"`
-	Price                   PriceValueDefinition              `json:"price"`
-	PriceBound              PriceValueDefinition              `json:"priceBound"`
-	TimeInForce             TimeInForceDefinition             `json:"timeInForce"`
-	GtdTime                 DateTimeDefinition                `json:"gtdTime"`
-	PositionFill            OrderPositionFillDefinition       `json:"positionFill"`
-	TriggerCondition        OrderTriggerConditionDefinition   `json:"triggerCondition"`
-	TakeProfitOnFill        TakeProfitDetailsDefinition       `json:"takeProfitOnFill"`
-	StopLossOnFill          StopLossDetailsDefinition         `json:"stopLossOnFill"`
-	TrailingStopLossOnFill  TrailingStopLossDetailsDefinition `json:"trailingStopLossOnFill"`
-	TradeClientExtensions   ClientExtensionsDefinition        `json:"tradeClientExtensions"`
-	FillingTransactionID    TransactionIDDefinition           `json:"fillingTransactionID"`
-	FilledTime              DateTimeDefinition                `json:"filledTime"`
-	TradeOpenedID           TradeIDDefinition                 `json:"tradeOpenedID"`
-	TradeReducedID          TradeIDDefinition                 `json:"tradeReducedID"`
-	TradeClosedIDs          []TradeIDDefinition               `json:"tradeClosedIDs"`
-	CancellingTransactionID TransactionIDDefinition           `json:"cancellingTransactionID"`
-	CancelledTime           DateTimeDefinition                `json:"cancelledTime"`
-	ReplacesOrderID         OrderIDDefinition                 `json:"replacesOrderID"`
-	ReplacedByOrderID       OrderIDDefinition                 `json:"replacedByOrderID"`
+	Id                      OrderIDDefinition                  `json:"id,omitempty"`
+	CreateTime              DateTimeDefinition                 `json:"createTime,omitempty"`
+	State                   OrderStateDefinition               `json:"state,omitempty"`
+	ClientExtensions        *ClientExtensionsDefinition        `json:"clientExtensions,omitempty"`
+	Type                    OrderTypeDefinition                `json:"type,omitempty"`
+	Instrument              InstrumentNameDefinition           `json:"instrument,omitempty"`
+	Units                   DecimalNumberDefinition            `json:"units,omitempty"`
+	Price                   PriceValueDefinition               `json:"price,omitempty"`
+	PriceBound              PriceValueDefinition               `json:"priceBound,omitempty"`
+	TimeInForce             TimeInForceDefinition              `json:"timeInForce,omitempty"`
+	GtdTime                 DateTimeDefinition                 `json:"gtdTime,omitempty"`
+	PositionFill            OrderPositionFillDefinition        `json:"positionFill,omitempty"`
+	TriggerCondition        OrderTriggerConditionDefinition    `json:"triggerCondition,omitempty"`
+	TakeProfitOnFill        *TakeProfitDetailsDefinition       `json:"takeProfitOnFill,omitempty"`
+	StopLossOnFill          *StopLossDetailsDefinition         `json:"stopLossOnFill,omitempty"`
+	TrailingStopLossOnFill  *TrailingStopLossDetailsDefinition `json:"trailingStopLossOnFill,omitempty"`
+	TradeClientExtensions   *ClientExtensionsDefinition        `json:"tradeClientExtensions,omitempty"`
+	FillingTransactionID    TransactionIDDefinition            `json:"fillingTransactionID,omitempty"`
+	FilledTime              DateTimeDefinition                 `json:"filledTime,omitempty"`
+	TradeOpenedID           TradeIDDefinition                  `json:"tradeOpenedID,omitempty"`
+	TradeReducedID          TradeIDDefinition                  `json:"tradeReducedID,omitempty"`
+	TradeClosedIDs          []TradeIDDefinition                `json:"tradeClosedIDs,omitempty"`
+	CancellingTransactionID TransactionIDDefinition            `json:"cancellingTransactionID,omitempty"`
+	CancelledTime           DateTimeDefinition                 `json:"cancelledTime,omitempty"`
+	ReplacesOrderID         OrderIDDefinition                  `json:"replacesOrderID,omitempty"`
+	ReplacedByOrderID       OrderIDDefinition                  `json:"replacedByOrderID,omitempty"`
 }
 
 type MarketIfTouchedOrderDefinition struct {
-	Id                      OrderIDDefinition                 `json:"id"`
-	CreateTime              DateTimeDefinition                `json:"createTime"`
-	State                   OrderStateDefinition              `json:"state"`
-	ClientExtensions        ClientExtensionsDefinition        `json:"clientExtensions"`
-	Type                    OrderTypeDefinition               `json:"type"`
-	Instrument              InstrumentNameDefinition          `json:"instrument"`
-	Units                   DecimalNumberDefinition           `json:"units"`
-	Price                   PriceValueDefinition              `json:"price"`
-	PriceBound              PriceValueDefinition              `json:"priceBound"`
-	TimeInForce             TimeInForceDefinition             `json:"timeInForce"`
-	GtdTime                 DateTimeDefinition                `json:"gtdTime"`
-	PositionFill            OrderPositionFillDefinition       `json:"positionFill"`
-	TriggerCondition        OrderTriggerConditionDefinition   `json:"triggerCondition"`
-	InitialMarketPrice      PriceValueDefinition              `json:"initialMarketPrice"`
-	TakeProfitOnFill        TakeProfitDetailsDefinition       `json:"takeProfitOnFill"`
-	StopLossOnFill          StopLossDetailsDefinition         `json:"stopLossOnFill"`
-	TrailingStopLossOnFill  TrailingStopLossDetailsDefinition `json:"trailingStopLossOnFill"`
-	TradeClientExtensions   ClientExtensionsDefinition        `json:"tradeClientExtensions"`
-	FillingTransactionID    TransactionIDDefinition           `json:"fillingTransactionID"`
-	FilledTime              DateTimeDefinition                `json:"filledTime"`
-	TradeOpenedID           TradeIDDefinition                 `json:"tradeOpenedID"`
-	TradeReducedID          TradeIDDefinition                 `json:"tradeReducedID"`
-	TradeClosedIDs          []TradeIDDefinition               `json:"tradeClosedIDs"`
-	CancellingTransactionID TransactionIDDefinition           `json:"cancellingTransactionID"`
-	CancelledTime           DateTimeDefinition                `json:"cancelledTime"`
-	ReplacesOrderID         OrderIDDefinition                 `json:"replacesOrderID"`
-	ReplacedByOrderID       OrderIDDefinition                 `json:"replacedByOrderID"`
+	Id                      OrderIDDefinition                  `json:"id,omitempty"`
+	CreateTime              DateTimeDefinition                 `json:"createTime,omitempty"`
+	State                   OrderStateDefinition               `json:"state,omitempty"`
+	ClientExtensions        *ClientExtensionsDefinition        `json:"clientExtensions,omitempty"`
+	Type                    OrderTypeDefinition                `json:"type,omitempty"`
+	Instrument              InstrumentNameDefinition           `json:"instrument,omitempty"`
+	Units                   DecimalNumberDefinition            `json:"units,omitempty"`
+	Price                   PriceValueDefinition               `json:"price,omitempty"`
+	PriceBound              PriceValueDefinition               `json:"priceBound,omitempty"`
+	TimeInForce             TimeInForceDefinition              `json:"timeInForce,omitempty"`
+	GtdTime                 DateTimeDefinition                 `json:"gtdTime,omitempty"`
+	PositionFill            OrderPositionFillDefinition        `json:"positionFill,omitempty"`
+	TriggerCondition        OrderTriggerConditionDefinition    `json:"triggerCondition,omitempty"`
+	InitialMarketPrice      PriceValueDefinition               `json:"initialMarketPrice,omitempty"`
+	TakeProfitOnFill        *TakeProfitDetailsDefinition       `json:"takeProfitOnFill,omitempty"`
+	StopLossOnFill          *StopLossDetailsDefinition         `json:"stopLossOnFill,omitempty"`
+	TrailingStopLossOnFill  *TrailingStopLossDetailsDefinition `json:"trailingStopLossOnFill,omitempty"`
+	TradeClientExtensions   *ClientExtensionsDefinition        `json:"tradeClientExtensions,omitempty"`
+	FillingTransactionID    TransactionIDDefinition            `json:"fillingTransactionID,omitempty"`
+	FilledTime              DateTimeDefinition                 `json:"filledTime,omitempty"`
+	TradeOpenedID           TradeIDDefinition                  `json:"tradeOpenedID,omitempty"`
+	TradeReducedID          TradeIDDefinition                  `json:"tradeReducedID,omitempty"`
+	TradeClosedIDs          []TradeIDDefinition                `json:"tradeClosedIDs,omitempty"`
+	CancellingTransactionID TransactionIDDefinition            `json:"cancellingTransactionID,omitempty"`
+	CancelledTime           DateTimeDefinition                 `json:"cancelledTime,omitempty"`
+	ReplacesOrderID         OrderIDDefinition                  `json:"replacesOrderID,omitempty"`
+	ReplacedByOrderID       OrderIDDefinition                  `json:"replacedByOrderID,omitempty"`
 }
 
 type TakeProfitOrderDefinition struct {
-	Id                      OrderIDDefinition               `json:"id"`
-	CreateTime              DateTimeDefinition              `json:"createTime"`
-	State                   OrderStateDefinition            `json:"state"`
-	ClientExtensions        ClientExtensionsDefinition      `json:"clientExtensions"`
-	Type                    OrderTypeDefinition             `json:"type"`
-	TradeID                 TradeIDDefinition               `json:"tradeID"`
-	ClientTradeID           ClientIDDefinition              `json:"clientTradeID"`
-	Price                   PriceValueDefinition            `json:"price"`
-	TimeInForce             TimeInForceDefinition           `json:"timeInForce"`
-	GtdTime                 DateTimeDefinition              `json:"gtdTime"`
-	TriggerCondition        OrderTriggerConditionDefinition `json:"triggerCondition"`
-	FillingTransactionID    TransactionIDDefinition         `json:"fillingTransactionID"`
-	FilledTime              DateTimeDefinition              `json:"filledTime"`
-	TradeOpenedID           TradeIDDefinition               `json:"tradeOpenedID"`
-	TradeReducedID          TradeIDDefinition               `json:"tradeReducedID"`
-	TradeClosedIDs          []TradeIDDefinition             `json:"tradeClosedIDs"`
-	CancellingTransactionID TransactionIDDefinition         `json:"cancellingTransactionID"`
-	CancelledTime           DateTimeDefinition              `json:"cancelledTime"`
-	ReplacesOrderID         OrderIDDefinition               `json:"replacesOrderID"`
-	ReplacedByOrderID       OrderIDDefinition               `json:"replacedByOrderID"`
+	Id                      OrderIDDefinition               `json:"id,omitempty"`
+	CreateTime              DateTimeDefinition              `json:"createTime,omitempty"`
+	State                   OrderStateDefinition            `json:"state,omitempty"`
+	ClientExtensions        *ClientExtensionsDefinition     `json:"clientExtensions,omitempty"`
+	Type                    OrderTypeDefinition             `json:"type,omitempty"`
+	TradeID                 TradeIDDefinition               `json:"tradeID,omitempty"`
+	ClientTradeID           ClientIDDefinition              `json:"clientTradeID,omitempty"`
+	Price                   PriceValueDefinition            `json:"price,omitempty"`
+	TimeInForce             TimeInForceDefinition           `json:"timeInForce,omitempty"`
+	GtdTime                 DateTimeDefinition              `json:"gtdTime,omitempty"`
+	TriggerCondition        OrderTriggerConditionDefinition `json:"triggerCondition,omitempty"`
+	FillingTransactionID    TransactionIDDefinition         `json:"fillingTransactionID,omitempty"`
+	FilledTime              DateTimeDefinition              `json:"filledTime,omitempty"`
+	TradeOpenedID           TradeIDDefinition               `json:"tradeOpenedID,omitempty"`
+	TradeReducedID          TradeIDDefinition               `json:"tradeReducedID,omitempty"`
+	TradeClosedIDs          []TradeIDDefinition             `json:"tradeClosedIDs,omitempty"`
+	CancellingTransactionID TransactionIDDefinition         `json:"cancellingTransactionID,omitempty"`
+	CancelledTime           DateTimeDefinition              `json:"cancelledTime,omitempty"`
+	ReplacesOrderID         OrderIDDefinition               `json:"replacesOrderID,omitempty"`
+	ReplacedByOrderID       OrderIDDefinition               `json:"replacedByOrderID,omitempty"`
 }
 
 type StopLossOrderDefinition struct {
-	Id                         OrderIDDefinition               `json:"id"`
-	CreateTime                 DateTimeDefinition              `json:"createTime"`
-	State                      OrderStateDefinition            `json:"state"`
-	ClientExtensions           ClientExtensionsDefinition      `json:"clientExtensions"`
-	Type                       OrderTypeDefinition             `json:"type"`
-	GuaranteedExecutionPremium DecimalNumberDefinition         `json:"guaranteedExecutionPremium"`
-	TradeID                    TradeIDDefinition               `json:"tradeID"`
-	ClientTradeID              ClientIDDefinition              `json:"clientTradeID"`
-	Price                      PriceValueDefinition            `json:"price"`
-	Distance                   DecimalNumberDefinition         `json:"distance"`
-	TimeInForce                TimeInForceDefinition           `json:"timeInForce"`
-	GtdTime                    DateTimeDefinition              `json:"gtdTime"`
-	TriggerCondition           OrderTriggerConditionDefinition `json:"triggerCondition"`
-	Guaranteed                 bool                            `json:"guaranteed"`
-	FillingTransactionID       TransactionIDDefinition         `json:"fillingTransactionID"`
-	FilledTime                 DateTimeDefinition              `json:"filledTime"`
-	TradeOpenedID              TradeIDDefinition               `json:"tradeOpenedID"`
-	TradeReducedID             TradeIDDefinition               `json:"tradeReducedID"`
-	TradeClosedIDs             []TradeIDDefinition             `json:"tradeClosedIDs"`
-	CancellingTransactionID    TransactionIDDefinition         `json:"cancellingTransactionID"`
-	CancelledTime              DateTimeDefinition              `json:"cancelledTime"`
-	ReplacesOrderID            OrderIDDefinition               `json:"replacesOrderID"`
-	ReplacedByOrderID          OrderIDDefinition               `json:"replacedByOrderID"`
+	Id                         OrderIDDefinition               `json:"id,omitempty"`
+	CreateTime                 DateTimeDefinition              `json:"createTime,omitempty"`
+	State                      OrderStateDefinition            `json:"state,omitempty"`
+	ClientExtensions           *ClientExtensionsDefinition     `json:"clientExtensions,omitempty"`
+	Type                       OrderTypeDefinition             `json:"type,omitempty"`
+	GuaranteedExecutionPremium DecimalNumberDefinition         `json:"guaranteedExecutionPremium,omitempty"`
+	TradeID                    TradeIDDefinition               `json:"tradeID,omitempty"`
+	ClientTradeID              ClientIDDefinition              `json:"clientTradeID,omitempty"`
+	Price                      PriceValueDefinition            `json:"price,omitempty"`
+	Distance                   DecimalNumberDefinition         `json:"distance,omitempty"`
+	TimeInForce                TimeInForceDefinition           `json:"timeInForce,omitempty"`
+	GtdTime                    DateTimeDefinition              `json:"gtdTime,omitempty"`
+	TriggerCondition           OrderTriggerConditionDefinition `json:"triggerCondition,omitempty"`
+	Guaranteed                 bool                            `json:"guaranteed,omitempty"`
+	FillingTransactionID       TransactionIDDefinition         `json:"fillingTransactionID,omitempty"`
+	FilledTime                 DateTimeDefinition              `json:"filledTime,omitempty"`
+	TradeOpenedID              TradeIDDefinition               `json:"tradeOpenedID,omitempty"`
+	TradeReducedID             TradeIDDefinition               `json:"tradeReducedID,omitempty"`
+	TradeClosedIDs             []TradeIDDefinition             `json:"tradeClosedIDs,omitempty"`
+	CancellingTransactionID    TransactionIDDefinition         `json:"cancellingTransactionID,omitempty"`
+	CancelledTime              DateTimeDefinition              `json:"cancelledTime,omitempty"`
+	ReplacesOrderID            OrderIDDefinition               `json:"replacesOrderID,omitempty"`
+	ReplacedByOrderID          OrderIDDefinition               `json:"replacedByOrderID,omitempty"`
 }
 
 type TrailingStopLossOrderDefinition struct {
-	Id                      OrderIDDefinition               `json:"id"`
-	CreateTime              DateTimeDefinition              `json:"createTime"`
-	State                   OrderStateDefinition            `json:"state"`
-	ClientExtensions        ClientExtensionsDefinition      `json:"clientExtensions"`
-	Type                    OrderTypeDefinition             `json:"type"`
-	TradeID                 TradeIDDefinition               `json:"tradeID"`
-	ClientTradeID           ClientIDDefinition              `json:"clientTradeID"`
-	Distance                DecimalNumberDefinition         `json:"distance"`
-	TimeInForce             TimeInForceDefinition           `json:"timeInForce"`
-	GtdTime                 DateTimeDefinition              `json:"gtdTime"`
-	TriggerCondition        OrderTriggerConditionDefinition `json:"triggerCondition"`
-	TrailingStopValue       PriceValueDefinition            `json:"trailingStopValue"`
-	FillingTransactionID    TransactionIDDefinition         `json:"fillingTransactionID"`
-	FilledTime              DateTimeDefinition              `json:"filledTime"`
-	TradeOpenedID           TradeIDDefinition               `json:"tradeOpenedID"`
-	TradeReducedID          TradeIDDefinition               `json:"tradeReducedID"`
-	TradeClosedIDs          []TradeIDDefinition             `json:"tradeClosedIDs"`
-	CancellingTransactionID TransactionIDDefinition         `json:"cancellingTransactionID"`
-	CancelledTime           DateTimeDefinition              `json:"cancelledTime"`
-	ReplacesOrderID         OrderIDDefinition               `json:"replacesOrderID"`
-	ReplacedByOrderID       OrderIDDefinition               `json:"replacedByOrderID"`
+	Id                      OrderIDDefinition               `json:"id,omitempty"`
+	CreateTime              DateTimeDefinition              `json:"createTime,omitempty"`
+	State                   OrderStateDefinition            `json:"state,omitempty"`
+	ClientExtensions        *ClientExtensionsDefinition     `json:"clientExtensions,omitempty"`
+	Type                    OrderTypeDefinition             `json:"type,omitempty"`
+	TradeID                 TradeIDDefinition               `json:"tradeID,omitempty"`
+	ClientTradeID           ClientIDDefinition              `json:"clientTradeID,omitempty"`
+	Distance                DecimalNumberDefinition         `json:"distance,omitempty"`
+	TimeInForce             TimeInForceDefinition           `json:"timeInForce,omitempty"`
+	GtdTime                 DateTimeDefinition              `json:"gtdTime,omitempty"`
+	TriggerCondition        OrderTriggerConditionDefinition `json:"triggerCondition,omitempty"`
+	TrailingStopValue       PriceValueDefinition            `json:"trailingStopValue,omitempty"`
+	FillingTransactionID    TransactionIDDefinition         `json:"fillingTransactionID,omitempty"`
+	FilledTime              DateTimeDefinition              `json:"filledTime,omitempty"`
+	TradeOpenedID           TradeIDDefinition               `json:"tradeOpenedID,omitempty"`
+	TradeReducedID          TradeIDDefinition               `json:"tradeReducedID,omitempty"`
+	TradeClosedIDs          []TradeIDDefinition             `json:"tradeClosedIDs,omitempty"`
+	CancellingTransactionID TransactionIDDefinition         `json:"cancellingTransactionID,omitempty"`
+	CancelledTime           DateTimeDefinition              `json:"cancelledTime,omitempty"`
+	ReplacesOrderID         OrderIDDefinition               `json:"replacesOrderID,omitempty"`
+	ReplacedByOrderID       OrderIDDefinition               `json:"replacedByOrderID,omitempty"`
 }
 
 // Order Requests
@@ -480,88 +480,88 @@ type MarketOrderRequestDefinition struct {
 }
 
 type LimitOrderRequestDefinition struct {
-	Type                   OrderTypeDefinition               `json:"type"`
-	Instrument             InstrumentNameDefinition          `json:"instrument"`
-	Units                  DecimalNumberDefinition           `json:"units"`
-	Price                  PriceValueDefinition              `json:"price"`
-	TimeInForce            TimeInForceDefinition             `json:"timeInForce"`
-	GtdTime                DateTimeDefinition                `json:"gtdTime"`
-	PositionFill           OrderPositionFillDefinition       `json:"positionFill"`
-	TriggerCondition       OrderTriggerConditionDefinition   `json:"triggerCondition"`
-	ClientExtensions       ClientExtensionsDefinition        `json:"clientExtensions"`
-	TakeProfitOnFill       TakeProfitDetailsDefinition       `json:"takeProfitOnFill"`
-	StopLossOnFill         StopLossDetailsDefinition         `json:"stopLossOnFill"`
-	TrailingStopLossOnFill TrailingStopLossDetailsDefinition `json:"trailingStopLossOnFill"`
-	TradeClientExtensions  ClientExtensionsDefinition        `json:"tradeClientExtensions"`
+	Type                   OrderTypeDefinition                `json:"type,omitempty"`
+	Instrument             InstrumentNameDefinition           `json:"instrument,omitempty"`
+	Units                  DecimalNumberDefinition            `json:"units,omitempty"`
+	Price                  PriceValueDefinition               `json:"price,omitempty"`
+	TimeInForce            TimeInForceDefinition              `json:"timeInForce,omitempty"`
+	GtdTime                DateTimeDefinition                 `json:"gtdTime,omitempty"`
+	PositionFill           OrderPositionFillDefinition        `json:"positionFill,omitempty"`
+	TriggerCondition       OrderTriggerConditionDefinition    `json:"triggerCondition,omitempty"`
+	ClientExtensions       *ClientExtensionsDefinition        `json:"clientExtensions,omitempty"`
+	TakeProfitOnFill       *TakeProfitDetailsDefinition       `json:"takeProfitOnFill,omitempty"`
+	StopLossOnFill         *StopLossDetailsDefinition         `json:"stopLossOnFill,omitempty"`
+	TrailingStopLossOnFill *TrailingStopLossDetailsDefinition `json:"trailingStopLossOnFill,omitempty"`
+	TradeClientExtensions  *ClientExtensionsDefinition        `json:"tradeClientExtensions,omitempty"`
 }
 
 type StopOrderRequestDefinition struct {
-	Type                   OrderTypeDefinition               `json:"type"`
-	Instrument             InstrumentNameDefinition          `json:"instrument"`
-	Units                  DecimalNumberDefinition           `json:"units"`
-	Price                  PriceValueDefinition              `json:"price"`
-	PriceBound             PriceValueDefinition              `json:"priceBound"`
-	TimeInForce            TimeInForceDefinition             `json:"timeInForce"`
-	GtdTime                DateTimeDefinition                `json:"gtdTime"`
-	PositionFill           OrderPositionFillDefinition       `json:"positionFill"`
-	TriggerCondition       OrderTriggerConditionDefinition   `json:"triggerCondition"`
-	ClientExtensions       ClientExtensionsDefinition        `json:"clientExtensions"`
-	TakeProfitOnFill       TakeProfitDetailsDefinition       `json:"takeProfitOnFill"`
-	StopLossOnFill         StopLossDetailsDefinition         `json:"stopLossOnFill"`
-	TrailingStopLossOnFill TrailingStopLossDetailsDefinition `json:"trailingStopLossOnFill"`
-	TradeClientExtensions  ClientExtensionsDefinition        `json:"tradeClientExtensions"`
+	Type                   OrderTypeDefinition                `json:"type,omitempty"`
+	Instrument             InstrumentNameDefinition           `json:"instrument,omitempty"`
+	Units                  DecimalNumberDefinition            `json:"units,omitempty"`
+	Price                  PriceValueDefinition               `json:"price,omitempty"`
+	PriceBound             PriceValueDefinition               `json:"priceBound,omitempty"`
+	TimeInForce            TimeInForceDefinition              `json:"timeInForce,omitempty"`
+	GtdTime                DateTimeDefinition                 `json:"gtdTime,omitempty"`
+	PositionFill           OrderPositionFillDefinition        `json:"positionFill,omitempty"`
+	TriggerCondition       OrderTriggerConditionDefinition    `json:"triggerCondition,omitempty"`
+	ClientExtensions       *ClientExtensionsDefinition        `json:"clientExtensions,omitempty"`
+	TakeProfitOnFill       *TakeProfitDetailsDefinition       `json:"takeProfitOnFill,omitempty"`
+	StopLossOnFill         *StopLossDetailsDefinition         `json:"stopLossOnFill,omitempty"`
+	TrailingStopLossOnFill *TrailingStopLossDetailsDefinition `json:"trailingStopLossOnFill,omitempty"`
+	TradeClientExtensions  *ClientExtensionsDefinition        `json:"tradeClientExtensions,omitempty"`
 }
 
 type MarketIfTouchedOrderRequestDefinition struct {
-	Type                   OrderTypeDefinition               `json:"type"`
-	Instrument             InstrumentNameDefinition          `json:"instrument"`
-	Units                  DecimalNumberDefinition           `json:"units"`
-	Price                  PriceValueDefinition              `json:"price"`
-	PriceBound             PriceValueDefinition              `json:"priceBound"`
-	TimeInForce            TimeInForceDefinition             `json:"timeInForce"`
-	GtdTime                DateTimeDefinition                `json:"gtdTime"`
-	PositionFill           OrderPositionFillDefinition       `json:"positionFill"`
-	TriggerCondition       OrderTriggerConditionDefinition   `json:"triggerCondition"`
-	ClientExtensions       ClientExtensionsDefinition        `json:"clientExtensions"`
-	TakeProfitOnFill       TakeProfitDetailsDefinition       `json:"takeProfitOnFill"`
-	StopLossOnFill         StopLossDetailsDefinition         `json:"stopLossOnFill"`
-	TrailingStopLossOnFill TrailingStopLossDetailsDefinition `json:"trailingStopLossOnFill"`
-	TradeClientExtensions  ClientExtensionsDefinition        `json:"tradeClientExtensions"`
+	Type                   OrderTypeDefinition                `json:"type,omitempty"`
+	Instrument             InstrumentNameDefinition           `json:"instrument,omitempty"`
+	Units                  DecimalNumberDefinition            `json:"units,omitempty"`
+	Price                  PriceValueDefinition               `json:"price,omitempty"`
+	PriceBound             PriceValueDefinition               `json:"priceBound,omitempty"`
+	TimeInForce            TimeInForceDefinition              `json:"timeInForce,omitempty"`
+	GtdTime                DateTimeDefinition                 `json:"gtdTime,omitempty"`
+	PositionFill           OrderPositionFillDefinition        `json:"positionFill,omitempty"`
+	TriggerCondition       OrderTriggerConditionDefinition    `json:"triggerCondition,omitempty"`
+	ClientExtensions       *ClientExtensionsDefinition        `json:"clientExtensions,omitempty"`
+	TakeProfitOnFill       *TakeProfitDetailsDefinition       `json:"takeProfitOnFill,omitempty"`
+	StopLossOnFill         *StopLossDetailsDefinition         `json:"stopLossOnFill,omitempty"`
+	TrailingStopLossOnFill *TrailingStopLossDetailsDefinition `json:"trailingStopLossOnFill,omitempty"`
+	TradeClientExtensions  *ClientExtensionsDefinition        `json:"tradeClientExtensions,omitempty"`
 }
 
 type TakeProfitOrderRequestDefinition struct {
-	Type             OrderTypeDefinition             `json:"type"`
-	TradeID          TradeIDDefinition               `json:"tradeID"`
-	ClientTradeID    ClientIDDefinition              `json:"clientTradeID"`
-	Price            PriceValueDefinition            `json:"price"`
-	TimeInForce      TimeInForceDefinition           `json:"timeInForce"`
-	GtdTime          DateTimeDefinition              `json:"gtdTime"`
-	TriggerCondition OrderTriggerConditionDefinition `json:"triggerCondition"`
-	ClientExtensions ClientExtensionsDefinition      `json:"clientExtensions"`
+	Type             OrderTypeDefinition             `json:"type,omitempty"`
+	TradeID          TradeIDDefinition               `json:"tradeID,omitempty"`
+	ClientTradeID    ClientIDDefinition              `json:"clientTradeID,omitempty"`
+	Price            PriceValueDefinition            `json:"price,omitempty"`
+	TimeInForce      TimeInForceDefinition           `json:"timeInForce,omitempty"`
+	GtdTime          DateTimeDefinition              `json:"gtdTime,omitempty"`
+	TriggerCondition OrderTriggerConditionDefinition `json:"triggerCondition,omitempty"`
+	ClientExtensions *ClientExtensionsDefinition     `json:"clientExtensions,omitempty"`
 }
 
 type StopLossOrderRequestDefinition struct {
-	Type             OrderTypeDefinition             `json:"type"`
-	TradeID          TradeIDDefinition               `json:"tradeID"`
-	ClientTradeID    ClientIDDefinition              `json:"clientTradeID"`
-	Price            PriceValueDefinition            `json:"price"`
-	Distance         DecimalNumberDefinition         `json:"distance"`
-	TimeInForce      TimeInForceDefinition           `json:"timeInForce"`
-	GtdTime          DateTimeDefinition              `json:"gtdTime"`
-	TriggerCondition OrderTriggerConditionDefinition `json:"triggerCondition"`
-	Guaranteed       bool                            `json:"guaranteed"`
-	ClientExtensions ClientExtensionsDefinition      `json:"clientExtensions"`
+	Type             OrderTypeDefinition             `json:"type,omitempty"`
+	TradeID          TradeIDDefinition               `json:"tradeID,omitempty"`
+	ClientTradeID    ClientIDDefinition              `json:"clientTradeID,omitempty"`
+	Price            PriceValueDefinition            `json:"price,omitempty"`
+	Distance         DecimalNumberDefinition         `json:"distance,omitempty"`
+	TimeInForce      TimeInForceDefinition           `json:"timeInForce,omitempty"`
+	GtdTime          DateTimeDefinition              `json:"gtdTime,omitempty"`
+	TriggerCondition OrderTriggerConditionDefinition `json:"triggerCondition,omitempty"`
+	Guaranteed       bool                            `json:"guaranteed,omitempty"`
+	ClientExtensions *ClientExtensionsDefinition     `json:"clientExtensions,omitempty"`
 }
 
 type TrailingStopLossOrderRequestDefinition struct {
-	Type             OrderTypeDefinition             `json:"type"`
-	TradeID          TradeIDDefinition               `json:"tradeID"`
-	ClientTradeID    ClientIDDefinition              `json:"clientTradeID"`
-	Distance         DecimalNumberDefinition         `json:"distance"`
-	TimeInForce      TimeInForceDefinition           `json:"timeInForce"`
-	GtdTime          DateTimeDefinition              `json:"gtdTime"`
-	TriggerCondition OrderTriggerConditionDefinition `json:"triggerCondition"`
-	ClientExtensions ClientExtensionsDefinition      `json:"clientExtensions"`
+	Type             OrderTypeDefinition             `json:"type,omitempty"`
+	TradeID          TradeIDDefinition               `json:"tradeID,omitempty"`
+	ClientTradeID    ClientIDDefinition              `json:"clientTradeID,omitempty"`
+	Distance         DecimalNumberDefinition         `json:"distance,omitempty"`
+	TimeInForce      TimeInForceDefinition           `json:"timeInForce,omitempty"`
+	GtdTime          DateTimeDefinition              `json:"gtdTime,omitempty"`
+	TriggerCondition OrderTriggerConditionDefinition `json:"triggerCondition,omitempty"`
+	ClientExtensions *ClientExtensionsDefinition     `json:"clientExtensions,omitempty"`
 }
 
 // Order-related Definitions
@@ -577,8 +577,8 @@ type OrderStateDefinition string
 type OrderStateFilterDefinition string
 
 type OrderIdentifierDefinition struct {
-	OrderID       OrderIDDefinition  `json:"orderID"`
-	ClientOrderID ClientIDDefinition `json:"clientOrderID"`
+	OrderID       OrderIDDefinition  `json:"orderID,omitempty"`
+	ClientOrderID ClientIDDefinition `json:"clientOrderID,omitempty"`
 }
 
 type OrderSpecifierDefinition string
@@ -590,10 +590,10 @@ type OrderPositionFillDefinition string
 type OrderTriggerConditionDefinition string
 
 type DynamicOrderStateDefinition struct {
-	Id                     OrderIDDefinition    `json:"id"`
-	TrailingStopValue      PriceValueDefinition `json:"trailingStopValue"`
-	TriggerDistance        PriceValueDefinition `json:"triggerDistance"`
-	IsTriggerDistanceExact bool                 `json:"isTriggerDistanceExact"`
+	Id                     OrderIDDefinition    `json:"id,omitempty"`
+	TrailingStopValue      PriceValueDefinition `json:"trailingStopValue,omitempty"`
+	TriggerDistance        PriceValueDefinition `json:"triggerDistance,omitempty"`
+	IsTriggerDistanceExact bool                 `json:"isTriggerDistanceExact,omitempty"`
 }
 
 type UnitsAvailableDetailsDefinition struct {
@@ -609,9 +609,9 @@ type UnitsAvailableDefinition struct {
 }
 
 type GuaranteedStopLossOrderEntryDataDefinition struct {
-	MinimumDistance  DecimalNumberDefinition                           `json:"minimumDistance"`
-	Premium          DecimalNumberDefinition                           `json:"premium"`
-	LevelRestriction GuaranteedStopLossOrderLevelRestrictionDefinition `json:"levelRestriction"`
+	MinimumDistance  DecimalNumberDefinition                            `json:"minimumDistance,omitempty"`
+	Premium          DecimalNumberDefinition                            `json:"premium,omitempty"`
+	LevelRestriction *GuaranteedStopLossOrderLevelRestrictionDefinition `json:"levelRestriction,omitempty"`
 }
 
 //
@@ -627,53 +627,53 @@ type TradeStateFilterDefinition string
 type TradeSpecifierDefinition string
 
 type TradeDefinition struct {
-	Id                    TradeIDDefinition               `json:"id"`
-	Instrument            InstrumentNameDefinition        `json:"instrument"`
-	Price                 PriceValueDefinition            `json:"price"`
-	OpenTime              DateTimeDefinition              `json:"openTime"`
-	State                 TradeStateDefinition            `json:"state"`
-	InitialUnits          DecimalNumberDefinition         `json:"initialUnits"`
-	InitialMarginRequired AccountUnitsDefinition          `json:"initialMarginRequired"`
-	CurrentUnits          DecimalNumberDefinition         `json:"currentUnits"`
-	RealizedPL            AccountUnitsDefinition          `json:"realizedPL"`
-	UnrealizedPL          AccountUnitsDefinition          `json:"unrealizedPL"`
-	MarginUsed            AccountUnitsDefinition          `json:"marginUsed"`
-	AverageClosePrice     PriceValueDefinition            `json:"averageClosePrice"`
-	ClosingTransactionIDs []TransactionIDDefinition       `json:"closingTransactionIDs"`
-	Financing             AccountUnitsDefinition          `json:"financing"`
-	CloseTime             DateTimeDefinition              `json:"closeTime"`
-	ClientExtensions      ClientExtensionsDefinition      `json:"clientExtensions"`
-	TakeProfitOrder       TakeProfitOrderDefinition       `json:"takeProfitOrder"`
-	StopLossOrder         StopLossOrderDefinition         `json:"stopLossOrder"`
-	TrailingStopLossOrder TrailingStopLossOrderDefinition `json:"trailingStopLossOrder"`
+	Id                    TradeIDDefinition                `json:"id,omitempty"`
+	Instrument            InstrumentNameDefinition         `json:"instrument,omitempty"`
+	Price                 PriceValueDefinition             `json:"price,omitempty"`
+	OpenTime              DateTimeDefinition               `json:"openTime,omitempty"`
+	State                 TradeStateDefinition             `json:"state,omitempty"`
+	InitialUnits          DecimalNumberDefinition          `json:"initialUnits,omitempty"`
+	InitialMarginRequired AccountUnitsDefinition           `json:"initialMarginRequired,omitempty"`
+	CurrentUnits          DecimalNumberDefinition          `json:"currentUnits,omitempty"`
+	RealizedPL            AccountUnitsDefinition           `json:"realizedPL,omitempty"`
+	UnrealizedPL          AccountUnitsDefinition           `json:"unrealizedPL,omitempty"`
+	MarginUsed            AccountUnitsDefinition           `json:"marginUsed,omitempty"`
+	AverageClosePrice     PriceValueDefinition             `json:"averageClosePrice,omitempty"`
+	ClosingTransactionIDs []TransactionIDDefinition        `json:"closingTransactionIDs,omitempty"`
+	Financing             AccountUnitsDefinition           `json:"financing,omitempty"`
+	CloseTime             DateTimeDefinition               `json:"closeTime,omitempty"`
+	ClientExtensions      *ClientExtensionsDefinition      `json:"clientExtensions,omitempty"`
+	TakeProfitOrder       *TakeProfitOrderDefinition       `json:"takeProfitOrder,omitempty"`
+	StopLossOrder         *StopLossOrderDefinition         `json:"stopLossOrder,omitempty"`
+	TrailingStopLossOrder *TrailingStopLossOrderDefinition `json:"trailingStopLossOrder,omitempty"`
 }
 
 type TradeSummaryDefinition struct {
-	Id                      TradeIDDefinition          `json:"id"`
-	Instrument              InstrumentNameDefinition   `json:"instrument"`
-	Price                   PriceValueDefinition       `json:"price"`
-	OpenTime                DateTimeDefinition         `json:"openTime"`
-	State                   TradeStateDefinition       `json:"state"`
-	InitialUnits            DecimalNumberDefinition    `json:"initialUnits"`
-	InitialMarginRequired   AccountUnitsDefinition     `json:"initialMarginRequired"`
-	CurrentUnits            DecimalNumberDefinition    `json:"currentUnits"`
-	RealizedPL              AccountUnitsDefinition     `json:"realizedPL"`
-	UnrealizedPL            AccountUnitsDefinition     `json:"unrealizedPL"`
-	MarginUsed              AccountUnitsDefinition     `json:"marginUsed"`
-	AverageClosePrice       PriceValueDefinition       `json:"averageClosePrice"`
-	ClosingTransactionIDs   []TransactionIDDefinition  `json:"closingTransactionIDs"`
-	Financing               AccountUnitsDefinition     `json:"financing"`
-	CloseTime               DateTimeDefinition         `json:"closeTime"`
-	ClientExtensions        ClientExtensionsDefinition `json:"clientExtensions"`
-	TakeProfitOrderID       OrderIDDefinition          `json:"takeProfitOrderID"`
-	StopLossOrderID         OrderIDDefinition          `json:"stopLossOrderID"`
-	TrailingStopLossOrderID OrderIDDefinition          `json:"trailingStopLossOrderID"`
+	Id                      TradeIDDefinition           `json:"id,omitempty"`
+	Instrument              InstrumentNameDefinition    `json:"instrument,omitempty"`
+	Price                   PriceValueDefinition        `json:"price,omitempty"`
+	OpenTime                DateTimeDefinition          `json:"openTime,omitempty"`
+	State                   TradeStateDefinition        `json:"state,omitempty"`
+	InitialUnits            DecimalNumberDefinition     `json:"initialUnits,omitempty"`
+	InitialMarginRequired   AccountUnitsDefinition      `json:"initialMarginRequired,omitempty"`
+	CurrentUnits            DecimalNumberDefinition     `json:"currentUnits,omitempty"`
+	RealizedPL              AccountUnitsDefinition      `json:"realizedPL,omitempty"`
+	UnrealizedPL            AccountUnitsDefinition      `json:"unrealizedPL,omitempty"`
+	MarginUsed              AccountUnitsDefinition      `json:"marginUsed,omitempty"`
+	AverageClosePrice       PriceValueDefinition        `json:"averageClosePrice,omitempty"`
+	ClosingTransactionIDs   []TransactionIDDefinition   `json:"closingTransactionIDs,omitempty"`
+	Financing               AccountUnitsDefinition      `json:"financing,omitempty"`
+	CloseTime               DateTimeDefinition          `json:"closeTime,omitempty"`
+	ClientExtensions        *ClientExtensionsDefinition `json:"clientExtensions,omitempty"`
+	TakeProfitOrderID       OrderIDDefinition           `json:"takeProfitOrderID,omitempty"`
+	StopLossOrderID         OrderIDDefinition           `json:"stopLossOrderID,omitempty"`
+	TrailingStopLossOrderID OrderIDDefinition           `json:"trailingStopLossOrderID,omitempty"`
 }
 
 type CalculatedTradeStateDefinition struct {
-	Id           TradeIDDefinition      `json:"id"`
-	UnrealizedPL AccountUnitsDefinition `json:"unrealizedPL"`
-	MarginUsed   AccountUnitsDefinition `json:"marginUsed"`
+	Id           TradeIDDefinition      `json:"id,omitempty"`
+	UnrealizedPL AccountUnitsDefinition `json:"unrealizedPL,omitempty"`
+	MarginUsed   AccountUnitsDefinition `json:"marginUsed,omitempty"`
 }
 
 type TradePLDefinition string
@@ -683,35 +683,35 @@ type TradePLDefinition string
 //
 
 type PositionDefinition struct {
-	Instrument              InstrumentNameDefinition `json:"instrument"`
-	PL                      AccountUnitsDefinition   `json:"pl"`
-	UnrealizedPL            AccountUnitsDefinition   `json:"unrealizedPL"`
-	MarginUsed              AccountUnitsDefinition   `json:"marginUsed"`
-	ResettablePL            AccountUnitsDefinition   `json:"resettablePL"`
-	Financing               AccountUnitsDefinition   `json:"financing"`
-	Commission              AccountUnitsDefinition   `json:"commission"`
-	GuaranteedExecutionFees AccountUnitsDefinition   `json:"guaranteedExecutionFees"`
-	Long                    PositionSideDefinition   `json:"long"`
-	Short                   PositionSideDefinition   `json:"short"`
+	Instrument              InstrumentNameDefinition `json:"instrument,omitempty"`
+	PL                      AccountUnitsDefinition   `json:"pl,omitempty"`
+	UnrealizedPL            AccountUnitsDefinition   `json:"unrealizedPL,omitempty"`
+	MarginUsed              AccountUnitsDefinition   `json:"marginUsed,omitempty"`
+	ResettablePL            AccountUnitsDefinition   `json:"resettablePL,omitempty"`
+	Financing               AccountUnitsDefinition   `json:"financing,omitempty"`
+	Commission              AccountUnitsDefinition   `json:"commission,omitempty"`
+	GuaranteedExecutionFees AccountUnitsDefinition   `json:"guaranteedExecutionFees,omitempty"`
+	Long                    *PositionSideDefinition  `json:"long,omitempty"`
+	Short                   *PositionSideDefinition  `json:"short,omitempty"`
 }
 
 type PositionSideDefinition struct {
-	Units                   DecimalNumberDefinition `json:"units"`
-	AveragePrice            PriceValueDefinition    `json:"averagePrice"`
-	TradeIDs                []TradeIDDefinition     `json:"tradeIDs"`
-	PL                      AccountUnitsDefinition  `json:"pl"`
-	UnrealizedPL            AccountUnitsDefinition  `json:"unrealizedPL"`
-	ResettablePL            AccountUnitsDefinition  `json:"resettablePL"`
-	Financing               AccountUnitsDefinition  `json:"financing"`
-	GuaranteedExecutionFees AccountUnitsDefinition  `json:"guaranteedExecutionFees"`
+	Units                   DecimalNumberDefinition `json:"units,omitempty"`
+	AveragePrice            PriceValueDefinition    `json:"averagePrice,omitempty"`
+	TradeIDs                []TradeIDDefinition     `json:"tradeIDs,omitempty"`
+	PL                      AccountUnitsDefinition  `json:"pl,omitempty"`
+	UnrealizedPL            AccountUnitsDefinition  `json:"unrealizedPL,omitempty"`
+	ResettablePL            AccountUnitsDefinition  `json:"resettablePL,omitempty"`
+	Financing               AccountUnitsDefinition  `json:"financing,omitempty"`
+	GuaranteedExecutionFees AccountUnitsDefinition  `json:"guaranteedExecutionFees,omitempty"`
 }
 
 type CalculatedPositionStateDefinition struct {
-	Instrument        InstrumentNameDefinition `json:"instrument"`
-	NetUnrealizedPL   AccountUnitsDefinition   `json:"netUnrealizedPL"`
-	LongUnrealizedPL  AccountUnitsDefinition   `json:"longUnrealizedPL"`
-	ShortUnrealizedPL AccountUnitsDefinition   `json:"shortUnrealizedPL"`
-	MarginUsed        AccountUnitsDefinition   `json:"marginUsed"`
+	Instrument        InstrumentNameDefinition `json:"instrument,omitempty"`
+	NetUnrealizedPL   AccountUnitsDefinition   `json:"netUnrealizedPL,omitempty"`
+	LongUnrealizedPL  AccountUnitsDefinition   `json:"longUnrealizedPL,omitempty"`
+	ShortUnrealizedPL AccountUnitsDefinition   `json:"shortUnrealizedPL,omitempty"`
+	MarginUsed        AccountUnitsDefinition   `json:"marginUsed,omitempty"`
 }
 
 //
@@ -1397,90 +1397,90 @@ type ClientExtensionsDefinition struct {
 }
 
 type TakeProfitDetailsDefinition struct {
-	Price            PriceValueDefinition       `json:"price,omitempty"`
-	TimeInForce      TimeInForceDefinition      `json:"timeInForce,omitempty"`
-	GtdTime          DateTimeDefinition         `json:"gtdTime,omitempty"`
-	ClientExtensions ClientExtensionsDefinition `json:"clientExtensions,omitempty"`
+	Price            PriceValueDefinition        `json:"price,omitempty"`
+	TimeInForce      TimeInForceDefinition       `json:"timeInForce,omitempty"`
+	GtdTime          DateTimeDefinition          `json:"gtdTime,omitempty"`
+	ClientExtensions *ClientExtensionsDefinition `json:"clientExtensions,omitempty"`
 }
 
 type StopLossDetailsDefinition struct {
-	Price            PriceValueDefinition       `json:"price,omitempty"`
-	Distance         DecimalNumberDefinition    `json:"distance,omitempty"`
-	TimeInForce      TimeInForceDefinition      `json:"timeInForce,omitempty"`
-	GtdTime          DateTimeDefinition         `json:"gtdTime,omitempty"`
-	ClientExtensions ClientExtensionsDefinition `json:"clientExtensions,omitempty"`
-	Guaranteed       bool                       `json:"guaranteed,omitempty"`
+	Price            PriceValueDefinition        `json:"price,omitempty"`
+	Distance         DecimalNumberDefinition     `json:"distance,omitempty"`
+	TimeInForce      TimeInForceDefinition       `json:"timeInForce,omitempty"`
+	GtdTime          DateTimeDefinition          `json:"gtdTime,omitempty"`
+	ClientExtensions *ClientExtensionsDefinition `json:"clientExtensions,omitempty"`
+	Guaranteed       bool                        `json:"guaranteed,omitempty"`
 }
 
 type TrailingStopLossDetailsDefinition struct {
-	Distance         DecimalNumberDefinition    `json:"distance,omitempty"`
-	TimeInForce      TimeInForceDefinition      `json:"timeInForce,omitempty"`
-	GtdTime          DateTimeDefinition         `json:"gtdTime,omitempty"`
-	ClientExtensions ClientExtensionsDefinition `json:"clientExtensions,omitempty"`
+	Distance         DecimalNumberDefinition     `json:"distance,omitempty"`
+	TimeInForce      TimeInForceDefinition       `json:"timeInForce,omitempty"`
+	GtdTime          DateTimeDefinition          `json:"gtdTime,omitempty"`
+	ClientExtensions *ClientExtensionsDefinition `json:"clientExtensions,omitempty"`
 }
 
 type TradeOpenDefinition struct {
-	TradeID                TradeIDDefinition          `json:"tradeID"`
-	Units                  DecimalNumberDefinition    `json:"units"`
-	Price                  PriceValueDefinition       `json:"price"`
-	GuaranteedExecutionFee AccountUnitsDefinition     `json:"guaranteedExecutionFee"`
-	ClientExtensions       ClientExtensionsDefinition `json:"clientExtensions"`
-	HalfSpreadCost         AccountUnitsDefinition     `json:"halfSpreadCost"`
-	InitialMarginRequired  AccountUnitsDefinition     `json:"initialMarginRequired"`
+	TradeID                TradeIDDefinition           `json:"tradeID,omitempty"`
+	Units                  DecimalNumberDefinition     `json:"units,omitempty"`
+	Price                  PriceValueDefinition        `json:"price,omitempty"`
+	GuaranteedExecutionFee AccountUnitsDefinition      `json:"guaranteedExecutionFee,omitempty"`
+	ClientExtensions       *ClientExtensionsDefinition `json:"clientExtensions,omitempty"`
+	HalfSpreadCost         AccountUnitsDefinition      `json:"halfSpreadCost,omitempty"`
+	InitialMarginRequired  AccountUnitsDefinition      `json:"initialMarginRequired,omitempty"`
 }
 
 type TradeReduceDefinition struct {
-	TradeID                TradeIDDefinition       `json:"tradeID"`
-	Units                  DecimalNumberDefinition `json:"units"`
-	Price                  PriceValueDefinition    `json:"price"`
-	RealizedPL             AccountUnitsDefinition  `json:"realizedPL"`
-	Financing              AccountUnitsDefinition  `json:"financing"`
-	GuaranteedExecutionFee AccountUnitsDefinition  `json:"guaranteedExecutionFee"`
-	HalfSpreadCost         AccountUnitsDefinition  `json:"halfSpreadCost"`
+	TradeID                TradeIDDefinition       `json:"tradeID,omitempty"`
+	Units                  DecimalNumberDefinition `json:"units,omitempty"`
+	Price                  PriceValueDefinition    `json:"price,omitempty"`
+	RealizedPL             AccountUnitsDefinition  `json:"realizedPL,omitempty"`
+	Financing              AccountUnitsDefinition  `json:"financing,omitempty"`
+	GuaranteedExecutionFee AccountUnitsDefinition  `json:"guaranteedExecutionFee,omitempty"`
+	HalfSpreadCost         AccountUnitsDefinition  `json:"halfSpreadCost,omitempty"`
 }
 
 type MarketOrderTradeCloseDefinition struct {
-	TradeID       TradeIDDefinition `json:"tradeID"`
-	ClientTradeID string            `json:"clientTradeID"`
-	Units         string            `json:"units"`
+	TradeID       TradeIDDefinition `json:"tradeID,omitempty"`
+	ClientTradeID string            `json:"clientTradeID,omitempty"`
+	Units         string            `json:"units,omitempty"`
 }
 
 type MarketOrderMarginCloseoutDefinition struct {
-	Reason MarketOrderMarginCloseoutReasonDefinition `json:"reason"`
+	Reason MarketOrderMarginCloseoutReasonDefinition `json:"reason,omitempty"`
 }
 
 type MarketOrderMarginCloseoutReasonDefinition string
 
 type MarketOrderDelayedTradeCloseDefinition struct {
-	TradeID             TradeIDDefinition       `json:"tradeID"`
-	ClientTradeID       TradeIDDefinition       `json:"clientTradeID"`
-	SourceTransactionID TransactionIDDefinition `json:"sourceTransactionID"`
+	TradeID             TradeIDDefinition       `json:"tradeID,omitempty"`
+	ClientTradeID       TradeIDDefinition       `json:"clientTradeID,omitempty"`
+	SourceTransactionID TransactionIDDefinition `json:"sourceTransactionID,omitempty"`
 }
 
 type MarketOrderPositionCloseoutDefinition struct {
-	Instrument InstrumentNameDefinition `json:"instrument"`
-	Units      string                   `json:"units"`
+	Instrument InstrumentNameDefinition `json:"instrument,omitempty"`
+	Units      string                   `json:"units,omitempty"`
 }
 
 type LiquidityRegenerationScheduleDefinition struct {
-	Steps []LiquidityRegenerationScheduleStepDefinition `json:"steps"`
+	Steps []*LiquidityRegenerationScheduleStepDefinition `json:"steps,omitempty"`
 }
 
 type LiquidityRegenerationScheduleStepDefinition struct {
-	Timestamp        DateTimeDefinition      `json:"timestamp"`
-	BidLiquidityUsed DecimalNumberDefinition `json:"bidLiquidityUsed"`
-	AskLiquidityUsed DecimalNumberDefinition `json:"askLiquidityUsed"`
+	Timestamp        DateTimeDefinition      `json:"timestamp,omitempty"`
+	BidLiquidityUsed DecimalNumberDefinition `json:"bidLiquidityUsed,omitempty"`
+	AskLiquidityUsed DecimalNumberDefinition `json:"askLiquidityUsed,omitempty"`
 }
 
 type OpenTradeFinancingDefinition struct {
-	TradeID   TradeIDDefinition      `json:"tradeID"`
-	Financing AccountUnitsDefinition `json:"financing"`
+	TradeID   TradeIDDefinition      `json:"tradeID,omitempty"`
+	Financing AccountUnitsDefinition `json:"financing,omitempty"`
 }
 
 type PositionFinancingDefinition struct {
-	Instrument          InstrumentNameDefinition       `json:"instrument"`
-	Financing           AccountUnitsDefinition         `json:"financing"`
-	OpenTradeFinancings []OpenTradeFinancingDefinition `json:"openTradeFinancings"`
+	Instrument          InstrumentNameDefinition        `json:"instrument,omitempty"`
+	Financing           AccountUnitsDefinition          `json:"financing,omitempty"`
+	OpenTradeFinancings []*OpenTradeFinancingDefinition `json:"openTradeFinancings,omitempty"`
 }
 
 type RequestIDDefinition string
@@ -1533,9 +1533,9 @@ const (
 )
 
 type TransactionHeartbeatDefinition struct {
-	Type              string                  `json:"type"`
-	LastTransactionID TransactionIDDefinition `json:"lastTransactionID"`
-	Time              DateTimeDefinition      `json:"time"`
+	Type              string                  `json:"type,omitempty"`
+	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
+	Time              DateTimeDefinition      `json:"time,omitempty"`
 }
 
 //
@@ -1571,23 +1571,23 @@ type QuoteHomeConversionFactorsDefinition struct {
 }
 
 type HomeConversionsDefinition struct {
-	Currency      CurrencyDefinition      `json:"currency"`
-	AccountGain   DecimalNumberDefinition `json:"accountGain"`
-	AccountLoss   DecimalNumberDefinition `json:"accountLoss"`
-	PositionValue DecimalNumberDefinition `json:"positionValue"`
+	Currency      CurrencyDefinition      `json:"currency,omitempty"`
+	AccountGain   DecimalNumberDefinition `json:"accountGain,omitempty"`
+	AccountLoss   DecimalNumberDefinition `json:"accountLoss,omitempty"`
+	PositionValue DecimalNumberDefinition `json:"positionValue,omitempty"`
 }
 
 type ClientPriceDefinition struct {
-	Bids        []PriceBucketDefinition `json:"bids"`
-	Asks        []PriceBucketDefinition `json:"asks"`
-	CloseoutBid PriceValueDefinition    `json:"closeoutBid"`
-	CloseoutAsk PriceValueDefinition    `json:"closeoutAsk"`
-	Timestamp   DateTimeDefinition      `json:"timestamp"`
+	Bids        []*PriceBucketDefinition `json:"bids,omitempty"`
+	Asks        []*PriceBucketDefinition `json:"asks,omitempty"`
+	CloseoutBid PriceValueDefinition     `json:"closeoutBid,omitempty"`
+	CloseoutAsk PriceValueDefinition     `json:"closeoutAsk,omitempty"`
+	Timestamp   DateTimeDefinition       `json:"timestamp,omitempty"`
 }
 
 type PricingHeartbeatDefinition struct {
-	Type string             `json:"type"`
-	Time DateTimeDefinition `json:"time"`
+	Type string             `json:"type,omitempty"`
+	Time DateTimeDefinition `json:"time,omitempty"`
 }
 
 //
@@ -1605,19 +1605,19 @@ type InstrumentNameDefinition string
 type InstrumentTypeDefinition string
 
 type InstrumentDefinition struct {
-	Name                        InstrumentNameDefinition       `json:"name"`
-	Type                        InstrumentTypeDefinition       `json:"type"`
-	DisplayName                 string                         `json:"displayName"`
-	PipLocation                 int                            `json:"pipLocation"`
-	DisplayPrecision            int                            `json:"displayPrecision"`
-	TradeUnitsPrecision         int                            `json:"tradeUnitsPrecision"`
-	MinimumTradeSize            DecimalNumberDefinition        `json:"minimumTradeSize"`
-	MaximumTrailingStopDistance DecimalNumberDefinition        `json:"maximumTrailingStopDistance"`
-	MinimumTrailingStopDistance DecimalNumberDefinition        `json:"minimumTrailingStopDistance"`
-	MaximumPositionSize         DecimalNumberDefinition        `json:"maximumPositionSize"`
-	MaximumOrderUnits           DecimalNumberDefinition        `json:"maximumOrderUnits"`
-	MarginRate                  DecimalNumberDefinition        `json:"marginRate"`
-	Commission                  InstrumentCommissionDefinition `json:"commission"`
+	Name                        InstrumentNameDefinition        `json:"name,omitempty"`
+	Type                        InstrumentTypeDefinition        `json:"type,omitempty"`
+	DisplayName                 string                          `json:"displayName,omitempty"`
+	PipLocation                 int                             `json:"pipLocation,omitempty"`
+	DisplayPrecision            int                             `json:"displayPrecision,omitempty"`
+	TradeUnitsPrecision         int                             `json:"tradeUnitsPrecision,omitempty"`
+	MinimumTradeSize            DecimalNumberDefinition         `json:"minimumTradeSize,omitempty"`
+	MaximumTrailingStopDistance DecimalNumberDefinition         `json:"maximumTrailingStopDistance,omitempty"`
+	MinimumTrailingStopDistance DecimalNumberDefinition         `json:"minimumTrailingStopDistance,omitempty"`
+	MaximumPositionSize         DecimalNumberDefinition         `json:"maximumPositionSize,omitempty"`
+	MaximumOrderUnits           DecimalNumberDefinition         `json:"maximumOrderUnits,omitempty"`
+	MarginRate                  DecimalNumberDefinition         `json:"marginRate,omitempty"`
+	Commission                  *InstrumentCommissionDefinition `json:"commission,omitempty"`
 }
 
 type DateTimeDefinition string
@@ -1625,14 +1625,14 @@ type DateTimeDefinition string
 type AcceptDatetimeFormatDefinition string
 
 type InstrumentCommissionDefinition struct {
-	Commission        DecimalNumberDefinition `json:"commission"`
-	UnitsTraded       DecimalNumberDefinition `json:"unitsTraded"`
-	MinimumCommission DecimalNumberDefinition `json:"minimumCommission"`
+	Commission        DecimalNumberDefinition `json:"commission,omitempty"`
+	UnitsTraded       DecimalNumberDefinition `json:"unitsTraded,omitempty"`
+	MinimumCommission DecimalNumberDefinition `json:"minimumCommission,omitempty"`
 }
 
 type GuaranteedStopLossOrderLevelRestrictionDefinition struct {
-	Volume     DecimalNumberDefinition `json:"volume"`
-	PriceRange DecimalNumberDefinition `json:"priceRange"`
+	Volume     DecimalNumberDefinition `json:"volume,omitempty"`
+	PriceRange DecimalNumberDefinition `json:"priceRange,omitempty"`
 }
 
 type DirectionDefinition string

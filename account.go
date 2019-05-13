@@ -5,52 +5,10 @@ import (
 	"strings"
 )
 
-// Receivers
+/* Receivers */
 
 type ReceiverAccounts struct {
 	Connection *Connection
-}
-
-type ReceiverAccountID struct {
-	AccountID  string
-	Connection *Connection
-}
-
-type ReceiverAccountSummary struct {
-	AccountID  string
-	Connection *Connection
-}
-
-type ReceiverAccountInstruments struct {
-	AccountID  string
-	Connection *Connection
-}
-
-// Params
-
-type GetAccountInstrumentsParams struct {
-	Instruments []string
-}
-
-// Schemas
-
-type GetAccountsSchema struct {
-	Accounts []AccountPropertiesDefinition `json:"accounts"`
-}
-
-type GetAccountIDSchema struct {
-	Account           AccountDefinition       `json:"account"`
-	LastTransactionID TransactionIDDefinition `json:"lastTransactionID"`
-}
-
-type GetAccountSummarySchema struct {
-	Account           AccountSummaryDefinition `json:"account"`
-	LastTransactionID TransactionIDDefinition  `json:"lastTransactionID"`
-}
-
-type GetAccountInstrumentsSchema struct {
-	Instruments       []InstrumentDefinition  `json:"instruments"`
-	LastTransactionID TransactionIDDefinition `json:"lastTransactionID"`
 }
 
 func (c *Connection) Accounts() *ReceiverAccounts {
@@ -58,6 +16,71 @@ func (c *Connection) Accounts() *ReceiverAccounts {
 		Connection: c,
 	}
 }
+
+type ReceiverAccountID struct {
+	AccountID  string
+	Connection *Connection
+}
+
+func (r *ReceiverAccounts) AccountID(id string) *ReceiverAccountID {
+	return &ReceiverAccountID{
+		AccountID:  id,
+		Connection: r.Connection,
+	}
+}
+
+type ReceiverAccountSummary struct {
+	AccountID  string
+	Connection *Connection
+}
+
+func (r *ReceiverAccountID) Summary() *ReceiverAccountSummary {
+	return &ReceiverAccountSummary{
+		AccountID:  r.AccountID,
+		Connection: r.Connection,
+	}
+}
+
+type ReceiverAccountInstruments struct {
+	AccountID  string
+	Connection *Connection
+}
+
+func (r *ReceiverAccountID) Instruments() *ReceiverAccountInstruments {
+	return &ReceiverAccountInstruments{
+		AccountID:  r.AccountID,
+		Connection: r.Connection,
+	}
+}
+
+/* Params */
+
+type GetAccountInstrumentsParams struct {
+	Instruments []string
+}
+
+/* Schemas */
+
+type GetAccountsSchema struct {
+	Accounts []*AccountPropertiesDefinition `json:"accounts,omitempty"`
+}
+
+type GetAccountIDSchema struct {
+	Account           *AccountDefinition       `json:"account,omitempty"`
+	LastTransactionID *TransactionIDDefinition `json:"lastTransactionID,omitempty"`
+}
+
+type GetAccountSummarySchema struct {
+	Account           *AccountSummaryDefinition `json:"account,omitempty"`
+	LastTransactionID *TransactionIDDefinition  `json:"lastTransactionID,omitempty"`
+}
+
+type GetAccountInstrumentsSchema struct {
+	Instruments       []*InstrumentDefinition  `json:"instruments,omitempty"`
+	LastTransactionID *TransactionIDDefinition `json:"lastTransactionID,omitempty"`
+}
+
+/* API */
 
 // GET /v3/accounts
 func (r *ReceiverAccounts) Get() (*GetAccountsSchema, error) {
@@ -83,13 +106,6 @@ func (r *ReceiverAccounts) Get() (*GetAccountsSchema, error) {
 		return nil, xerrors.Errorf("Get accounts failed: %w", err)
 	}
 	return data.(*GetAccountsSchema), nil
-}
-
-func (r *ReceiverAccounts) AccountID(id string) *ReceiverAccountID {
-	return &ReceiverAccountID{
-		AccountID:  id,
-		Connection: r.Connection,
-	}
 }
 
 // GET /v3/accounts/{accountID}
@@ -121,13 +137,6 @@ func (r *ReceiverAccountID) Get() (*GetAccountIDSchema, error) {
 	return data.(*GetAccountIDSchema), nil
 }
 
-func (r *ReceiverAccountID) Summary() *ReceiverAccountSummary {
-	return &ReceiverAccountSummary{
-		AccountID:  r.AccountID,
-		Connection: r.Connection,
-	}
-}
-
 // GET /v3/accounts/{accountID}/summary
 func (r *ReceiverAccountSummary) Get() (*GetAccountSummarySchema, error) {
 	resp, err := r.Connection.request(
@@ -155,13 +164,6 @@ func (r *ReceiverAccountSummary) Get() (*GetAccountSummarySchema, error) {
 		return nil, xerrors.Errorf("Get account summary failed: %w", err)
 	}
 	return data.(*GetAccountSummarySchema), nil
-}
-
-func (r *ReceiverAccountID) Instruments() *ReceiverAccountInstruments {
-	return &ReceiverAccountInstruments{
-		AccountID:  r.AccountID,
-		Connection: r.Connection,
-	}
 }
 
 // GET /v3/accounts/{accountID}/instruments

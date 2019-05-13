@@ -10,11 +10,18 @@ import (
 	"time"
 )
 
-// Receivers
+/* Receivers */
 
 type ReceiverPricing struct {
 	AccountID  string
 	Connection *Connection
+}
+
+func (r *ReceiverAccountID) Pricing() *ReceiverPricing {
+	return &ReceiverPricing{
+		AccountID:  r.AccountID,
+		Connection: r.Connection,
+	}
 }
 
 type ReceiverPricingStream struct {
@@ -22,7 +29,14 @@ type ReceiverPricingStream struct {
 	Connection *Connection
 }
 
-// Params
+func (r *ReceiverPricing) Stream() *ReceiverPricingStream {
+	return &ReceiverPricingStream{
+		AccountID:  r.AccountID,
+		Connection: r.Connection,
+	}
+}
+
+/* Params */
 
 type GetPricingParams struct {
 	Instruments            []string
@@ -36,15 +50,15 @@ type GetPricingStreamParams struct {
 	Instruments []string
 }
 
-// Schemas
+/* Schemas */
 
 type GetPricingSchema struct {
-	Prices          []PriceDefinition           `json:"prices"`
-	HomeConversions []HomeConversionsDefinition `json:"homeConversions"`
-	Time            DateTimeDefinition          `json:"time"`
+	Prices          []*PriceDefinition           `json:"prices,omitempty"`
+	HomeConversions []*HomeConversionsDefinition `json:"homeConversions,omitempty"`
+	Time            DateTimeDefinition           `json:"time,omitempty"`
 }
 
-// Types
+/* Streams */
 
 type PriceChannels struct {
 	Price     <-chan *PriceDefinition
@@ -53,12 +67,7 @@ type PriceChannels struct {
 	closeWait *sync.WaitGroup
 }
 
-func (r *ReceiverAccountID) Pricing() *ReceiverPricing {
-	return &ReceiverPricing{
-		AccountID:  r.AccountID,
-		Connection: r.Connection,
-	}
-}
+/* API */
 
 // GET /v3/accounts/{accountID}/pricing
 func (r *ReceiverPricing) Get(params *GetPricingParams) (*GetPricingSchema, error) {
@@ -101,13 +110,6 @@ func (r *ReceiverPricing) Get(params *GetPricingParams) (*GetPricingSchema, erro
 		return nil, xerrors.Errorf("Get pricing failed: %w", err)
 	}
 	return data.(*GetPricingSchema), nil
-}
-
-func (r *ReceiverPricing) Stream() *ReceiverPricingStream {
-	return &ReceiverPricingStream{
-		AccountID:  r.AccountID,
-		Connection: r.Connection,
-	}
 }
 
 // GET /v3/accounts/{accountID}/pricing/stream
@@ -226,6 +228,8 @@ func (r *ReceiverPricingStream) Get(params *GetPricingStreamParams) (*PriceChann
 		closeWait: closeWait,
 	}, nil
 }
+
+/* Utils */
 
 func (ch *PriceChannels) Close() {
 	close(ch.close)
