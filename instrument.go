@@ -112,6 +112,8 @@ func (r *ReceiverInstrument) Candles() *ReceiverInstrumentCandles {
 }
 
 // GET /v3/instruments/{instrument}/candles
+//
+// Fetch candlestick data for an instrument.
 func (r *ReceiverInstrumentCandles) Get(params *GetInstrumentCandlesParams) (*GetInstrumentCandlesSchema, error) {
 	resp, err := r.Connection.request(
 		&requestParams{
