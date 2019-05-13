@@ -39,9 +39,9 @@ type GetPricingStreamParams struct {
 // Schemas
 
 type GetPricingSchema struct {
-	Prices          []PriceDefinition           `json:"prices"`
-	HomeConversions []HomeConversionsDefinition `json:"homeConversions"`
-	Time            DateTimeDefinition          `json:"time"`
+	Prices          []*PriceDefinition           `json:"prices,omitempty"`
+	HomeConversions []*HomeConversionsDefinition `json:"homeConversions,omitempty"`
+	Time            DateTimeDefinition           `json:"time,omitempty"`
 }
 
 // Types

@@ -24,23 +24,23 @@ type PostOrdersParams struct {
 // Schemas
 
 type PostOrdersSchema struct {
-	OrderCreateTransaction        TransactionDefinition            `json:"orderCreateTransaction"`
-	OrderFillTransaction          OrderFillTransactionDefinition   `json:"orderFillTransaction"`
-	OrderCancelTransaction        OrderCancelTransactionDefinition `json:"orderCancelTransaction"`
-	OrderReissueTransaction       TransactionDefinition            `json:"orderReissueTransaction"`
-	OrderReissueRejectTransaction TransactionDefinition            `json:"orderReissueRejectTransaction"`
-	RelatedTransactionIDs         []TransactionIDDefinition        `json:"relatedTransactionIDs"`
-	LastTransactionID             TransactionIDDefinition          `json:"lastTransactionID"`
+	OrderCreateTransaction        *TransactionDefinition            `json:"orderCreateTransaction,omitempty"`
+	OrderFillTransaction          *OrderFillTransactionDefinition   `json:"orderFillTransaction,omitempty"`
+	OrderCancelTransaction        *OrderCancelTransactionDefinition `json:"orderCancelTransaction,omitempty"`
+	OrderReissueTransaction       *TransactionDefinition            `json:"orderReissueTransaction,omitempty"`
+	OrderReissueRejectTransaction *TransactionDefinition            `json:"orderReissueRejectTransaction,omitempty"`
+	RelatedTransactionIDs         []TransactionIDDefinition         `json:"relatedTransactionIDs,omitempty"`
+	LastTransactionID             TransactionIDDefinition           `json:"lastTransactionID,omitempty"`
 }
 
 // Errors
 
 type PostOrdersBadRequestError struct {
-	OrderRejectTransaction TransactionDefinition     `json:"orderRejectTransaction"`
-	RelatedTransactionIDs  []TransactionIDDefinition `json:"relatedTransactionIDs"`
-	LastTransactionID      TransactionIDDefinition   `json:"lastTransactionID"`
-	ErrorCode              string                    `json:"errorCode"`
-	ErrorMessage           string                    `json:"errorMessage"`
+	OrderRejectTransaction *TransactionDefinition    `json:"orderRejectTransaction,omitempty"`
+	RelatedTransactionIDs  []TransactionIDDefinition `json:"relatedTransactionIDs,omitempty"`
+	LastTransactionID      TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
+	ErrorCode              string                    `json:"errorCode,omitempty"`
+	ErrorMessage           string                    `json:"errorMessage,omitempty"`
 }
 
 func (r *PostOrdersBadRequestError) Error() string {
@@ -49,11 +49,11 @@ func (r *PostOrdersBadRequestError) Error() string {
 }
 
 type PostOrdersNotFoundError struct {
-	OrderRejectTransaction TransactionDefinition     `json:"orderRejectTransaction"`
-	RelatedTransactionIDs  []TransactionIDDefinition `json:"relatedTransactionIDs"`
-	LastTransactionID      TransactionIDDefinition   `json:"lastTransactionID"`
-	ErrorCode              string                    `json:"errorCode"`
-	ErrorMessage           string                    `json:"errorMessage"`
+	OrderRejectTransaction *TransactionDefinition    `json:"orderRejectTransaction,omitempty"`
+	RelatedTransactionIDs  []TransactionIDDefinition `json:"relatedTransactionIDs,omitempty"`
+	LastTransactionID      TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
+	ErrorCode              string                    `json:"errorCode,omitempty"`
+	ErrorMessage           string                    `json:"errorMessage,omitempty"`
 }
 
 func (r *PostOrdersNotFoundError) Error() string {

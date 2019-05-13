@@ -51,25 +51,25 @@ type GetTransactionsStreamParams struct {
 // Schemas
 
 type GetTransactionsSchema struct {
-	From              DateTimeDefinition            `json:"from"`
-	To                DateTimeDefinition            `json:"to"`
-	PageSize          int                           `json:"pageSize"`
-	Type              []TransactionFilterDefinition `json:"type"`
-	Count             int                           `json:"count"`
-	Pages             []string                      `json:"pages"`
-	LastTransactionID TransactionIDDefinition       `json:"lastTransactionID"`
+	From              DateTimeDefinition            `json:"from,omitempty"`
+	To                DateTimeDefinition            `json:"to,omitempty"`
+	PageSize          int                           `json:"pageSize,omitempty"`
+	Type              []TransactionFilterDefinition `json:"type,omitempty"`
+	Count             int                           `json:"count,omitempty"`
+	Pages             []string                      `json:"pages,omitempty"`
+	LastTransactionID TransactionIDDefinition       `json:"lastTransactionID,omitempty"`
 }
 
 type GetTransactionsIdrangeSchema struct {
-	Transactions      []interface{}           `json:"transactions"`
-	LastTransactionID TransactionIDDefinition `json:"lastTransactionID"`
+	Transactions      []interface{}           `json:"transactions,omitempty"`
+	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
 type getTransactionsIdrangeParser struct {
-	Transactions []TransactionDefinition `json:"transactions"`
+	Transactions []TransactionDefinition `json:"transactions,omitempty"`
 }
 type getTransactionsIdrangeRawMessage struct {
-	Message []json.RawMessage `json:"transactions"`
+	Message []json.RawMessage `json:"transactions,omitempty"`
 }
 
 type TransactionsChannels struct {

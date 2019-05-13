@@ -35,22 +35,22 @@ type GetAccountInstrumentsParams struct {
 // Schemas
 
 type GetAccountsSchema struct {
-	Accounts []AccountPropertiesDefinition `json:"accounts"`
+	Accounts []*AccountPropertiesDefinition `json:"accounts,omitempty"`
 }
 
 type GetAccountIDSchema struct {
-	Account           AccountDefinition       `json:"account"`
-	LastTransactionID TransactionIDDefinition `json:"lastTransactionID"`
+	Account           *AccountDefinition       `json:"account,omitempty"`
+	LastTransactionID *TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
 type GetAccountSummarySchema struct {
-	Account           AccountSummaryDefinition `json:"account"`
-	LastTransactionID TransactionIDDefinition  `json:"lastTransactionID"`
+	Account           *AccountSummaryDefinition `json:"account,omitempty"`
+	LastTransactionID *TransactionIDDefinition  `json:"lastTransactionID,omitempty"`
 }
 
 type GetAccountInstrumentsSchema struct {
-	Instruments       []InstrumentDefinition  `json:"instruments"`
-	LastTransactionID TransactionIDDefinition `json:"lastTransactionID"`
+	Instruments       []*InstrumentDefinition  `json:"instruments,omitempty"`
+	LastTransactionID *TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
 func (c *Connection) Accounts() *ReceiverAccounts {
