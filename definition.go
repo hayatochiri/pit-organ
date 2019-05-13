@@ -207,11 +207,11 @@ type CandlestickDataDefinition struct {
 }
 
 type OrderBookDefinition struct {
-	Instrument  InstrumentNameDefinition    `json:"instrument"`
-	Time        DateTimeDefinition          `json:"time"`
-	Price       PriceValueDefinition        `json:"price"`
-	BucketWidth PriceValueDefinition        `json:"bucketWidth"`
-	Buckets     []OrderBookBucketDefinition `json:"buckets"`
+	Instrument  InstrumentNameDefinition    `json:"instrument,omitempty"`
+	Time        DateTimeDefinition          `json:"time,omitempty"`
+	Price       PriceValueDefinition        `json:"price,omitempty"`
+	BucketWidth PriceValueDefinition        `json:"bucketWidth,omitempty"`
+	Buckets     []OrderBookBucketDefinition `json:"buckets,omitempty"`
 }
 
 type OrderBookBucketDefinition struct {
@@ -221,11 +221,11 @@ type OrderBookBucketDefinition struct {
 }
 
 type PositionBookDefinition struct {
-	Instrument  InstrumentNameDefinition       `json:"instrument"`
-	Time        DateTimeDefinition             `json:"time"`
-	Price       PriceValueDefinition           `json:"price"`
-	BucketWidth PriceValueDefinition           `json:"bucketWidth"`
-	Buckets     []PositionBookBucketDefinition `json:"buckets"`
+	Instrument  InstrumentNameDefinition       `json:"instrument,omitempty"`
+	Time        DateTimeDefinition             `json:"time,omitempty"`
+	Price       PriceValueDefinition           `json:"price,omitempty"`
+	BucketWidth PriceValueDefinition           `json:"bucketWidth,omitempty"`
+	Buckets     []PositionBookBucketDefinition `json:"buckets,omitempty"`
 }
 
 type PositionBookBucketDefinition struct {
