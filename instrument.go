@@ -1,7 +1,9 @@
 package pitOrgan
 
 import (
+	"github.com/peterhellberg/link"
 	"golang.org/x/xerrors"
+	"net/url"
 	"strconv"
 	"time"
 )
@@ -49,12 +51,44 @@ type GetInstrumentCandlesParams struct {
 	WeeklyAlignment   WeeklyAlignmentDefinition
 }
 
+type GetInstrumentOrderBookParams struct {
+	Time time.Time // The time of the snapshot to fetch. If not specified, then the most recent snapshot is fetched.
+}
+
+type GetInstrumentPositionBookParams struct {
+	Time time.Time // The time of the snapshot to fetch. If not specified, then the most recent snapshot is fetched.
+}
+
 // Schemas
 
 type GetInstrumentCandlesSchema struct {
 	Instrument  InstrumentNameDefinition         `json:"instrument,omitempty"`
 	Granularity CandlestickGranularityDefinition `json:"granularity,omitempty"`
 	Candles     []*CandlestickDefinition         `json:"candles,omitempty"`
+}
+
+type GetInstrumentOrderBookSchema struct {
+	// The instrument’s order book
+	OrderBook *OrderBookDefinition `json:"orderBook,omitempty"`
+	Headers   struct {
+		RequestID string
+		Link      struct {
+			Prev time.Time
+			Next time.Time
+		}
+	}
+}
+
+type GetInstrumentPositionBookSchema struct {
+	// The instrument’s position book
+	PositionBook *PositionBookDefinition `json:"positionBook,omitempty"`
+	Headers      struct {
+		RequestID string
+		Link      struct {
+			Prev time.Time
+			Next time.Time
+		}
+	}
 }
 
 func (c *Connection) Instruments() *ReceiverInstruments {
@@ -181,7 +215,75 @@ func (r *ReceiverInstrument) OrderBook() *ReceiverInstrumentOrderBook {
 	}
 }
 
-// TODO: GET /v3/instruments/{instrument}/orderBook
+// GET /v3/instruments/{instrument}/orderBook
+//
+// Fetch an order book for an instrument.
+func (r *ReceiverInstrumentOrderBook) Get(params *GetInstrumentOrderBookParams) (*GetInstrumentOrderBookSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "GET",
+			endPoint: "/v3/instruments/" + r.Instrument + "/orderBook",
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+			queries: func() []query {
+				q := make([]query, 0, 1)
+				if params == nil {
+					return q
+				}
+
+				// time
+				if !params.Time.IsZero() {
+					q = append(q, query{key: "time", value: params.Time.Format(time.RFC3339Nano)})
+				}
+
+				return q
+			}(),
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Get instrument order book canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		schema := new(GetInstrumentOrderBookSchema)
+		if reqID, ok := resp.Header["Requestid"]; ok {
+			schema.Headers.RequestID = reqID[0]
+		}
+		if links, ok := resp.Header["Link"]; ok {
+			for _, l := range link.Parse(links[0]) {
+				u, err := url.Parse(l.URI)
+				if err != nil {
+					return nil, xerrors.Errorf("Parse orderbook header failed: %w", err)
+				}
+				if refTimes, ok := u.Query()["time"]; ok {
+					refTime, err := time.Parse(time.RFC3339, refTimes[0])
+					if err != nil {
+						return nil, xerrors.Errorf("Parse orderbook %#v time: %w", l.Rel, err)
+					}
+					switch l.Rel {
+					case "prev":
+						schema.Headers.Link.Prev = refTime
+					case "next":
+						schema.Headers.Link.Next = refTime
+					default:
+						return nil, xerrors.Errorf("Unexpected orderbook link %#v <%#v>", l.Rel, l.URI)
+					}
+				}
+			}
+		}
+		data = schema
+	}
+
+	data, err = parseResponse(resp, data)
+	if err != nil {
+		return nil, xerrors.Errorf("Get instrument order book failed: %w", err)
+	}
+	return data.(*GetInstrumentOrderBookSchema), nil
+}
 
 func (r *ReceiverInstrument) PositionBook() *ReceiverInstrumentPositionBook {
 	return &ReceiverInstrumentPositionBook{
@@ -190,4 +292,72 @@ func (r *ReceiverInstrument) PositionBook() *ReceiverInstrumentPositionBook {
 	}
 }
 
-// TODO: GET /v3/instruments/{instrument}/positionBook
+// GET /v3/instruments/{instrument}/positionBook
+//
+// Fetch a position book for an instrument.
+func (r *ReceiverInstrumentPositionBook) Get(params *GetInstrumentPositionBookParams) (*GetInstrumentPositionBookSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "GET",
+			endPoint: "/v3/instruments/" + r.Instrument + "/positionBook",
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+			queries: func() []query {
+				q := make([]query, 0, 1)
+				if params == nil {
+					return q
+				}
+
+				// time
+				if !params.Time.IsZero() {
+					q = append(q, query{key: "time", value: params.Time.Format(time.RFC3339Nano)})
+				}
+
+				return q
+			}(),
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Get instrument position book canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		schema := new(GetInstrumentPositionBookSchema)
+		if reqID, ok := resp.Header["Requestid"]; ok {
+			schema.Headers.RequestID = reqID[0]
+		}
+		if links, ok := resp.Header["Link"]; ok {
+			for _, l := range link.Parse(links[0]) {
+				u, err := url.Parse(l.URI)
+				if err != nil {
+					return nil, xerrors.Errorf("Parse positionbook header failed: %w", err)
+				}
+				if refTimes, ok := u.Query()["time"]; ok {
+					refTime, err := time.Parse(time.RFC3339, refTimes[0])
+					if err != nil {
+						return nil, xerrors.Errorf("Parse positionbook %#v time: %w", l.Rel, err)
+					}
+					switch l.Rel {
+					case "prev":
+						schema.Headers.Link.Prev = refTime
+					case "next":
+						schema.Headers.Link.Next = refTime
+					default:
+						return nil, xerrors.Errorf("Unexpected positionbook link %#v <%#v>", l.Rel, l.URI)
+					}
+				}
+			}
+		}
+		data = schema
+	}
+
+	data, err = parseResponse(resp, data)
+	if err != nil {
+		return nil, xerrors.Errorf("Get instrument position book failed: %w", err)
+	}
+	return data.(*GetInstrumentPositionBookSchema), nil
+}
