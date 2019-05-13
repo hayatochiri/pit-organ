@@ -361,3 +361,19 @@ func (r *ReceiverInstrumentPositionBook) Get(params *GetInstrumentPositionBookPa
 	}
 	return data.(*GetInstrumentPositionBookSchema), nil
 }
+
+func (s *GetInstrumentOrderBookSchema) PrevParams() *GetInstrumentOrderBookParams {
+	return &GetInstrumentOrderBookParams{Time: s.Headers.Link.Prev}
+}
+
+func (s *GetInstrumentOrderBookSchema) NextParams() *GetInstrumentOrderBookParams {
+	return &GetInstrumentOrderBookParams{Time: s.Headers.Link.Next}
+}
+
+func (s *GetInstrumentPositionBookSchema) PrevParams() *GetInstrumentPositionBookParams {
+	return &GetInstrumentPositionBookParams{Time: s.Headers.Link.Prev}
+}
+
+func (s *GetInstrumentPositionBookSchema) NextParams() *GetInstrumentPositionBookParams {
+	return &GetInstrumentPositionBookParams{Time: s.Headers.Link.Next}
+}
