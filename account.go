@@ -106,6 +106,32 @@ type PatchAccountConfigurationSchema struct {
 	LastTransactionID          TransactionIDDefinition               `json:"lastTransactionID,omitempty"`
 }
 
+/* Errors */
+
+type PatchAccountConfigurationBadRequestError struct {
+	ClientConfigureRejectTransaction *ClientConfigureRejectTransactionDefinition `json:"clientConfigureRejectTransaction,omitempty"`
+	LastTransactionID                TransactionIDDefinition                     `json:"lastTransactionID,omitempty"`
+	ErrorCode                        string                                      `json:"errorCode,omitempty"`
+	ErrorMessage                     string                                      `json:"errorMessage,omitempty"`
+}
+
+func (r *PatchAccountConfigurationBadRequestError) Error() string {
+	// TODO: エラーを整える
+	return r.ErrorMessage
+}
+
+type PatchAccountConfigurationForbiddenError struct {
+	ClientConfigureRejectTransaction *ClientConfigureRejectTransactionDefinition `json:"clientConfigureRejectTransaction,omitempty"`
+	LastTransactionID                TransactionIDDefinition                     `json:"lastTransactionID,omitempty"`
+	ErrorCode                        string                                      `json:"errorCode,omitempty"`
+	ErrorMessage                     string                                      `json:"errorMessage,omitempty"`
+}
+
+func (r *PatchAccountConfigurationForbiddenError) Error() string {
+	// TODO: エラーを整える
+	return r.ErrorMessage
+}
+
 /* API */
 
 // GET /v3/accounts
@@ -245,6 +271,10 @@ func (r *ReceiverAccountConfiguration) Patch(params *PatchAccountConfigurationPa
 	switch resp.StatusCode {
 	case 200:
 		data = new(PatchAccountConfigurationSchema)
+	case 400:
+		data = new(PatchAccountConfigurationBadRequestError)
+	case 403:
+		data = new(PatchAccountConfigurationForbiddenError)
 	}
 
 	data, err = parseResponse(resp, data)
