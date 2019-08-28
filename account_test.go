@@ -51,7 +51,7 @@ func Test_AccountInstruments(t *testing.T) {
 	data, err := connection.Accounts().AccountID(accountID).Instruments().Get(params)
 
 	if err != nil {
-		t.Fatalf("Get account instruments` failed.\n%+v", err)
+		t.Fatalf("Get account instruments failed.\n%+v", err)
 	}
 
 	t.Logf("Response:\n%s", spew.Sdump(data))
