@@ -71,6 +71,15 @@ type GetAccountInstrumentsParams struct {
 	Instruments []string
 }
 
+type PatchAccountConfigurationBodyParams struct {
+	Alias      interface{} `json:"alias,omitempty"`
+	MarginRate interface{} `json:"marginRate,omitempty"`
+}
+
+type PatchAccountConfigurationParams struct {
+	Body *PatchAccountConfigurationBodyParams
+}
+
 /* Schemas */
 
 type GetAccountsSchema struct {
@@ -90,6 +99,11 @@ type GetAccountSummarySchema struct {
 type GetAccountInstrumentsSchema struct {
 	Instruments       []*InstrumentDefinition  `json:"instruments,omitempty"`
 	LastTransactionID *TransactionIDDefinition `json:"lastTransactionID,omitempty"`
+}
+
+type PatchAccountConfigurationSchema struct {
+	ClientConfigureTransaction *ClientConfigureTransactionDefinition `json:"clientConfigureTransaction,omitempty"`
+	LastTransactionID          TransactionIDDefinition               `json:"lastTransactionID,omitempty"`
 }
 
 /* API */
@@ -210,6 +224,34 @@ func (r *ReceiverAccountInstruments) Get(params *GetAccountInstrumentsParams) (*
 	return data.(*GetAccountInstrumentsSchema), nil
 }
 
-// TODO: PATCH /v3/accounts/{accountID}/configuration
+// PATCH /v3/accounts/{accountID}/configuration
+func (r *ReceiverAccountConfiguration) Patch(params *PatchAccountConfigurationParams) (*PatchAccountConfigurationSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "PATCH",
+			endPoint: "/v3/accounts/" + r.AccountID + "/configuration",
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+			body: params.Body,
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Patch account configuration canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		data = new(PatchAccountConfigurationSchema)
+	}
+
+	data, err = parseResponse(resp, data)
+	if err != nil {
+		return nil, xerrors.Errorf("Patch account configuration failed: %w", err)
+	}
+	return data.(*PatchAccountConfigurationSchema), nil
+}
 
 // TODO: GET /v3/accounts/{accountID}/changes
