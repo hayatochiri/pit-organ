@@ -53,6 +53,18 @@ func (r *ReceiverAccountID) Instruments() *ReceiverAccountInstruments {
 	}
 }
 
+type ReceiverAccountConfiguration struct {
+	AccountID  string
+	Connection *Connection
+}
+
+func (r *ReceiverAccountID) Configuration() *ReceiverAccountConfiguration {
+	return &ReceiverAccountConfiguration{
+		AccountID:  r.AccountID,
+		Connection: r.Connection,
+	}
+}
+
 /* Params */
 
 type GetAccountInstrumentsParams struct {
