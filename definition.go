@@ -79,7 +79,7 @@ type AccountPropertiesDefinition struct {
 type GuaranteedStopLossOrderModeDefinition string
 
 type AccountSummaryDefinition struct {
-	Id                          AccountIDDefinition                   `json:"id,omitempty"`
+	ID                          AccountIDDefinition                   `json:"id,omitempty"`
 	Alias                       string                                `json:"alias,omitempty"`
 	Currency                    CurrencyDefinition                    `json:"currency,omitempty"`
 	Balance                     AccountUnitsDefinition                `json:"balance,omitempty"`
@@ -241,14 +241,14 @@ type PositionBookBucketDefinition struct {
 // Orders
 
 type OrderDefinition struct {
-	Id               OrderIDDefinition           `json:"id,omitempty"`
+	ID               OrderIDDefinition           `json:"id,omitempty"`
 	CreateTime       DateTimeDefinition          `json:"createTime,omitempty"`
 	State            OrderStateDefinition        `json:"state,omitempty"`
 	ClientExtensions *ClientExtensionsDefinition `json:"clientExtensions,omitempty"`
 }
 
 type MarketOrderDefinition struct {
-	Id                      OrderIDDefinition                       `json:"id,omitempty"`
+	ID                      OrderIDDefinition                       `json:"id,omitempty"`
 	CreateTime              DateTimeDefinition                      `json:"createTime,omitempty"`
 	State                   OrderStateDefinition                    `json:"state,omitempty"`
 	ClientExtensions        *ClientExtensionsDefinition             `json:"clientExtensions,omitempty"`
@@ -277,7 +277,7 @@ type MarketOrderDefinition struct {
 }
 
 type FixedPriceOrderDefinition struct {
-	Id                      OrderIDDefinition                  `json:"id,omitempty"`
+	ID                      OrderIDDefinition                  `json:"id,omitempty"`
 	CreateTime              DateTimeDefinition                 `json:"createTime,omitempty"`
 	State                   OrderStateDefinition               `json:"state,omitempty"`
 	ClientExtensions        *ClientExtensionsDefinition        `json:"clientExtensions,omitempty"`
@@ -301,7 +301,7 @@ type FixedPriceOrderDefinition struct {
 }
 
 type LimitOrderDefinition struct {
-	Id                      OrderIDDefinition                  `json:"id,omitempty"`
+	ID                      OrderIDDefinition                  `json:"id,omitempty"`
 	CreateTime              DateTimeDefinition                 `json:"createTime,omitempty"`
 	State                   OrderStateDefinition               `json:"state,omitempty"`
 	ClientExtensions        *ClientExtensionsDefinition        `json:"clientExtensions,omitempty"`
@@ -329,7 +329,7 @@ type LimitOrderDefinition struct {
 }
 
 type StopOrderDefinition struct {
-	Id                      OrderIDDefinition                  `json:"id,omitempty"`
+	ID                      OrderIDDefinition                  `json:"id,omitempty"`
 	CreateTime              DateTimeDefinition                 `json:"createTime,omitempty"`
 	State                   OrderStateDefinition               `json:"state,omitempty"`
 	ClientExtensions        *ClientExtensionsDefinition        `json:"clientExtensions,omitempty"`
@@ -358,7 +358,7 @@ type StopOrderDefinition struct {
 }
 
 type MarketIfTouchedOrderDefinition struct {
-	Id                      OrderIDDefinition                  `json:"id,omitempty"`
+	ID                      OrderIDDefinition                  `json:"id,omitempty"`
 	CreateTime              DateTimeDefinition                 `json:"createTime,omitempty"`
 	State                   OrderStateDefinition               `json:"state,omitempty"`
 	ClientExtensions        *ClientExtensionsDefinition        `json:"clientExtensions,omitempty"`
@@ -388,7 +388,7 @@ type MarketIfTouchedOrderDefinition struct {
 }
 
 type TakeProfitOrderDefinition struct {
-	Id                      OrderIDDefinition               `json:"id,omitempty"`
+	ID                      OrderIDDefinition               `json:"id,omitempty"`
 	CreateTime              DateTimeDefinition              `json:"createTime,omitempty"`
 	State                   OrderStateDefinition            `json:"state,omitempty"`
 	ClientExtensions        *ClientExtensionsDefinition     `json:"clientExtensions,omitempty"`
@@ -411,7 +411,7 @@ type TakeProfitOrderDefinition struct {
 }
 
 type StopLossOrderDefinition struct {
-	Id                         OrderIDDefinition               `json:"id,omitempty"`
+	ID                         OrderIDDefinition               `json:"id,omitempty"`
 	CreateTime                 DateTimeDefinition              `json:"createTime,omitempty"`
 	State                      OrderStateDefinition            `json:"state,omitempty"`
 	ClientExtensions           *ClientExtensionsDefinition     `json:"clientExtensions,omitempty"`
@@ -437,7 +437,7 @@ type StopLossOrderDefinition struct {
 }
 
 type TrailingStopLossOrderDefinition struct {
-	Id                      OrderIDDefinition               `json:"id,omitempty"`
+	ID                      OrderIDDefinition               `json:"id,omitempty"`
 	CreateTime              DateTimeDefinition              `json:"createTime,omitempty"`
 	State                   OrderStateDefinition            `json:"state,omitempty"`
 	ClientExtensions        *ClientExtensionsDefinition     `json:"clientExtensions,omitempty"`
@@ -590,7 +590,7 @@ type OrderPositionFillDefinition string
 type OrderTriggerConditionDefinition string
 
 type DynamicOrderStateDefinition struct {
-	Id                     OrderIDDefinition    `json:"id,omitempty"`
+	ID                     OrderIDDefinition    `json:"id,omitempty"`
 	TrailingStopValue      PriceValueDefinition `json:"trailingStopValue,omitempty"`
 	TriggerDistance        PriceValueDefinition `json:"triggerDistance,omitempty"`
 	IsTriggerDistanceExact bool                 `json:"isTriggerDistanceExact,omitempty"`
@@ -627,7 +627,7 @@ type TradeStateFilterDefinition string
 type TradeSpecifierDefinition string
 
 type TradeDefinition struct {
-	Id                    TradeIDDefinition                `json:"id,omitempty"`
+	ID                    TradeIDDefinition                `json:"id,omitempty"`
 	Instrument            InstrumentNameDefinition         `json:"instrument,omitempty"`
 	Price                 PriceValueDefinition             `json:"price,omitempty"`
 	OpenTime              DateTimeDefinition               `json:"openTime,omitempty"`
@@ -649,7 +649,7 @@ type TradeDefinition struct {
 }
 
 type TradeSummaryDefinition struct {
-	Id                      TradeIDDefinition           `json:"id,omitempty"`
+	ID                      TradeIDDefinition           `json:"id,omitempty"`
 	Instrument              InstrumentNameDefinition    `json:"instrument,omitempty"`
 	Price                   PriceValueDefinition        `json:"price,omitempty"`
 	OpenTime                DateTimeDefinition          `json:"openTime,omitempty"`
@@ -671,7 +671,7 @@ type TradeSummaryDefinition struct {
 }
 
 type CalculatedTradeStateDefinition struct {
-	Id           TradeIDDefinition      `json:"id,omitempty"`
+	ID           TradeIDDefinition      `json:"id,omitempty"`
 	UnrealizedPL AccountUnitsDefinition `json:"unrealizedPL,omitempty"`
 	MarginUsed   AccountUnitsDefinition `json:"marginUsed,omitempty"`
 }
@@ -722,7 +722,7 @@ type CalculatedPositionStateDefinition struct {
 
 // TODO: Implemented by: OrderFillTransaction, OrderCancelTransaction, OrderCancelRejectTransaction, OrderClientExtensionsModifyTransaction, OrderClientExtensionsModifyRejectTransaction, CreateTransaction, CloseTransaction, ReopenTransaction, ClientConfigureTransaction, ClientConfigureRejectTransaction, TransferFundsTransaction, TransferFundsRejectTransaction, MarketOrderTransaction, MarketOrderRejectTransaction, FixedPriceOrderTransaction, LimitOrderTransaction, LimitOrderRejectTransaction, StopOrderTransaction, StopOrderRejectTransaction, MarketIfTouchedOrderTransaction, MarketIfTouchedOrderRejectTransaction, TakeProfitOrderTransaction, TakeProfitOrderRejectTransaction, StopLossOrderTransaction, StopLossOrderRejectTransaction, TrailingStopLossOrderTransaction, TrailingStopLossOrderRejectTransaction, TradeClientExtensionsModifyTransaction, TradeClientExtensionsModifyRejectTransaction, MarginCallEnterTransaction, MarginCallExtendTransaction, MarginCallExitTransaction, DelayedTradeClosureTransaction, DailyFinancingTransaction, ResetResettablePLTransaction
 type TransactionDefinition struct {
-	Id        TransactionIDDefinition   `json:"id,omitempty"`
+	ID        TransactionIDDefinition   `json:"id,omitempty"`
 	Time      DateTimeDefinition        `json:"time,omitempty"`
 	UserID    int                       `json:"userID,omitempty"`
 	AccountID AccountIDDefinition       `json:"accountID,omitempty"`
@@ -732,7 +732,7 @@ type TransactionDefinition struct {
 }
 
 type CreateTransactionDefinition struct {
-	Id            TransactionIDDefinition   `json:"id,omitempty"`
+	ID            TransactionIDDefinition   `json:"id,omitempty"`
 	Time          DateTimeDefinition        `json:"time,omitempty"`
 	UserID        int                       `json:"userID,omitempty"`
 	AccountID     AccountIDDefinition       `json:"accountID,omitempty"`
@@ -747,7 +747,7 @@ type CreateTransactionDefinition struct {
 }
 
 type CloseTransactionDefinition struct {
-	Id        TransactionIDDefinition   `json:"id,omitempty"`
+	ID        TransactionIDDefinition   `json:"id,omitempty"`
 	Time      DateTimeDefinition        `json:"time,omitempty"`
 	UserID    int                       `json:"userID,omitempty"`
 	AccountID AccountIDDefinition       `json:"accountID,omitempty"`
@@ -757,7 +757,7 @@ type CloseTransactionDefinition struct {
 }
 
 type ReopenTransactionDefinition struct {
-	Id        TransactionIDDefinition   `json:"id,omitempty"`
+	ID        TransactionIDDefinition   `json:"id,omitempty"`
 	Time      DateTimeDefinition        `json:"time,omitempty"`
 	UserID    int                       `json:"userID,omitempty"`
 	AccountID AccountIDDefinition       `json:"accountID,omitempty"`
@@ -767,7 +767,7 @@ type ReopenTransactionDefinition struct {
 }
 
 type ClientConfigureTransactionDefinition struct {
-	Id         TransactionIDDefinition   `json:"id,omitempty"`
+	ID         TransactionIDDefinition   `json:"id,omitempty"`
 	Time       DateTimeDefinition        `json:"time,omitempty"`
 	UserID     int                       `json:"userID,omitempty"`
 	AccountID  AccountIDDefinition       `json:"accountID,omitempty"`
@@ -779,7 +779,7 @@ type ClientConfigureTransactionDefinition struct {
 }
 
 type ClientConfigureRejectTransactionDefinition struct {
-	Id           TransactionIDDefinition           `json:"id,omitempty"`
+	ID           TransactionIDDefinition           `json:"id,omitempty"`
 	Time         DateTimeDefinition                `json:"time,omitempty"`
 	UserID       int                               `json:"userID,omitempty"`
 	AccountID    AccountIDDefinition               `json:"accountID,omitempty"`
@@ -792,7 +792,7 @@ type ClientConfigureRejectTransactionDefinition struct {
 }
 
 type TransferFundsTransactionDefinition struct {
-	Id             TransactionIDDefinition   `json:"id,omitempty"`
+	ID             TransactionIDDefinition   `json:"id,omitempty"`
 	Time           DateTimeDefinition        `json:"time,omitempty"`
 	UserID         int                       `json:"userID,omitempty"`
 	AccountID      AccountIDDefinition       `json:"accountID,omitempty"`
@@ -806,7 +806,7 @@ type TransferFundsTransactionDefinition struct {
 }
 
 type TransferFundsRejectTransactionDefinition struct {
-	Id            TransactionIDDefinition           `json:"id,omitempty"`
+	ID            TransactionIDDefinition           `json:"id,omitempty"`
 	Time          DateTimeDefinition                `json:"time,omitempty"`
 	UserID        int                               `json:"userID,omitempty"`
 	AccountID     AccountIDDefinition               `json:"accountID,omitempty"`
@@ -820,7 +820,7 @@ type TransferFundsRejectTransactionDefinition struct {
 }
 
 type MarketOrderTransactionDefinition struct {
-	Id                     TransactionIDDefinition                 `json:"id,omitempty"`
+	ID                     TransactionIDDefinition                 `json:"id,omitempty"`
 	Time                   DateTimeDefinition                      `json:"time,omitempty"`
 	UserID                 int                                     `json:"userID,omitempty"`
 	AccountID              AccountIDDefinition                     `json:"accountID,omitempty"`
@@ -846,7 +846,7 @@ type MarketOrderTransactionDefinition struct {
 }
 
 type MarketOrderRejectTransactionDefinition struct {
-	Id                     TransactionIDDefinition                 `json:"id,omitempty"`
+	ID                     TransactionIDDefinition                 `json:"id,omitempty"`
 	Time                   DateTimeDefinition                      `json:"time,omitempty"`
 	UserID                 int                                     `json:"userID,omitempty"`
 	AccountID              AccountIDDefinition                     `json:"accountID,omitempty"`
@@ -873,7 +873,7 @@ type MarketOrderRejectTransactionDefinition struct {
 }
 
 type FixedPriceOrderTransactionDefinition struct {
-	Id                     TransactionIDDefinition            `json:"id,omitempty"`
+	ID                     TransactionIDDefinition            `json:"id,omitempty"`
 	Time                   DateTimeDefinition                 `json:"time,omitempty"`
 	UserID                 int                                `json:"userID,omitempty"`
 	AccountID              AccountIDDefinition                `json:"accountID,omitempty"`
@@ -894,7 +894,7 @@ type FixedPriceOrderTransactionDefinition struct {
 }
 
 type LimitOrderTransactionDefinition struct {
-	Id                      TransactionIDDefinition            `json:"id,omitempty"`
+	ID                      TransactionIDDefinition            `json:"id,omitempty"`
 	Time                    DateTimeDefinition                 `json:"time,omitempty"`
 	UserID                  int                                `json:"userID,omitempty"`
 	AccountID               AccountIDDefinition                `json:"accountID,omitempty"`
@@ -919,7 +919,7 @@ type LimitOrderTransactionDefinition struct {
 }
 
 type LimitOrderRejectTransactionDefinition struct {
-	Id                      TransactionIDDefinition            `json:"id,omitempty"`
+	ID                      TransactionIDDefinition            `json:"id,omitempty"`
 	Time                    DateTimeDefinition                 `json:"time,omitempty"`
 	UserID                  int                                `json:"userID,omitempty"`
 	AccountID               AccountIDDefinition                `json:"accountID,omitempty"`
@@ -944,7 +944,7 @@ type LimitOrderRejectTransactionDefinition struct {
 }
 
 type StopOrderTransactionDefinition struct {
-	Id                      TransactionIDDefinition            `json:"id,omitempty"`
+	ID                      TransactionIDDefinition            `json:"id,omitempty"`
 	Time                    DateTimeDefinition                 `json:"time,omitempty"`
 	UserID                  int                                `json:"userID,omitempty"`
 	AccountID               AccountIDDefinition                `json:"accountID,omitempty"`
@@ -970,7 +970,7 @@ type StopOrderTransactionDefinition struct {
 }
 
 type StopOrderRejectTransactionDefinition struct {
-	Id                      TransactionIDDefinition            `json:"id,omitempty"`
+	ID                      TransactionIDDefinition            `json:"id,omitempty"`
 	Time                    DateTimeDefinition                 `json:"time,omitempty"`
 	UserID                  int                                `json:"userID,omitempty"`
 	AccountID               AccountIDDefinition                `json:"accountID,omitempty"`
@@ -996,7 +996,7 @@ type StopOrderRejectTransactionDefinition struct {
 }
 
 type MarketIfTouchedOrderTransactionDefinition struct {
-	Id                      TransactionIDDefinition              `json:"id,omitempty"`
+	ID                      TransactionIDDefinition              `json:"id,omitempty"`
 	Time                    DateTimeDefinition                   `json:"time,omitempty"`
 	UserID                  int                                  `json:"userID,omitempty"`
 	AccountID               AccountIDDefinition                  `json:"accountID,omitempty"`
@@ -1022,7 +1022,7 @@ type MarketIfTouchedOrderTransactionDefinition struct {
 }
 
 type MarketIfTouchedOrderRejectTransactionDefinition struct {
-	Id                      TransactionIDDefinition              `json:"id,omitempty"`
+	ID                      TransactionIDDefinition              `json:"id,omitempty"`
 	Time                    DateTimeDefinition                   `json:"time,omitempty"`
 	UserID                  int                                  `json:"userID,omitempty"`
 	AccountID               AccountIDDefinition                  `json:"accountID,omitempty"`
@@ -1048,7 +1048,7 @@ type MarketIfTouchedOrderRejectTransactionDefinition struct {
 }
 
 type TakeProfitOrderTransactionDefinition struct {
-	Id                      TransactionIDDefinition         `json:"id,omitempty"`
+	ID                      TransactionIDDefinition         `json:"id,omitempty"`
 	Time                    DateTimeDefinition              `json:"time,omitempty"`
 	UserID                  int                             `json:"userID,omitempty"`
 	AccountID               AccountIDDefinition             `json:"accountID,omitempty"`
@@ -1069,7 +1069,7 @@ type TakeProfitOrderTransactionDefinition struct {
 }
 
 type TakeProfitOrderRejectTransactionDefinition struct {
-	Id                      TransactionIDDefinition           `json:"id,omitempty"`
+	ID                      TransactionIDDefinition           `json:"id,omitempty"`
 	Time                    DateTimeDefinition                `json:"time,omitempty"`
 	UserID                  int                               `json:"userID,omitempty"`
 	AccountID               AccountIDDefinition               `json:"accountID,omitempty"`
@@ -1090,7 +1090,7 @@ type TakeProfitOrderRejectTransactionDefinition struct {
 }
 
 type StopLossOrderTransactionDefinition struct {
-	Id                         TransactionIDDefinition         `json:"id,omitempty"`
+	ID                         TransactionIDDefinition         `json:"id,omitempty"`
 	Time                       DateTimeDefinition              `json:"time,omitempty"`
 	UserID                     int                             `json:"userID,omitempty"`
 	AccountID                  AccountIDDefinition             `json:"accountID,omitempty"`
@@ -1114,7 +1114,7 @@ type StopLossOrderTransactionDefinition struct {
 }
 
 type StopLossOrderRejectTransactionDefinition struct {
-	Id                      TransactionIDDefinition           `json:"id,omitempty"`
+	ID                      TransactionIDDefinition           `json:"id,omitempty"`
 	Time                    DateTimeDefinition                `json:"time,omitempty"`
 	UserID                  int                               `json:"userID,omitempty"`
 	AccountID               AccountIDDefinition               `json:"accountID,omitempty"`
@@ -1137,7 +1137,7 @@ type StopLossOrderRejectTransactionDefinition struct {
 }
 
 type TrailingStopLossOrderTransactionDefinition struct {
-	Id                      TransactionIDDefinition               `json:"id,omitempty"`
+	ID                      TransactionIDDefinition               `json:"id,omitempty"`
 	Time                    DateTimeDefinition                    `json:"time,omitempty"`
 	UserID                  int                                   `json:"userID,omitempty"`
 	AccountID               AccountIDDefinition                   `json:"accountID,omitempty"`
@@ -1158,7 +1158,7 @@ type TrailingStopLossOrderTransactionDefinition struct {
 }
 
 type TrailingStopLossOrderRejectTransactionDefinition struct {
-	Id                      TransactionIDDefinition               `json:"id,omitempty"`
+	ID                      TransactionIDDefinition               `json:"id,omitempty"`
 	Time                    DateTimeDefinition                    `json:"time,omitempty"`
 	UserID                  int                                   `json:"userID,omitempty"`
 	AccountID               AccountIDDefinition                   `json:"accountID,omitempty"`
@@ -1179,7 +1179,7 @@ type TrailingStopLossOrderRejectTransactionDefinition struct {
 }
 
 type OrderFillTransactionDefinition struct {
-	Id                            TransactionIDDefinition   `json:"id,omitempty"`
+	ID                            TransactionIDDefinition   `json:"id,omitempty"`
 	Time                          DateTimeDefinition        `json:"time,omitempty"`
 	UserID                        int                       `json:"userID,omitempty"`
 	AccountID                     AccountIDDefinition       `json:"accountID,omitempty"`
@@ -1207,7 +1207,7 @@ type OrderFillTransactionDefinition struct {
 }
 
 type OrderCancelTransactionDefinition struct {
-	Id                TransactionIDDefinition     `json:"id,omitempty"`
+	ID                TransactionIDDefinition     `json:"id,omitempty"`
 	Time              DateTimeDefinition          `json:"time,omitempty"`
 	UserID            int                         `json:"userID,omitempty"`
 	AccountID         AccountIDDefinition         `json:"accountID,omitempty"`
@@ -1221,7 +1221,7 @@ type OrderCancelTransactionDefinition struct {
 }
 
 type OrderCancelRejectTransactionDefinition struct {
-	Id            TransactionIDDefinition           `json:"id,omitempty"`
+	ID            TransactionIDDefinition           `json:"id,omitempty"`
 	Time          DateTimeDefinition                `json:"time,omitempty"`
 	UserID        int                               `json:"userID,omitempty"`
 	AccountID     AccountIDDefinition               `json:"accountID,omitempty"`
@@ -1234,7 +1234,7 @@ type OrderCancelRejectTransactionDefinition struct {
 }
 
 type OrderClientExtensionsModifyTransactionDefinition struct {
-	Id                          TransactionIDDefinition     `json:"id,omitempty"`
+	ID                          TransactionIDDefinition     `json:"id,omitempty"`
 	Time                        DateTimeDefinition          `json:"time,omitempty"`
 	UserID                      int                         `json:"userID,omitempty"`
 	AccountID                   AccountIDDefinition         `json:"accountID,omitempty"`
@@ -1248,7 +1248,7 @@ type OrderClientExtensionsModifyTransactionDefinition struct {
 }
 
 type OrderClientExtensionsModifyRejectTransactionDefinition struct {
-	Id                          TransactionIDDefinition           `json:"id,omitempty"`
+	ID                          TransactionIDDefinition           `json:"id,omitempty"`
 	Time                        DateTimeDefinition                `json:"time,omitempty"`
 	UserID                      int                               `json:"userID,omitempty"`
 	AccountID                   AccountIDDefinition               `json:"accountID,omitempty"`
@@ -1263,7 +1263,7 @@ type OrderClientExtensionsModifyRejectTransactionDefinition struct {
 }
 
 type TradeClientExtensionsModifyTransactionDefinition struct {
-	Id                          TransactionIDDefinition     `json:"id,omitempty"`
+	ID                          TransactionIDDefinition     `json:"id,omitempty"`
 	Time                        DateTimeDefinition          `json:"time,omitempty"`
 	UserID                      int                         `json:"userID,omitempty"`
 	AccountID                   AccountIDDefinition         `json:"accountID,omitempty"`
@@ -1276,7 +1276,7 @@ type TradeClientExtensionsModifyTransactionDefinition struct {
 }
 
 type TradeClientExtensionsModifyRejectTransactionDefinition struct {
-	Id                          TransactionIDDefinition           `json:"id,omitempty"`
+	ID                          TransactionIDDefinition           `json:"id,omitempty"`
 	Time                        DateTimeDefinition                `json:"time,omitempty"`
 	UserID                      int                               `json:"userID,omitempty"`
 	AccountID                   AccountIDDefinition               `json:"accountID,omitempty"`
@@ -1290,7 +1290,7 @@ type TradeClientExtensionsModifyRejectTransactionDefinition struct {
 }
 
 type MarginCallEnterTransactionDefinition struct {
-	Id        TransactionIDDefinition   `json:"id,omitempty"`
+	ID        TransactionIDDefinition   `json:"id,omitempty"`
 	Time      DateTimeDefinition        `json:"time,omitempty"`
 	UserID    int                       `json:"userID,omitempty"`
 	AccountID AccountIDDefinition       `json:"accountID,omitempty"`
@@ -1300,7 +1300,7 @@ type MarginCallEnterTransactionDefinition struct {
 }
 
 type MarginCallExtendTransactionDefinition struct {
-	Id              TransactionIDDefinition   `json:"id,omitempty"`
+	ID              TransactionIDDefinition   `json:"id,omitempty"`
 	Time            DateTimeDefinition        `json:"time,omitempty"`
 	UserID          int                       `json:"userID,omitempty"`
 	AccountID       AccountIDDefinition       `json:"accountID,omitempty"`
@@ -1311,7 +1311,7 @@ type MarginCallExtendTransactionDefinition struct {
 }
 
 type MarginCallExitTransactionDefinition struct {
-	Id        TransactionIDDefinition   `json:"id,omitempty"`
+	ID        TransactionIDDefinition   `json:"id,omitempty"`
 	Time      DateTimeDefinition        `json:"time,omitempty"`
 	UserID    int                       `json:"userID,omitempty"`
 	AccountID AccountIDDefinition       `json:"accountID,omitempty"`
@@ -1321,7 +1321,7 @@ type MarginCallExitTransactionDefinition struct {
 }
 
 type DelayedTradeClosureTransactionDefinition struct {
-	Id        TransactionIDDefinition     `json:"id,omitempty"`
+	ID        TransactionIDDefinition     `json:"id,omitempty"`
 	Time      DateTimeDefinition          `json:"time,omitempty"`
 	UserID    int                         `json:"userID,omitempty"`
 	AccountID AccountIDDefinition         `json:"accountID,omitempty"`
@@ -1333,7 +1333,7 @@ type DelayedTradeClosureTransactionDefinition struct {
 }
 
 type DailyFinancingTransactionDefinition struct {
-	Id                   TransactionIDDefinition        `json:"id,omitempty"`
+	ID                   TransactionIDDefinition        `json:"id,omitempty"`
 	Time                 DateTimeDefinition             `json:"time,omitempty"`
 	UserID               int                            `json:"userID,omitempty"`
 	AccountID            AccountIDDefinition            `json:"accountID,omitempty"`
@@ -1347,7 +1347,7 @@ type DailyFinancingTransactionDefinition struct {
 }
 
 type ResetResettablePLTransactionDefinition struct {
-	Id        TransactionIDDefinition   `json:"id,omitempty"`
+	ID        TransactionIDDefinition   `json:"id,omitempty"`
 	Time      DateTimeDefinition        `json:"time,omitempty"`
 	UserID    int                       `json:"userID,omitempty"`
 	AccountID AccountIDDefinition       `json:"accountID,omitempty"`
@@ -1391,7 +1391,7 @@ type ClientTagDefinition string
 type ClientCommentDefinition string
 
 type ClientExtensionsDefinition struct {
-	Id      ClientIDDefinition      `json:"id,omitempty"`
+	ID      ClientIDDefinition      `json:"id,omitempty"`
 	Tag     ClientTagDefinition     `json:"tag,omitempty"`
 	Comment ClientCommentDefinition `json:"comment,omitempty"`
 }
