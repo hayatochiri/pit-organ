@@ -53,10 +53,31 @@ func (r *ReceiverAccountID) Instruments() *ReceiverAccountInstruments {
 	}
 }
 
+type ReceiverAccountConfiguration struct {
+	AccountID  string
+	Connection *Connection
+}
+
+func (r *ReceiverAccountID) Configuration() *ReceiverAccountConfiguration {
+	return &ReceiverAccountConfiguration{
+		AccountID:  r.AccountID,
+		Connection: r.Connection,
+	}
+}
+
 /* Params */
 
 type GetAccountInstrumentsParams struct {
 	Instruments []string
+}
+
+type PatchAccountConfigurationBodyParams struct {
+	Alias      interface{} `json:"alias,omitempty"`
+	MarginRate interface{} `json:"marginRate,omitempty"`
+}
+
+type PatchAccountConfigurationParams struct {
+	Body *PatchAccountConfigurationBodyParams
 }
 
 /* Schemas */
@@ -78,6 +99,37 @@ type GetAccountSummarySchema struct {
 type GetAccountInstrumentsSchema struct {
 	Instruments       []*InstrumentDefinition  `json:"instruments,omitempty"`
 	LastTransactionID *TransactionIDDefinition `json:"lastTransactionID,omitempty"`
+}
+
+type PatchAccountConfigurationSchema struct {
+	ClientConfigureTransaction *ClientConfigureTransactionDefinition `json:"clientConfigureTransaction,omitempty"`
+	LastTransactionID          TransactionIDDefinition               `json:"lastTransactionID,omitempty"`
+}
+
+/* Errors */
+
+type PatchAccountConfigurationBadRequestError struct {
+	ClientConfigureRejectTransaction *ClientConfigureRejectTransactionDefinition `json:"clientConfigureRejectTransaction,omitempty"`
+	LastTransactionID                TransactionIDDefinition                     `json:"lastTransactionID,omitempty"`
+	ErrorCode                        string                                      `json:"errorCode,omitempty"`
+	ErrorMessage                     string                                      `json:"errorMessage,omitempty"`
+}
+
+func (r *PatchAccountConfigurationBadRequestError) Error() string {
+	// TODO: エラーを整える
+	return r.ErrorMessage
+}
+
+type PatchAccountConfigurationForbiddenError struct {
+	ClientConfigureRejectTransaction *ClientConfigureRejectTransactionDefinition `json:"clientConfigureRejectTransaction,omitempty"`
+	LastTransactionID                TransactionIDDefinition                     `json:"lastTransactionID,omitempty"`
+	ErrorCode                        string                                      `json:"errorCode,omitempty"`
+	ErrorMessage                     string                                      `json:"errorMessage,omitempty"`
+}
+
+func (r *PatchAccountConfigurationForbiddenError) Error() string {
+	// TODO: エラーを整える
+	return r.ErrorMessage
 }
 
 /* API */
@@ -198,6 +250,38 @@ func (r *ReceiverAccountInstruments) Get(params *GetAccountInstrumentsParams) (*
 	return data.(*GetAccountInstrumentsSchema), nil
 }
 
-// TODO: PATCH /v3/accounts/{accountID}/configuration
+// PATCH /v3/accounts/{accountID}/configuration
+func (r *ReceiverAccountConfiguration) Patch(params *PatchAccountConfigurationParams) (*PatchAccountConfigurationSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "PATCH",
+			endPoint: "/v3/accounts/" + r.AccountID + "/configuration",
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+			body: params.Body,
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Patch account configuration canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		data = new(PatchAccountConfigurationSchema)
+	case 400:
+		data = new(PatchAccountConfigurationBadRequestError)
+	case 403:
+		data = new(PatchAccountConfigurationForbiddenError)
+	}
+
+	data, err = parseResponse(resp, data)
+	if err != nil {
+		return nil, xerrors.Errorf("Patch account configuration failed: %w", err)
+	}
+	return data.(*PatchAccountConfigurationSchema), nil
+}
 
 // TODO: GET /v3/accounts/{accountID}/changes

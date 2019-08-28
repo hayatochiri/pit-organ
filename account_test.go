@@ -56,3 +56,51 @@ func Test_AccountInstruments(t *testing.T) {
 
 	t.Logf("Response:\n%s", spew.Sdump(data))
 }
+
+func Test_AccountConfiguration(t *testing.T) {
+	t.Run("AliasSettingSuccess", func(t *testing.T) {
+		expect := "Test Account #1"
+
+		connection := newConnection(t, OandaPractice)
+		accountID := Getenv("ACCOUNT_ID")
+		params := &PatchAccountConfigurationParams{
+			&PatchAccountConfigurationBodyParams{
+				Alias: expect,
+			},
+		}
+		data, err := connection.Accounts().AccountID(accountID).Configuration().Patch(params)
+
+		if err != nil {
+			t.Fatalf("Patch account configuration failed.\n%+v", err)
+		}
+
+		if actual := data.ClientConfigureTransaction.Alias; actual != expect {
+			t.Fatalf("Failed to set alias.\nExpect: %#v\nActual: %#v", expect, actual)
+		}
+
+		t.Logf("Response:\n%s", spew.Sdump(data))
+	})
+
+	t.Run("MarginRateSettingSuccess", func(t *testing.T) {
+		expect := "0.04"
+
+		connection := newConnection(t, OandaPractice)
+		accountID := Getenv("ACCOUNT_ID")
+		params := &PatchAccountConfigurationParams{
+			&PatchAccountConfigurationBodyParams{
+				MarginRate: expect,
+			},
+		}
+		data, err := connection.Accounts().AccountID(accountID).Configuration().Patch(params)
+
+		if err != nil {
+			t.Fatalf("Patch account configuration failed.\n%+v", err)
+		}
+
+		if actual := string(data.ClientConfigureTransaction.MarginRate); actual != expect {
+			t.Fatalf("Failed to set margin rate.\nExpect: %#v\nActual: %#v", expect, actual)
+		}
+
+		t.Logf("Response:\n%s", spew.Sdump(data))
+	})
+}
