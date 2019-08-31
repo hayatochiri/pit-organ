@@ -87,18 +87,18 @@ type GetAccountsSchema struct {
 }
 
 type GetAccountIDSchema struct {
-	Account           *AccountDefinition       `json:"account,omitempty"`
-	LastTransactionID *TransactionIDDefinition `json:"lastTransactionID,omitempty"`
+	Account           *AccountDefinition      `json:"account,omitempty"`
+	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
 type GetAccountSummarySchema struct {
 	Account           *AccountSummaryDefinition `json:"account,omitempty"`
-	LastTransactionID *TransactionIDDefinition  `json:"lastTransactionID,omitempty"`
+	LastTransactionID TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
 }
 
 type GetAccountInstrumentsSchema struct {
-	Instruments       []*InstrumentDefinition  `json:"instruments,omitempty"`
-	LastTransactionID *TransactionIDDefinition `json:"lastTransactionID,omitempty"`
+	Instruments       []*InstrumentDefinition `json:"instruments,omitempty"`
+	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
 type PatchAccountConfigurationSchema struct {
