@@ -23,7 +23,7 @@ $ ./run [command]
 | <ul><li>[x] </li></ul> | GET    | /v3/accounts/{accountID}/summary                                  |
 | <ul><li>[x] </li></ul> | GET    | /v3/accounts/{accountID}/instruments                              |
 | <ul><li>[x] </li></ul> | PATCH  | /v3/accounts/{accountID}/configuration                            |
-| <ul><li>[ ] </li></ul> | GET    | /v3/accounts/{accountID}/changes                                  |
+| <ul><li>[x] </li></ul> | GET    | /v3/accounts/{accountID}/changes                                  |
 | <ul><li>[x] </li></ul> | GET    | /v3/instruments/{instrument}/candles                              |
 | <ul><li>[x] </li></ul> | GET    | /v3/instruments/{instrument}/orderBook                            |
 | <ul><li>[x] </li></ul> | GET    | /v3/instruments/{instrument}/positionBook                         |
