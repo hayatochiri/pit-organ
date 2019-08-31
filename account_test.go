@@ -104,3 +104,30 @@ func Test_AccountConfiguration(t *testing.T) {
 		t.Logf("Response:\n%s", spew.Sdump(data))
 	})
 }
+
+func Test_AccountChanges(t *testing.T) {
+	connection := newConnection(t, OandaPractice)
+	accountID := Getenv("ACCOUNT_ID")
+	accountIDPath := connection.Accounts().AccountID(accountID)
+
+	transactionID := func() TransactionIDDefinition {
+		params := &PatchAccountConfigurationParams{
+			&PatchAccountConfigurationBodyParams{
+				MarginRate: "0.4",
+			},
+		}
+		data, _ := accountIDPath.Configuration().Patch(params)
+		return data.LastTransactionID
+	}()
+
+	params := &GetAccountChangesParams{
+		SinceTransactionID: transactionID,
+	}
+	data, err := connection.Accounts().AccountID(accountID).Changes().Get(params)
+
+	if err != nil {
+		t.Fatalf("Get account changes failed.\n%+v", err)
+	}
+
+	t.Logf("Response:\n%s", spew.Sdump(data))
+}

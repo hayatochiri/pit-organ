@@ -65,6 +65,18 @@ func (r *ReceiverAccountID) Configuration() *ReceiverAccountConfiguration {
 	}
 }
 
+type ReceiverAccountChanges struct {
+	AccountID  string
+	Connection *Connection
+}
+
+func (r *ReceiverAccountID) Changes() *ReceiverAccountChanges {
+	return &ReceiverAccountChanges{
+		AccountID:  r.AccountID,
+		Connection: r.Connection,
+	}
+}
+
 /* Params */
 
 type GetAccountInstrumentsParams struct {
@@ -78,6 +90,10 @@ type PatchAccountConfigurationBodyParams struct {
 
 type PatchAccountConfigurationParams struct {
 	Body *PatchAccountConfigurationBodyParams
+}
+
+type GetAccountChangesParams struct {
+	SinceTransactionID TransactionIDDefinition
 }
 
 /* Schemas */
@@ -104,6 +120,12 @@ type GetAccountInstrumentsSchema struct {
 type PatchAccountConfigurationSchema struct {
 	ClientConfigureTransaction *ClientConfigureTransactionDefinition `json:"clientConfigureTransaction,omitempty"`
 	LastTransactionID          TransactionIDDefinition               `json:"lastTransactionID,omitempty"`
+}
+
+type GetAccountChangesSchema struct {
+	Changes           *AccountChangesDefinition      `json:"changes,omitempty"`
+	State             *AccountChangesStateDefinition `json:"state,omitempty"`
+	LastTransactionID TransactionIDDefinition        `json:"lastTransactionID,omitempty"`
 }
 
 /* Errors */
@@ -284,4 +306,39 @@ func (r *ReceiverAccountConfiguration) Patch(params *PatchAccountConfigurationPa
 	return data.(*PatchAccountConfigurationSchema), nil
 }
 
-// TODO: GET /v3/accounts/{accountID}/changes
+// GET /v3/accounts/{accountID}/changes
+func (r *ReceiverAccountChanges) Get(params *GetAccountChangesParams) (*GetAccountChangesSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "GET",
+			endPoint: "/v3/accounts/" + r.AccountID + "/changes",
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+			queries: func() []query {
+				q := make([]query, 0, 1)
+
+				// sinceTransactionID
+				q = append(q, query{key: "sinceTransactionID", value: string(params.SinceTransactionID)})
+
+				return q
+			}(),
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Get account changes canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		data = new(GetAccountChangesSchema)
+	}
+
+	data, err = parseResponse(resp, data)
+	if err != nil {
+		return nil, xerrors.Errorf("Get account changes failed: %w", err)
+	}
+	return data.(*GetAccountChangesSchema), nil
+}
