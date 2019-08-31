@@ -65,6 +65,18 @@ func (r *ReceiverAccountID) Configuration() *ReceiverAccountConfiguration {
 	}
 }
 
+type ReceiverAccountChanges struct {
+	AccountID  string
+	Connection *Connection
+}
+
+func (r *ReceiverAccountID) Changes() *ReceiverAccountChanges {
+	return &ReceiverAccountChanges{
+		AccountID:  r.AccountID,
+		Connection: r.Connection,
+	}
+}
+
 /* Params */
 
 type GetAccountInstrumentsParams struct {
