@@ -2,6 +2,8 @@ package pitOrgan
 
 import (
 	"golang.org/x/xerrors"
+	"strconv"
+	"strings"
 )
 
 /* Receivers */
@@ -28,6 +30,14 @@ type PostOrdersParams struct {
 	Body PostOrdersBodyParams
 }
 
+type GetOrdersParams struct {
+	IDs        []string
+	State      interface{}
+	Instrument interface{}
+	Count      int
+	BeforeID   interface{}
+}
+
 /* Schemas */
 
 type PostOrdersSchema struct {
@@ -38,6 +48,11 @@ type PostOrdersSchema struct {
 	OrderReissueRejectTransaction *TransactionDefinition            `json:"orderReissueRejectTransaction,omitempty"`
 	RelatedTransactionIDs         []TransactionIDDefinition         `json:"relatedTransactionIDs,omitempty"`
 	LastTransactionID             TransactionIDDefinition           `json:"lastTransactionID,omitempty"`
+}
+
+type GetOrdersSchema struct {
+	Orders            []*OrderDefinition      `json:"orders,omitempty"`
+	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
 /* Errors */
@@ -104,7 +119,59 @@ func (r *ReceiverOrders) Post(params *PostOrdersParams) (*PostOrdersSchema, erro
 	return data.(*PostOrdersSchema), nil
 }
 
-// TODO: GET /v3/accounts/{accountID}/orders
+// GET /v3/accounts/{accountID}/orders
+func (r *ReceiverOrders) Get(params *GetOrdersParams) (*GetOrdersSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "GET",
+			endPoint: "/v3/accounts/" + r.AccountID + "/orders",
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+			queries: func() []query {
+				q := make([]query, 0, 5)
+
+				if len(params.IDs) > 0 {
+					q = append(q, query{key: "ids", value: strings.Join(params.IDs, ",")})
+				}
+
+				if str, ok := params.State.(string); ok {
+					q = append(q, query{key: "state", value: str})
+				}
+
+				if str, ok := params.Instrument.(string); ok {
+					q = append(q, query{key: "instrument", value: str})
+				}
+
+				if params.Count != 0 {
+					q = append(q, query{key: "count", value: strconv.Itoa(params.Count)})
+				}
+
+				if str, ok := params.BeforeID.(string); ok {
+					q = append(q, query{key: "beforeID", value: str})
+				}
+
+				return q
+			}(),
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Get orders canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		data = new(GetOrdersSchema)
+	}
+
+	data, err = parseResponse(resp, data)
+	if err != nil {
+		return nil, xerrors.Errorf("Get orders failed: %w", err)
+	}
+	return data.(*GetOrdersSchema), nil
+}
 
 // TODO: GET /v3/accounts/{accountID}/pendingOrders
 
