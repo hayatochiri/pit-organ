@@ -2,6 +2,8 @@ package pitOrgan
 
 import (
 	"golang.org/x/xerrors"
+	"strconv"
+	"strings"
 )
 
 /* Receivers */
@@ -18,6 +20,32 @@ func (r *ReceiverAccountID) Orders() *ReceiverOrders {
 	}
 }
 
+type ReceiverPendingOrders struct {
+	AccountID  string
+	Connection *Connection
+}
+
+func (r *ReceiverAccountID) PendingOrders() *ReceiverPendingOrders {
+	return &ReceiverPendingOrders{
+		AccountID:  r.AccountID,
+		Connection: r.Connection,
+	}
+}
+
+type ReceiverOrderSpecifier struct {
+	AccountID      string
+	Connection     *Connection
+	OrderSpecifier string
+}
+
+func (r *ReceiverOrders) OrderSpecifier(orderSpecifier string) *ReceiverOrderSpecifier {
+	return &ReceiverOrderSpecifier{
+		AccountID:      r.AccountID,
+		Connection:     r.Connection,
+		OrderSpecifier: orderSpecifier,
+	}
+}
+
 // Params
 
 type PostOrdersBodyParams struct {
@@ -26,6 +54,14 @@ type PostOrdersBodyParams struct {
 
 type PostOrdersParams struct {
 	Body PostOrdersBodyParams
+}
+
+type GetOrdersParams struct {
+	IDs        []string
+	State      interface{}
+	Instrument interface{}
+	Count      int
+	BeforeID   interface{}
 }
 
 /* Schemas */
@@ -38,6 +74,21 @@ type PostOrdersSchema struct {
 	OrderReissueRejectTransaction *TransactionDefinition            `json:"orderReissueRejectTransaction,omitempty"`
 	RelatedTransactionIDs         []TransactionIDDefinition         `json:"relatedTransactionIDs,omitempty"`
 	LastTransactionID             TransactionIDDefinition           `json:"lastTransactionID,omitempty"`
+}
+
+type GetOrdersSchema struct {
+	Orders            []*OrderDefinition      `json:"orders,omitempty"`
+	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
+}
+
+type GetPendingOrdersSchema struct {
+	Orders            []*OrderDefinition      `json:"orders,omitempty"`
+	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
+}
+
+type GetOrderSpecifierSchema struct {
+	Order             *OrderDefinition        `json:"order,omitempty"`
+	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
 /* Errors */
@@ -104,11 +155,117 @@ func (r *ReceiverOrders) Post(params *PostOrdersParams) (*PostOrdersSchema, erro
 	return data.(*PostOrdersSchema), nil
 }
 
-// TODO: GET /v3/accounts/{accountID}/orders
+// GET /v3/accounts/{accountID}/orders
+func (r *ReceiverOrders) Get(params *GetOrdersParams) (*GetOrdersSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "GET",
+			endPoint: "/v3/accounts/" + r.AccountID + "/orders",
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+			queries: func() []query {
+				q := make([]query, 0, 5)
 
-// TODO: GET /v3/accounts/{accountID}/pendingOrders
+				if len(params.IDs) > 0 {
+					q = append(q, query{key: "ids", value: strings.Join(params.IDs, ",")})
+				}
 
-// TODO: GET /v3/accounts/{accountID}/orders/{orderSpecifier}
+				if str, ok := params.State.(string); ok {
+					q = append(q, query{key: "state", value: str})
+				}
+
+				if str, ok := params.Instrument.(string); ok {
+					q = append(q, query{key: "instrument", value: str})
+				}
+
+				if params.Count != 0 {
+					q = append(q, query{key: "count", value: strconv.Itoa(params.Count)})
+				}
+
+				if str, ok := params.BeforeID.(string); ok {
+					q = append(q, query{key: "beforeID", value: str})
+				}
+
+				return q
+			}(),
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Get orders canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		data = new(GetOrdersSchema)
+	}
+
+	data, err = parseResponse(resp, data)
+	if err != nil {
+		return nil, xerrors.Errorf("Get orders failed: %w", err)
+	}
+	return data.(*GetOrdersSchema), nil
+}
+
+// GET /v3/accounts/{accountID}/pendingOrders
+func (r *ReceiverPendingOrders) Get() (*GetPendingOrdersSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "GET",
+			endPoint: "/v3/accounts/" + r.AccountID + "/pendingOrders",
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Get pending orders canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		data = new(GetPendingOrdersSchema)
+	}
+
+	data, err = parseResponse(resp, data)
+	if err != nil {
+		return nil, xerrors.Errorf("Get pending orders failed: %w", err)
+	}
+	return data.(*GetPendingOrdersSchema), nil
+}
+
+// GET /v3/accounts/{accountID}/orders/{orderSpecifier}
+func (r *ReceiverOrderSpecifier) Get() (*GetOrderSpecifierSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "GET",
+			endPoint: "/v3/accounts/" + r.AccountID + "/orders/" + r.OrderSpecifier,
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Get order specifier canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		data = new(GetOrderSpecifierSchema)
+	}
+
+	data, err = parseResponse(resp, data)
+	if err != nil {
+		return nil, xerrors.Errorf("Get order specifier failed: %w", err)
+	}
+	return data.(*GetOrderSpecifierSchema), nil
+}
 
 // TODO: PUT /v3/accounts/{accountID}/orders/{orderSpecifier}
 
