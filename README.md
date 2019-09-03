@@ -28,9 +28,9 @@ $ ./run [command]
 | <ul><li>[x] </li></ul>  | GET    | [/v3/instruments/{instrument}/orderBook](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverInstrumentOrderBook.Get)        |
 | <ul><li>[x] </li></ul>  | GET    | [/v3/instruments/{instrument}/positionBook](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverInstrumentPositionBook.Get)  |
 | <ul><li>[x] </li></ul>  | POST   | [/v3/accounts/{accountID}/orders](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverOrders.Post)                           |
-| <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/orders](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverOrders.Get)                           |
-| <ul><li>[ ] </li></ul>  | GET    | /v3/accounts/{accountID}/pendingOrders                                                                                              |
-| <ul><li>[ ] </li></ul>  | GET    | /v3/accounts/{accountID}/orders/{orderSpecifier}                                                                                    |
+| <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/orders](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverOrders.Get)                            |
+| <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/pendingOrders](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverPendingOrders.Get)              |
+| <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/orders/{orderSpecifier}](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverOrderSpecifier.Get)   |
 | <ul><li>[ ] </li></ul>  | PUT    | /v3/accounts/{accountID}/orders/{orderSpecifier}                                                                                    |
 | <ul><li>[ ] </li></ul>  | PUT    | /v3/accounts/{accountID}/orders/{orderSpecifier}/cancel                                                                             |
 | <ul><li>[ ] </li></ul>  | PUT    | /v3/accounts/{accountID}/orders/{orderSpecifier}/clientExtensions                                                                   |
