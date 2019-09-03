@@ -51,3 +51,17 @@ func Test_Orders(t *testing.T) {
 		}
 	})
 }
+
+func Test_PendingOrders(t *testing.T) {
+	t.Run("Success", func(t *testing.T) {
+		connection := newConnection(t, OandaPractice)
+		accountID := Getenv("ACCOUNT_ID")
+
+		data, err := connection.Accounts().AccountID(accountID).PendingOrders().Get()
+		if err != nil {
+			t.Fatalf("Error occurred.\n%+v", err)
+		}
+
+		t.Logf("Response:\n%s", spew.Sdump(data))
+	})
+}
