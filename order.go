@@ -32,6 +32,20 @@ func (r *ReceiverAccountID) PendingOrders() *ReceiverPendingOrders {
 	}
 }
 
+type ReceiverOrderSpecifier struct {
+	AccountID      string
+	Connection     *Connection
+	OrderSpecifier string
+}
+
+func (r *ReceiverOrders) OrderSpecifier(orderSpecifier string) *ReceiverOrderSpecifier {
+	return &ReceiverOrderSpecifier{
+		AccountID:      r.AccountID,
+		Connection:     r.Connection,
+		OrderSpecifier: orderSpecifier,
+	}
+}
+
 // Params
 
 type PostOrdersBodyParams struct {
