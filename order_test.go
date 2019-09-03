@@ -65,3 +65,26 @@ func Test_PendingOrders(t *testing.T) {
 		t.Logf("Response:\n%s", spew.Sdump(data))
 	})
 }
+
+func Test_OrderSpecifier(t *testing.T) {
+	t.Run("Success", func(t *testing.T) {
+		connection := newConnection(t, OandaPractice)
+		accountID := Getenv("ACCOUNT_ID")
+		accountIDPath := connection.Accounts().AccountID(accountID)
+
+		orderID := func() string {
+			data, err := accountIDPath.Orders().Get(&GetOrdersParams{State: "ALL"})
+			if err != nil {
+				t.Fatalf("Error occurred.\n%+v", err)
+			}
+			return string(data.Orders[0].ID)
+		}()
+
+		data, err := accountIDPath.Orders().OrderSpecifier(orderID).Get()
+		if err != nil {
+			t.Fatalf("Error occurred.\n%+v", err)
+		}
+
+		t.Logf("Response:\n%s", spew.Sdump(data))
+	})
+}
