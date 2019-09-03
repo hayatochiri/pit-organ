@@ -67,6 +67,11 @@ type GetOrdersSchema struct {
 	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
+type GetPendingOrdersSchema struct {
+	Orders            []*OrderDefinition      `json:"orders,omitempty"`
+	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
+}
+
 /* Errors */
 
 type PostOrdersBadRequestError struct {
@@ -185,7 +190,35 @@ func (r *ReceiverOrders) Get(params *GetOrdersParams) (*GetOrdersSchema, error) 
 	return data.(*GetOrdersSchema), nil
 }
 
-// TODO: GET /v3/accounts/{accountID}/pendingOrders
+// GET /v3/accounts/{accountID}/pendingOrders
+func (r *ReceiverPendingOrders) Get() (*GetPendingOrdersSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "GET",
+			endPoint: "/v3/accounts/" + r.AccountID + "/pendingOrders",
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Get pending orders canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		data = new(GetPendingOrdersSchema)
+	}
+
+	data, err = parseResponse(resp, data)
+	if err != nil {
+		return nil, xerrors.Errorf("Get pending orders failed: %w", err)
+	}
+	return data.(*GetPendingOrdersSchema), nil
+}
+
 
 // TODO: GET /v3/accounts/{accountID}/orders/{orderSpecifier}
 
