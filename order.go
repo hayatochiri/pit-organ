@@ -20,6 +20,18 @@ func (r *ReceiverAccountID) Orders() *ReceiverOrders {
 	}
 }
 
+type ReceiverPendingOrders struct {
+	AccountID  string
+	Connection *Connection
+}
+
+func (r *ReceiverAccountID) PendingOrders() *ReceiverPendingOrders {
+	return &ReceiverPendingOrders{
+		AccountID:  r.AccountID,
+		Connection: r.Connection,
+	}
+}
+
 // Params
 
 type PostOrdersBodyParams struct {
