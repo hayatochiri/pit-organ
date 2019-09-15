@@ -67,13 +67,13 @@ type GetOrdersParams struct {
 /* Schemas */
 
 type PostOrdersSchema struct {
-	OrderCreateTransaction        *TransactionDefinition            `json:"orderCreateTransaction,omitempty"`
-	OrderFillTransaction          *OrderFillTransactionDefinition   `json:"orderFillTransaction,omitempty"`
-	OrderCancelTransaction        *OrderCancelTransactionDefinition `json:"orderCancelTransaction,omitempty"`
-	OrderReissueTransaction       *TransactionDefinition            `json:"orderReissueTransaction,omitempty"`
-	OrderReissueRejectTransaction *TransactionDefinition            `json:"orderReissueRejectTransaction,omitempty"`
-	RelatedTransactionIDs         []TransactionIDDefinition         `json:"relatedTransactionIDs,omitempty"`
-	LastTransactionID             TransactionIDDefinition           `json:"lastTransactionID,omitempty"`
+	OrderCreateTransaction        *TransactionDefinition    `json:"orderCreateTransaction,omitempty"`
+	OrderFillTransaction          *TransactionDefinition    `json:"orderFillTransaction,omitempty"`
+	OrderCancelTransaction        *TransactionDefinition    `json:"orderCancelTransaction,omitempty"`
+	OrderReissueTransaction       *TransactionDefinition    `json:"orderReissueTransaction,omitempty"`
+	OrderReissueRejectTransaction *TransactionDefinition    `json:"orderReissueRejectTransaction,omitempty"`
+	RelatedTransactionIDs         []TransactionIDDefinition `json:"relatedTransactionIDs,omitempty"`
+	LastTransactionID             TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
 }
 
 type GetOrdersSchema struct {

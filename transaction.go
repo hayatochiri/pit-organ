@@ -82,15 +82,8 @@ type GetTransactionsSchema struct {
 }
 
 type GetTransactionsIdrangeSchema struct {
-	Transactions      []interface{}           `json:"transactions,omitempty"`
-	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
-}
-
-type getTransactionsIdrangeParser struct {
-	Transactions []TransactionDefinition `json:"transactions,omitempty"`
-}
-type getTransactionsIdrangeRawMessage struct {
-	Message []json.RawMessage `json:"transactions,omitempty"`
+	Transactions      []*TransactionDefinition `json:"transactions,omitempty"`
+	LastTransactionID TransactionIDDefinition  `json:"lastTransactionID,omitempty"`
 }
 
 /* Streams */

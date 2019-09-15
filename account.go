@@ -118,8 +118,8 @@ type GetAccountInstrumentsSchema struct {
 }
 
 type PatchAccountConfigurationSchema struct {
-	ClientConfigureTransaction *ClientConfigureTransactionDefinition `json:"clientConfigureTransaction,omitempty"`
-	LastTransactionID          TransactionIDDefinition               `json:"lastTransactionID,omitempty"`
+	ClientConfigureTransaction *TransactionDefinition  `json:"clientConfigureTransaction,omitempty"`
+	LastTransactionID          TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
 type GetAccountChangesSchema struct {
@@ -131,10 +131,10 @@ type GetAccountChangesSchema struct {
 /* Errors */
 
 type PatchAccountConfigurationBadRequestError struct {
-	ClientConfigureRejectTransaction *ClientConfigureRejectTransactionDefinition `json:"clientConfigureRejectTransaction,omitempty"`
-	LastTransactionID                TransactionIDDefinition                     `json:"lastTransactionID,omitempty"`
-	ErrorCode                        string                                      `json:"errorCode,omitempty"`
-	ErrorMessage                     string                                      `json:"errorMessage,omitempty"`
+	ClientConfigureRejectTransaction *TransactionDefinition  `json:"clientConfigureRejectTransaction,omitempty"`
+	LastTransactionID                TransactionIDDefinition `json:"lastTransactionID,omitempty"`
+	ErrorCode                        string                  `json:"errorCode,omitempty"`
+	ErrorMessage                     string                  `json:"errorMessage,omitempty"`
 }
 
 func (r *PatchAccountConfigurationBadRequestError) Error() string {
@@ -143,10 +143,10 @@ func (r *PatchAccountConfigurationBadRequestError) Error() string {
 }
 
 type PatchAccountConfigurationForbiddenError struct {
-	ClientConfigureRejectTransaction *ClientConfigureRejectTransactionDefinition `json:"clientConfigureRejectTransaction,omitempty"`
-	LastTransactionID                TransactionIDDefinition                     `json:"lastTransactionID,omitempty"`
-	ErrorCode                        string                                      `json:"errorCode,omitempty"`
-	ErrorMessage                     string                                      `json:"errorMessage,omitempty"`
+	ClientConfigureRejectTransaction *TransactionDefinition  `json:"clientConfigureRejectTransaction,omitempty"`
+	LastTransactionID                TransactionIDDefinition `json:"lastTransactionID,omitempty"`
+	ErrorCode                        string                  `json:"errorCode,omitempty"`
+	ErrorMessage                     string                  `json:"errorMessage,omitempty"`
 }
 
 func (r *PatchAccountConfigurationForbiddenError) Error() string {
