@@ -105,7 +105,7 @@ func (r *ReceiverPricing) Get(params *GetPricingParams) (*GetPricingSchema, erro
 		data = new(GetPricingSchema)
 	}
 
-	data, err = parseResponse(resp, data)
+	data, err = parseResponse(resp, data, r.Connection.strict)
 	if err != nil {
 		return nil, xerrors.Errorf("Get pricing failed: %w", err)
 	}
@@ -133,7 +133,7 @@ func (r *ReceiverPricingStream) Get(params *GetPricingStreamParams) (*PriceChann
 	if resp.StatusCode != 200 {
 		defer resp.Body.Close()
 		var err interface{}
-		_, err = parseResponse(resp, err)
+		_, err = parseResponse(resp, err, r.Connection.strict)
 		return nil, xerrors.Errorf("Get pricing stream failed: %w", err)
 	}
 

@@ -79,6 +79,7 @@ func newConnection(t *testing.T, env OandaEnvironment) *Connection {
 		Token:       Getenv("TOKEN"),
 		Environemnt: env,
 		Timeout:     time.Second * 10,
+		strict:      true,
 	}
 
 	return connection

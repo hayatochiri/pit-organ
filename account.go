@@ -118,8 +118,8 @@ type GetAccountInstrumentsSchema struct {
 }
 
 type PatchAccountConfigurationSchema struct {
-	ClientConfigureTransaction *ClientConfigureTransactionDefinition `json:"clientConfigureTransaction,omitempty"`
-	LastTransactionID          TransactionIDDefinition               `json:"lastTransactionID,omitempty"`
+	ClientConfigureTransaction *TransactionDefinition  `json:"clientConfigureTransaction,omitempty"`
+	LastTransactionID          TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
 type GetAccountChangesSchema struct {
@@ -131,10 +131,10 @@ type GetAccountChangesSchema struct {
 /* Errors */
 
 type PatchAccountConfigurationBadRequestError struct {
-	ClientConfigureRejectTransaction *ClientConfigureRejectTransactionDefinition `json:"clientConfigureRejectTransaction,omitempty"`
-	LastTransactionID                TransactionIDDefinition                     `json:"lastTransactionID,omitempty"`
-	ErrorCode                        string                                      `json:"errorCode,omitempty"`
-	ErrorMessage                     string                                      `json:"errorMessage,omitempty"`
+	ClientConfigureRejectTransaction *TransactionDefinition  `json:"clientConfigureRejectTransaction,omitempty"`
+	LastTransactionID                TransactionIDDefinition `json:"lastTransactionID,omitempty"`
+	ErrorCode                        string                  `json:"errorCode,omitempty"`
+	ErrorMessage                     string                  `json:"errorMessage,omitempty"`
 }
 
 func (r *PatchAccountConfigurationBadRequestError) Error() string {
@@ -143,10 +143,10 @@ func (r *PatchAccountConfigurationBadRequestError) Error() string {
 }
 
 type PatchAccountConfigurationForbiddenError struct {
-	ClientConfigureRejectTransaction *ClientConfigureRejectTransactionDefinition `json:"clientConfigureRejectTransaction,omitempty"`
-	LastTransactionID                TransactionIDDefinition                     `json:"lastTransactionID,omitempty"`
-	ErrorCode                        string                                      `json:"errorCode,omitempty"`
-	ErrorMessage                     string                                      `json:"errorMessage,omitempty"`
+	ClientConfigureRejectTransaction *TransactionDefinition  `json:"clientConfigureRejectTransaction,omitempty"`
+	LastTransactionID                TransactionIDDefinition `json:"lastTransactionID,omitempty"`
+	ErrorCode                        string                  `json:"errorCode,omitempty"`
+	ErrorMessage                     string                  `json:"errorMessage,omitempty"`
 }
 
 func (r *PatchAccountConfigurationForbiddenError) Error() string {
@@ -175,7 +175,7 @@ func (r *ReceiverAccounts) Get() (*GetAccountsSchema, error) {
 		data = new(GetAccountsSchema)
 	}
 
-	data, err = parseResponse(resp, data)
+	data, err = parseResponse(resp, data, r.Connection.strict)
 	if err != nil {
 		return nil, xerrors.Errorf("Get accounts failed: %w", err)
 	}
@@ -204,7 +204,7 @@ func (r *ReceiverAccountID) Get() (*GetAccountIDSchema, error) {
 		data = new(GetAccountIDSchema)
 	}
 
-	data, err = parseResponse(resp, data)
+	data, err = parseResponse(resp, data, r.Connection.strict)
 	if err != nil {
 		return nil, xerrors.Errorf("Get account ID failed: %w", err)
 	}
@@ -233,7 +233,7 @@ func (r *ReceiverAccountSummary) Get() (*GetAccountSummarySchema, error) {
 		data = new(GetAccountSummarySchema)
 	}
 
-	data, err = parseResponse(resp, data)
+	data, err = parseResponse(resp, data, r.Connection.strict)
 	if err != nil {
 		return nil, xerrors.Errorf("Get account summary failed: %w", err)
 	}
@@ -265,7 +265,7 @@ func (r *ReceiverAccountInstruments) Get(params *GetAccountInstrumentsParams) (*
 		data = new(GetAccountInstrumentsSchema)
 	}
 
-	data, err = parseResponse(resp, data)
+	data, err = parseResponse(resp, data, r.Connection.strict)
 	if err != nil {
 		return nil, xerrors.Errorf("Get account instruments failed: %w", err)
 	}
@@ -299,7 +299,7 @@ func (r *ReceiverAccountConfiguration) Patch(params *PatchAccountConfigurationPa
 		data = new(PatchAccountConfigurationForbiddenError)
 	}
 
-	data, err = parseResponse(resp, data)
+	data, err = parseResponse(resp, data, r.Connection.strict)
 	if err != nil {
 		return nil, xerrors.Errorf("Patch account configuration failed: %w", err)
 	}
@@ -336,7 +336,7 @@ func (r *ReceiverAccountChanges) Get(params *GetAccountChangesParams) (*GetAccou
 		data = new(GetAccountChangesSchema)
 	}
 
-	data, err = parseResponse(resp, data)
+	data, err = parseResponse(resp, data, r.Connection.strict)
 	if err != nil {
 		return nil, xerrors.Errorf("Get account changes failed: %w", err)
 	}

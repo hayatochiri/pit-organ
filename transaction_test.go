@@ -35,48 +35,6 @@ func Test_TransactionsIdrange(t *testing.T) {
 			t.Fatalf("Get transactions idrange failed.\n%+v", err)
 		}
 
-		for _, transaction := range data.Transactions {
-			switch tr := transaction.(type) {
-			case *CreateTransactionDefinition:
-			case *CloseTransactionDefinition:
-			case *ReopenTransactionDefinition:
-			case *ClientConfigureTransactionDefinition:
-			case *ClientConfigureRejectTransactionDefinition:
-			case *TransferFundsTransactionDefinition:
-			case *TransferFundsRejectTransactionDefinition:
-			case *MarketOrderTransactionDefinition:
-			case *MarketOrderRejectTransactionDefinition:
-			case *FixedPriceOrderTransactionDefinition:
-			case *LimitOrderTransactionDefinition:
-			case *LimitOrderRejectTransactionDefinition:
-			case *StopOrderTransactionDefinition:
-			case *StopOrderRejectTransactionDefinition:
-			case *MarketIfTouchedOrderTransactionDefinition:
-			case *MarketIfTouchedOrderRejectTransactionDefinition:
-			case *TakeProfitOrderTransactionDefinition:
-			case *TakeProfitOrderRejectTransactionDefinition:
-			case *StopLossOrderTransactionDefinition:
-			case *StopLossOrderRejectTransactionDefinition:
-			case *TrailingStopLossOrderTransactionDefinition:
-			case *TrailingStopLossOrderRejectTransactionDefinition:
-			case *OrderFillTransactionDefinition:
-			case *OrderCancelTransactionDefinition:
-			case *OrderCancelRejectTransactionDefinition:
-			case *OrderClientExtensionsModifyTransactionDefinition:
-			case *OrderClientExtensionsModifyRejectTransactionDefinition:
-			case *TradeClientExtensionsModifyTransactionDefinition:
-			case *TradeClientExtensionsModifyRejectTransactionDefinition:
-			case *MarginCallEnterTransactionDefinition:
-			case *MarginCallExtendTransactionDefinition:
-			case *MarginCallExitTransactionDefinition:
-			case *DelayedTradeClosureTransactionDefinition:
-			case *DailyFinancingTransactionDefinition:
-			case *ResetResettablePLTransactionDefinition:
-			default:
-				t.Errorf("Unexpected transaction type detected.\n%s", spew.Sdump(tr))
-			}
-		}
-
 		t.Logf("Response:\n%s", spew.Sdump(data))
 	})
 }

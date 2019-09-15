@@ -67,13 +67,13 @@ type GetOrdersParams struct {
 /* Schemas */
 
 type PostOrdersSchema struct {
-	OrderCreateTransaction        *TransactionDefinition            `json:"orderCreateTransaction,omitempty"`
-	OrderFillTransaction          *OrderFillTransactionDefinition   `json:"orderFillTransaction,omitempty"`
-	OrderCancelTransaction        *OrderCancelTransactionDefinition `json:"orderCancelTransaction,omitempty"`
-	OrderReissueTransaction       *TransactionDefinition            `json:"orderReissueTransaction,omitempty"`
-	OrderReissueRejectTransaction *TransactionDefinition            `json:"orderReissueRejectTransaction,omitempty"`
-	RelatedTransactionIDs         []TransactionIDDefinition         `json:"relatedTransactionIDs,omitempty"`
-	LastTransactionID             TransactionIDDefinition           `json:"lastTransactionID,omitempty"`
+	OrderCreateTransaction        *TransactionDefinition    `json:"orderCreateTransaction,omitempty"`
+	OrderFillTransaction          *TransactionDefinition    `json:"orderFillTransaction,omitempty"`
+	OrderCancelTransaction        *TransactionDefinition    `json:"orderCancelTransaction,omitempty"`
+	OrderReissueTransaction       *TransactionDefinition    `json:"orderReissueTransaction,omitempty"`
+	OrderReissueRejectTransaction *TransactionDefinition    `json:"orderReissueRejectTransaction,omitempty"`
+	RelatedTransactionIDs         []TransactionIDDefinition `json:"relatedTransactionIDs,omitempty"`
+	LastTransactionID             TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
 }
 
 type GetOrdersSchema struct {
@@ -148,7 +148,7 @@ func (r *ReceiverOrders) Post(params *PostOrdersParams) (*PostOrdersSchema, erro
 		data = new(PostOrdersNotFoundError)
 	}
 
-	data, err = parseResponse(resp, data)
+	data, err = parseResponse(resp, data, r.Connection.strict)
 	if err != nil {
 		return nil, xerrors.Errorf("Post orders failed: %w", err)
 	}
@@ -202,7 +202,7 @@ func (r *ReceiverOrders) Get(params *GetOrdersParams) (*GetOrdersSchema, error) 
 		data = new(GetOrdersSchema)
 	}
 
-	data, err = parseResponse(resp, data)
+	data, err = parseResponse(resp, data, r.Connection.strict)
 	if err != nil {
 		return nil, xerrors.Errorf("Get orders failed: %w", err)
 	}
@@ -231,7 +231,7 @@ func (r *ReceiverPendingOrders) Get() (*GetPendingOrdersSchema, error) {
 		data = new(GetPendingOrdersSchema)
 	}
 
-	data, err = parseResponse(resp, data)
+	data, err = parseResponse(resp, data, r.Connection.strict)
 	if err != nil {
 		return nil, xerrors.Errorf("Get pending orders failed: %w", err)
 	}
@@ -260,7 +260,7 @@ func (r *ReceiverOrderSpecifier) Get() (*GetOrderSpecifierSchema, error) {
 		data = new(GetOrderSpecifierSchema)
 	}
 
-	data, err = parseResponse(resp, data)
+	data, err = parseResponse(resp, data, r.Connection.strict)
 	if err != nil {
 		return nil, xerrors.Errorf("Get order specifier failed: %w", err)
 	}

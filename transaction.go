@@ -82,21 +82,14 @@ type GetTransactionsSchema struct {
 }
 
 type GetTransactionsIdrangeSchema struct {
-	Transactions      []interface{}           `json:"transactions,omitempty"`
-	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
-}
-
-type getTransactionsIdrangeParser struct {
-	Transactions []TransactionDefinition `json:"transactions,omitempty"`
-}
-type getTransactionsIdrangeRawMessage struct {
-	Message []json.RawMessage `json:"transactions,omitempty"`
+	Transactions      []*TransactionDefinition `json:"transactions,omitempty"`
+	LastTransactionID TransactionIDDefinition  `json:"lastTransactionID,omitempty"`
 }
 
 /* Streams */
 
 type TransactionsChannels struct {
-	Transaction <-chan interface{}
+	Transaction <-chan *TransactionDefinition
 	Error       <-chan error
 	close       chan<- struct{}
 	closeWait   *sync.WaitGroup
@@ -157,7 +150,7 @@ func (r *ReceiverTransactions) Get(params *GetTransactionsParams) (*GetTransacti
 		data = new(GetTransactionsSchema)
 	}
 
-	data, err = parseResponse(resp, data)
+	data, err = parseResponse(resp, data, r.Connection.strict)
 	if err != nil {
 		return nil, xerrors.Errorf("Get transactions failed: %w", err)
 	}
@@ -214,29 +207,10 @@ func (r *ReceiverTransactionsIdrange) Get(params *GetTransactionsIdrangeParams) 
 	case 200:
 		data = new(GetTransactionsIdrangeSchema)
 	}
-	data, err = parseBody(body, resp.StatusCode, data)
+	data, err = parseBody(body, resp.StatusCode, data, r.Connection.strict)
 	// HTTPステータスコードが200以外ならエラーとしてreturnされる
 	if err != nil {
 		return nil, xerrors.Errorf("Get transactions idrange failed: %w", err)
-	}
-
-	var parser = new(getTransactionsIdrangeParser)
-	if err := json.Unmarshal(body, parser); err != nil {
-		return nil, xerrors.Errorf("Unmarshal response body failed: %w", err)
-	}
-
-	var rawMessage = new(getTransactionsIdrangeRawMessage)
-	if err := json.Unmarshal(body, rawMessage); err != nil {
-		return nil, xerrors.Errorf("Unmarshal response body failed: %w", err)
-	}
-
-	data.(*GetTransactionsIdrangeSchema).Transactions = make([]interface{}, len(parser.Transactions), len(parser.Transactions))
-	for n, transaction := range parser.Transactions {
-		var tData interface{}
-		if tData, err = unmarshalTransaction(rawMessage.Message[n], transaction.Type); err != nil {
-			return nil, xerrors.Errorf("Unmarshal response body failed(type=%s): %w", transaction.Type, err)
-		}
-		data.(*GetTransactionsIdrangeSchema).Transactions[n] = tData
 	}
 
 	return data.(*GetTransactionsIdrangeSchema), nil
@@ -264,13 +238,13 @@ func (r *ReceiverTransactionsStream) Get(params *GetTransactionsStreamParams) (*
 	if resp.StatusCode != 200 {
 		defer resp.Body.Close()
 		var err interface{}
-		_, err = parseResponse(resp, err)
+		_, err = parseResponse(resp, err, r.Connection.strict)
 		return nil, xerrors.Errorf("Get transactions stream failed: %w", err)
 	}
 
 	closeWait := new(sync.WaitGroup)
 
-	transactionCh := make(chan interface{}, params.BufferSize)
+	transactionCh := make(chan *TransactionDefinition, params.BufferSize)
 	errorCh := make(chan error, 2)
 	closeCh := make(chan struct{})
 
@@ -339,14 +313,7 @@ func (r *ReceiverTransactionsStream) Get(params *GetTransactionsStreamParams) (*
 					continue
 				}
 
-				var tData interface{}
-				tData, err := unmarshalTransaction(line, data.Type)
-				if err != nil {
-					errorCh <- xerrors.Errorf("Unmarshal response body failed(type=%s): %w", data.Type, err)
-					return
-				}
-
-				transactionCh <- tData
+				transactionCh <- data
 			case <-timeout.C:
 				timeout.Reset(r.Connection.Timeout)
 				if !received {
@@ -409,89 +376,4 @@ func (s *GetTransactionsSchema) IdrangeParams() ([]*GetTransactionsIdrangeParams
 	}
 
 	return params, nil
-}
-
-/* Privates */
-
-func unmarshalTransaction(data []byte, tType TransactionTypeDefinition) (interface{}, error) {
-	var v interface{}
-
-	switch tType {
-	case "CREATE":
-		v = new(CreateTransactionDefinition)
-	case "CLOSE":
-		v = new(CloseTransactionDefinition)
-	case "REOPEN":
-		v = new(ReopenTransactionDefinition)
-	case "CLIENT_CONFIGURE":
-		v = new(ClientConfigureTransactionDefinition)
-	case "CLIENT_CONFIGURE_REJECT":
-		v = new(ClientConfigureRejectTransactionDefinition)
-	case "TRANSFER_FUNDS":
-		v = new(TransferFundsTransactionDefinition)
-	case "TRANSFER_FUNDS_REJECT":
-		v = new(TransferFundsRejectTransactionDefinition)
-	case "MARKET_ORDER":
-		v = new(MarketOrderTransactionDefinition)
-	case "MARKET_ORDER_REJECT":
-		v = new(MarketOrderRejectTransactionDefinition)
-	case "FIXED_PRICE_ORDER":
-		v = new(FixedPriceOrderTransactionDefinition)
-	case "LIMIT_ORDER":
-		v = new(LimitOrderTransactionDefinition)
-	case "LIMIT_ORDER_REJECT":
-		v = new(LimitOrderRejectTransactionDefinition)
-	case "STOP_ORDER":
-		v = new(StopOrderTransactionDefinition)
-	case "STOP_ORDER_REJECT":
-		v = new(StopOrderRejectTransactionDefinition)
-	case "MARKET_IF_TOUCHED_ORDER":
-		v = new(MarketIfTouchedOrderTransactionDefinition)
-	case "MARKET_IF_TOUCHED_ORDER_REJECT":
-		v = new(MarketIfTouchedOrderRejectTransactionDefinition)
-	case "TAKE_PROFIT_ORDER":
-		v = new(TakeProfitOrderTransactionDefinition)
-	case "TAKE_PROFIT_ORDER_REJECT":
-		v = new(TakeProfitOrderRejectTransactionDefinition)
-	case "STOP_LOSS_ORDER":
-		v = new(StopLossOrderTransactionDefinition)
-	case "STOP_LOSS_ORDER_REJECT":
-		v = new(StopLossOrderRejectTransactionDefinition)
-	case "TRAILING_STOP_LOSS_ORDER":
-		v = new(TrailingStopLossOrderTransactionDefinition)
-	case "TRAILING_STOP_LOSS_ORDER_REJECT":
-		v = new(TrailingStopLossOrderRejectTransactionDefinition)
-	case "ORDER_FILL":
-		v = new(OrderFillTransactionDefinition)
-	case "ORDER_CANCEL":
-		v = new(OrderCancelTransactionDefinition)
-	case "ORDER_CANCEL_REJECT":
-		v = new(OrderCancelRejectTransactionDefinition)
-	case "ORDER_CLIENT_EXTENSIONS_MODIFY":
-		v = new(OrderClientExtensionsModifyTransactionDefinition)
-	case "ORDER_CLIENT_EXTENSIONS_MODIFY_REJECT":
-		v = new(OrderClientExtensionsModifyRejectTransactionDefinition)
-	case "TRADE_CLIENT_EXTENSIONS_MODIFY":
-		v = new(TradeClientExtensionsModifyTransactionDefinition)
-	case "TRADE_CLIENT_EXTENSIONS_MODIFY_REJECT":
-		v = new(TradeClientExtensionsModifyRejectTransactionDefinition)
-	case "MARGIN_CALL_ENTER":
-		v = new(MarginCallEnterTransactionDefinition)
-	case "MARGIN_CALL_EXTEND":
-		v = new(MarginCallExtendTransactionDefinition)
-	case "MARGIN_CALL_EXIT":
-		v = new(MarginCallExitTransactionDefinition)
-	case "DELAYED_TRADE_CLOSURE":
-		v = new(DelayedTradeClosureTransactionDefinition)
-	case "DAILY_FINANCING":
-		v = new(DailyFinancingTransactionDefinition)
-	case "RESET_RESETTABLE_PL":
-		v = new(ResetResettablePLTransactionDefinition)
-	}
-
-	if err := json.Unmarshal(data, v); err != nil {
-		return nil, xerrors.Errorf("Unmarshal transaction failed(type=%s): %w", tType, err)
-	}
-
-	return v, nil
 }

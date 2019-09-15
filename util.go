@@ -3,10 +3,14 @@ package pitOrgan
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/davecgh/go-spew/spew"
 	"golang.org/x/xerrors"
 	"io/ioutil"
 	"net/http"
 	"path"
+	"reflect"
+	"strconv"
+	"strings"
 )
 
 type header struct {
@@ -97,7 +101,7 @@ func (c *Connection) stream(params *requestParams) (*http.Response, error) {
 	return resp, nil
 }
 
-func parseBody(body []byte, statusCode int, data interface{}) (interface{}, error) {
+func parseBody(body []byte, statusCode int, data interface{}, strict bool) (interface{}, error) {
 	var errMessage string
 	switch statusCode {
 	case 200, 201:
@@ -135,6 +139,12 @@ func parseBody(body []byte, statusCode int, data interface{}) (interface{}, erro
 		return nil, xerrors.Errorf("Unmarshal response body failed: %w", err)
 	}
 
+	if strict {
+		if err := compareJson(data, body); err != nil {
+			return nil, xerrors.Errorf("Response body JSON is different from unmarshalled it: %w", err)
+		}
+	}
+
 	if statusCode/100 != 2 {
 		return nil, xerrors.Errorf("%s: %w", errMessage, data)
 	}
@@ -142,11 +152,115 @@ func parseBody(body []byte, statusCode int, data interface{}) (interface{}, erro
 	return data, nil
 }
 
-func parseResponse(resp *http.Response, data interface{}) (interface{}, error) {
+func parseResponse(resp *http.Response, data interface{}, strict bool) (interface{}, error) {
 	body, err := ioutil.ReadAll(resp.Body)
+
 	if err != nil {
 		return nil, xerrors.Errorf("Read response body failed: %w", err)
 	}
 
-	return parseBody(body, resp.StatusCode, data)
+	return parseBody(body, resp.StatusCode, data, strict)
+}
+
+func compareJson(jsonObj interface{}, jsonStr []byte) error {
+	bytes, err := json.Marshal(jsonObj)
+	if err != nil {
+		return xerrors.Errorf("Marshal JSON object failed: %w", err)
+	}
+
+	actual := new(interface{})
+	if err = json.Unmarshal(bytes, actual); err != nil {
+		return xerrors.Errorf("Reunmarshal JSON string failed: %w", err)
+	}
+
+	expect := new(interface{})
+	if err = json.Unmarshal(jsonStr, expect); err != nil {
+		return xerrors.Errorf("Unmarshal JSON string failed: %w", err)
+	}
+
+	if err := deepEqual(expect, actual, []string{reflect.TypeOf(jsonObj).String()}); err != nil {
+		return xerrors.Errorf("Unmarshalled JSON is lacking:\nExpect: %sActual: %s\n: %w", string(jsonStr), string(bytes), err)
+	}
+
+	return nil
+}
+
+func deepEqual(expect, actual interface{}, breadcrumbs []string) error {
+	if reflect.TypeOf(expect).String() == "*interface {}" {
+		expect = reflect.Indirect(reflect.ValueOf(expect)).Interface()
+	}
+
+	if actual == nil {
+		return xerrors.Errorf("Actual value is not equal to expect\nBreadcrumbs: %s\nExpect: %sActual: %s", strings.Join(breadcrumbs, " > "), spew.Sdump(expect), spew.Sdump(actual))
+	}
+	if reflect.TypeOf(actual).String() == "*interface {}" {
+		actual = reflect.Indirect(reflect.ValueOf(actual)).Interface()
+	}
+
+	switch expectValue := expect.(type) {
+	case map[string]interface{}:
+		actualValue, ok := actual.(map[string]interface{})
+		if !ok {
+			return xerrors.Errorf("Actual value is not equal to expect\nBreadcrumbs: %s\nExpect: %+v\nActual: %+v", strings.Join(breadcrumbs, " > "), expect, actual)
+		}
+
+		for k := range expectValue {
+			if v, ok := expectValue[k].([]interface{}); ok && len(v) == 0 {
+				if _, ok := actualValue[k]; !ok {
+					return nil
+				}
+			}
+
+			if err := deepEqual(expectValue[k], actualValue[k], append(breadcrumbs, k)); err != nil {
+				return err
+			}
+		}
+	case []interface{}:
+		actualValue, ok := actual.([]interface{})
+		if !ok {
+			return xerrors.Errorf("Actual value is not equal to expect\nBreadcrumbs: %s\nExpect: %+v\nActual: %+v", strings.Join(breadcrumbs, " > "), expect, actual)
+		}
+
+		for n := range expectValue {
+			if err := deepEqual(expectValue[n], actualValue[n], append(breadcrumbs, "["+strconv.Itoa(n)+"]")); err != nil {
+				return err
+			}
+		}
+	case string:
+		switch actualValue := actual.(type) {
+		case string:
+			if expectValue != actualValue {
+				return xerrors.Errorf("Actual value is not equal to expect\nBreadcrumbs: %s\nExpect: %sActual: %s", strings.Join(breadcrumbs, " > "), spew.Sdump(expect), spew.Sdump(actual))
+			}
+		case float64:
+			ev, _ := strconv.ParseFloat(expectValue, 64)
+			if ev != actualValue {
+				return xerrors.Errorf("Actual value is not equal to expect\nBreadcrumbs: %s\nExpect: %sActual: %s", strings.Join(breadcrumbs, " > "), spew.Sdump(expect), spew.Sdump(actual))
+			}
+		default:
+			return xerrors.Errorf("Actual value is not equal to expect\nBreadcrumbs: %s\nExpect: %sActual: %s", strings.Join(breadcrumbs, " > "), spew.Sdump(expect), spew.Sdump(actual))
+		}
+	case float64:
+		switch actualValue := actual.(type) {
+		case float64:
+			if expectValue != actualValue {
+				return xerrors.Errorf("Actual value is not equal to expect\nBreadcrumbs: %s\nExpect: %sActual: %s", strings.Join(breadcrumbs, " > "), spew.Sdump(expect), spew.Sdump(actual))
+			}
+		default:
+			return xerrors.Errorf("Actual value is not equal to expect\nBreadcrumbs: %s\nExpect: %sActual: %s", strings.Join(breadcrumbs, " > "), spew.Sdump(expect), spew.Sdump(actual))
+		}
+	case bool:
+		switch actualValue := actual.(type) {
+		case bool:
+			if expectValue != actualValue {
+				return xerrors.Errorf("Actual value is not equal to expect\nBreadcrumbs: %s\nExpect: %sActual: %s", strings.Join(breadcrumbs, " > "), spew.Sdump(expect), spew.Sdump(actual))
+			}
+		default:
+			return xerrors.Errorf("Actual value is not equal to expect\nBreadcrumbs: %s\nExpect: %sActual: %s", strings.Join(breadcrumbs, " > "), spew.Sdump(expect), spew.Sdump(actual))
+		}
+	default:
+		return xerrors.Errorf("Unexpected type was given\nBreadcrumbs: %s\nType: %s\nExpect: %sActual: %s", strings.Join(breadcrumbs, " > "), reflect.TypeOf(expect).String(), spew.Sdump(expect), spew.Sdump(actual))
+	}
+
+	return nil
 }
