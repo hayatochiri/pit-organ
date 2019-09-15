@@ -1,7 +1,6 @@
 package pitOrgan_test
 
 import (
-	"fmt"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/hayatochiri/pit-organ"
 	"log"
@@ -42,80 +41,7 @@ func ExampleReceiverTransactionsIdrange_Get() {
 		log.Fatalf("%+v", err)
 	}
 
-	for _, transaction := range data.Transactions {
-		switch t := transaction.(type) {
-		case *pitOrgan.CreateTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.CloseTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.ReopenTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.ClientConfigureTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.ClientConfigureRejectTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.TransferFundsTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.TransferFundsRejectTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.MarketOrderTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.MarketOrderRejectTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.FixedPriceOrderTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.LimitOrderTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.LimitOrderRejectTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.StopOrderTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.StopOrderRejectTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.MarketIfTouchedOrderTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.MarketIfTouchedOrderRejectTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.TakeProfitOrderTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.TakeProfitOrderRejectTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.StopLossOrderTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.StopLossOrderRejectTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.TrailingStopLossOrderTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.TrailingStopLossOrderRejectTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.OrderFillTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.OrderCancelTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.OrderCancelRejectTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.OrderClientExtensionsModifyTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.OrderClientExtensionsModifyRejectTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.TradeClientExtensionsModifyTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.TradeClientExtensionsModifyRejectTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.MarginCallEnterTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.MarginCallExtendTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.MarginCallExitTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.DelayedTradeClosureTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.DailyFinancingTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		case *pitOrgan.ResetResettablePLTransactionDefinition:
-			fmt.Printf("Transaction type = %s\n", t.Type)
-		}
-	}
+	spew.Dump(data)
 }
 
 func ExampleReceiverTransactionsIdrange_Get_idrangeParams() {
