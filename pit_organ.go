@@ -17,6 +17,9 @@ type Connection struct {
 	Token       string
 	Environemnt OandaEnvironment
 	Timeout     time.Duration
+
+	// テスト用、APIの動作を厳密にする
+	strict bool
 }
 
 type baseURLs struct {
