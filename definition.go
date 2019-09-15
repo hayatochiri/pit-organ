@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 )
 
+type Deprecated interface{}
+
 //
 // Account Definitions
 //
@@ -49,6 +51,8 @@ type AccountDefinition struct {
 	Trades                      []*TradeSummaryDefinition             `json:"trades,omitempty"`
 	Positions                   []*PositionDefinition                 `json:"positions,omitempty"`
 	Orders                      []*OrderDefinition                    `json:"orders,omitempty"`
+
+	Dividend Deprecated `json:"dividend,omitempty"`
 }
 
 type AccountChangesStateDefinition struct {
@@ -114,6 +118,8 @@ type AccountSummaryDefinition struct {
 	MarginCallMarginUsed        AccountUnitsDefinition                `json:"marginCallMarginUsed,omitempty"`
 	MarginCallPercent           DecimalNumberDefinition               `json:"marginCallPercent,omitempty"`
 	LastTransactionID           TransactionIDDefinition               `json:"lastTransactionID,omitempty"`
+
+	Dividend Deprecated `json:"dividend,omitempty"`
 }
 
 type CalculatedAccountStateDefinition struct {
@@ -212,6 +218,8 @@ type OrderBookDefinition struct {
 	Price       PriceValueDefinition         `json:"price,omitempty"`
 	BucketWidth PriceValueDefinition         `json:"bucketWidth,omitempty"`
 	Buckets     []*OrderBookBucketDefinition `json:"buckets,omitempty"`
+
+	UnixTime Deprecated `json:"unixTime,omitempty"`
 }
 
 type OrderBookBucketDefinition struct {
@@ -226,6 +234,8 @@ type PositionBookDefinition struct {
 	Price       PriceValueDefinition            `json:"price,omitempty"`
 	BucketWidth PriceValueDefinition            `json:"bucketWidth,omitempty"`
 	Buckets     []*PositionBookBucketDefinition `json:"buckets,omitempty"`
+
+	UnixTime Deprecated `json:"unixTime,omitempty"`
 }
 
 type PositionBookBucketDefinition struct {
@@ -280,6 +290,8 @@ type OrderDefinition struct {
 	TriggerCondition           OrderTriggerConditionDefinition         `json:"triggerCondition,omitempty"`
 	Type                       OrderTypeDefinition                     `json:"type,omitempty"`
 	Units                      DecimalNumberDefinition                 `json:"units,omitempty"`
+
+	PartialFill Deprecated `json:"partialFill"`
 }
 
 type TakeProfitOrderDefinition = OrderDefinition
@@ -492,6 +504,8 @@ type TradeSummaryDefinition struct {
 	TakeProfitOrderID       string                      `json:"takeProfitOrderID,omitempty"`
 	StopLossOrderID         string                      `json:"stopLossOrderID,omitempty"`
 	TrailingStopLossOrderID string                      `json:"trailingStopLossOrderID,omitempty"`
+
+	Dividend Deprecated `json:"dividend,omitempty"`
 }
 
 type CalculatedTradeStateDefinition struct {
@@ -517,6 +531,8 @@ type PositionDefinition struct {
 	GuaranteedExecutionFees AccountUnitsDefinition   `json:"guaranteedExecutionFees,omitempty"`
 	Long                    *PositionSideDefinition  `json:"long,omitempty"`
 	Short                   *PositionSideDefinition  `json:"short,omitempty"`
+
+	Dividend Deprecated `json:"dividend,omitempty"`
 }
 
 type PositionSideDefinition struct {
@@ -528,6 +544,8 @@ type PositionSideDefinition struct {
 	ResettablePL            AccountUnitsDefinition  `json:"resettablePL,omitempty"`
 	Financing               AccountUnitsDefinition  `json:"financing,omitempty"`
 	GuaranteedExecutionFees AccountUnitsDefinition  `json:"guaranteedExecutionFees,omitempty"`
+
+	Dividend Deprecated `json:"dividend,omitempty"`
 }
 
 type CalculatedPositionStateDefinition struct {
@@ -613,6 +631,10 @@ type TransactionDefinition struct {
 	Type                          TransactionTypeDefinition               `json:"type,omitempty"`
 	Units                         DecimalNumberDefinition                 `json:"units,omitempty"`
 	UserID                        *int                                    `json:"userID,omitempty"`
+
+	RequestedUnits Deprecated `json:"requestedUnits,omitempty"`
+	FullVWAP       Deprecated `json:"fullVWAP,omitempty"`
+	PartialFill    Deprecated `json:"partialFill,omitempty"`
 }
 
 // Transaction-related Definitions
@@ -855,6 +877,8 @@ type InstrumentDefinition struct {
 	MaximumOrderUnits           DecimalNumberDefinition         `json:"maximumOrderUnits,omitempty"`
 	MarginRate                  DecimalNumberDefinition         `json:"marginRate,omitempty"`
 	Commission                  *InstrumentCommissionDefinition `json:"commission,omitempty"`
+
+	Tags Deprecated `json:"tags,omitempty"`
 }
 
 type DateTimeDefinition string
