@@ -219,7 +219,7 @@ func (r *ReceiverInstrumentCandles) Get(params *GetInstrumentCandlesParams) (*Ge
 		data = new(GetInstrumentCandlesSchema)
 	}
 
-	data, err = parseResponse(resp, data)
+	data, err = parseResponse(resp, data, r.Connection.strict)
 	if err != nil {
 		return nil, xerrors.Errorf("Get instrument candles failed: %w", err)
 	}
@@ -289,7 +289,7 @@ func (r *ReceiverInstrumentOrderBook) Get(params *GetInstrumentOrderBookParams) 
 		data = schema
 	}
 
-	data, err = parseResponse(resp, data)
+	data, err = parseResponse(resp, data, r.Connection.strict)
 	if err != nil {
 		return nil, xerrors.Errorf("Get instrument order book failed: %w", err)
 	}
@@ -359,7 +359,7 @@ func (r *ReceiverInstrumentPositionBook) Get(params *GetInstrumentPositionBookPa
 		data = schema
 	}
 
-	data, err = parseResponse(resp, data)
+	data, err = parseResponse(resp, data, r.Connection.strict)
 	if err != nil {
 		return nil, xerrors.Errorf("Get instrument position book failed: %w", err)
 	}

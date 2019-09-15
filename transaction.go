@@ -157,7 +157,7 @@ func (r *ReceiverTransactions) Get(params *GetTransactionsParams) (*GetTransacti
 		data = new(GetTransactionsSchema)
 	}
 
-	data, err = parseResponse(resp, data)
+	data, err = parseResponse(resp, data, r.Connection.strict)
 	if err != nil {
 		return nil, xerrors.Errorf("Get transactions failed: %w", err)
 	}
@@ -214,7 +214,7 @@ func (r *ReceiverTransactionsIdrange) Get(params *GetTransactionsIdrangeParams) 
 	case 200:
 		data = new(GetTransactionsIdrangeSchema)
 	}
-	data, err = parseBody(body, resp.StatusCode, data)
+	data, err = parseBody(body, resp.StatusCode, data, r.Connection.strict)
 	// HTTPステータスコードが200以外ならエラーとしてreturnされる
 	if err != nil {
 		return nil, xerrors.Errorf("Get transactions idrange failed: %w", err)
@@ -264,7 +264,7 @@ func (r *ReceiverTransactionsStream) Get(params *GetTransactionsStreamParams) (*
 	if resp.StatusCode != 200 {
 		defer resp.Body.Close()
 		var err interface{}
-		_, err = parseResponse(resp, err)
+		_, err = parseResponse(resp, err, r.Connection.strict)
 		return nil, xerrors.Errorf("Get transactions stream failed: %w", err)
 	}
 

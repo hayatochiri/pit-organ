@@ -175,7 +175,7 @@ func (r *ReceiverAccounts) Get() (*GetAccountsSchema, error) {
 		data = new(GetAccountsSchema)
 	}
 
-	data, err = parseResponse(resp, data)
+	data, err = parseResponse(resp, data, r.Connection.strict)
 	if err != nil {
 		return nil, xerrors.Errorf("Get accounts failed: %w", err)
 	}
@@ -204,7 +204,7 @@ func (r *ReceiverAccountID) Get() (*GetAccountIDSchema, error) {
 		data = new(GetAccountIDSchema)
 	}
 
-	data, err = parseResponse(resp, data)
+	data, err = parseResponse(resp, data, r.Connection.strict)
 	if err != nil {
 		return nil, xerrors.Errorf("Get account ID failed: %w", err)
 	}
@@ -233,7 +233,7 @@ func (r *ReceiverAccountSummary) Get() (*GetAccountSummarySchema, error) {
 		data = new(GetAccountSummarySchema)
 	}
 
-	data, err = parseResponse(resp, data)
+	data, err = parseResponse(resp, data, r.Connection.strict)
 	if err != nil {
 		return nil, xerrors.Errorf("Get account summary failed: %w", err)
 	}
@@ -265,7 +265,7 @@ func (r *ReceiverAccountInstruments) Get(params *GetAccountInstrumentsParams) (*
 		data = new(GetAccountInstrumentsSchema)
 	}
 
-	data, err = parseResponse(resp, data)
+	data, err = parseResponse(resp, data, r.Connection.strict)
 	if err != nil {
 		return nil, xerrors.Errorf("Get account instruments failed: %w", err)
 	}
@@ -299,7 +299,7 @@ func (r *ReceiverAccountConfiguration) Patch(params *PatchAccountConfigurationPa
 		data = new(PatchAccountConfigurationForbiddenError)
 	}
 
-	data, err = parseResponse(resp, data)
+	data, err = parseResponse(resp, data, r.Connection.strict)
 	if err != nil {
 		return nil, xerrors.Errorf("Patch account configuration failed: %w", err)
 	}
@@ -336,7 +336,7 @@ func (r *ReceiverAccountChanges) Get(params *GetAccountChangesParams) (*GetAccou
 		data = new(GetAccountChangesSchema)
 	}
 
-	data, err = parseResponse(resp, data)
+	data, err = parseResponse(resp, data, r.Connection.strict)
 	if err != nil {
 		return nil, xerrors.Errorf("Get account changes failed: %w", err)
 	}
