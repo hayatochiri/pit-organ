@@ -168,3 +168,52 @@ func Test_OrderSpecifierCancel(t *testing.T) {
 
 	t.Logf("Response:\n%s", spew.Sdump(data))
 }
+
+func Test_OrderSpecifierClientExtensions(t *testing.T) {
+	connection := newConnection(t, OandaPractice)
+	accountID := Getenv("ACCOUNT_ID")
+	accountIDPath := connection.Accounts().AccountID(accountID)
+
+	order := func() *PostOrdersSchema {
+		params := &PostOrdersParams{
+			Body: PostOrdersBodyParams{
+				Order: MarketIfTouchedOrderRequestDefinition{
+					Type:        "MARKET_IF_TOUCHED",
+					Instrument:  "USD_JPY",
+					Units:       "100",
+					Price:       "150.00",
+					TimeInForce: "GTC",
+				},
+			},
+		}
+
+		data, err := accountIDPath.Orders().Post(params)
+		if err != nil {
+			t.Fatalf("Error occurred.\n%+v", err)
+		}
+
+		return data
+	}()
+
+	params := &PutOrderSpecifierClientExtensionsParams{
+		Body: &PutOrderSpecifierClientExtensionsBodyParams{
+			ClientExtensions: &ClientExtensionsDefinition{
+				ID:      "Hoge",
+				Tag:     "Huga",
+				Comment: "Piyo",
+			},
+			TradeClientExtensions: &ClientExtensionsDefinition{
+				ID:      "Foo",
+				Tag:     "Bar",
+				Comment: "Baz",
+			},
+		},
+	}
+
+	data, err := accountIDPath.Orders().OrderSpecifier(order.LastTransactionID).ClientExtensions().Put(params)
+	if err != nil {
+		t.Fatalf("Error occurred.\n%+v", err)
+	}
+
+	t.Logf("Response:\n%s", spew.Sdump(data))
+}
