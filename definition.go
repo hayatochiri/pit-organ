@@ -651,15 +651,15 @@ type TransactionDefinition struct {
 
 // Transaction-related Definitions
 
-type TransactionIDDefinition string
+type TransactionIDDefinition = string
 
-type TransactionTypeDefinition string
+type TransactionTypeDefinition = string
 
-type FundingReasonDefinition string
+type FundingReasonDefinition = string
 
-type ClientTagDefinition string
+type ClientTagDefinition = string
 
-type ClientCommentDefinition string
+type ClientCommentDefinition = string
 
 type ClientExtensionsDefinition struct {
 	ID      string                  `json:"id,omitempty"`
