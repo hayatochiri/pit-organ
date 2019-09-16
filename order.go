@@ -64,6 +64,14 @@ type GetOrdersParams struct {
 	BeforeID   interface{}
 }
 
+type PutOrderSpecifierBodyParams struct {
+	Order OrderRequestDefinition `json:"order"`
+}
+
+type PutOrderSpecifierParams struct {
+	Body PutOrderSpecifierBodyParams
+}
+
 /* Schemas */
 
 type PostOrdersSchema struct {
@@ -91,6 +99,17 @@ type GetOrderSpecifierSchema struct {
 	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
+type PutOrderSpecifierSchema struct {
+	OrderCancelTransaction          *TransactionDefinition    `json:"orderCancelTransaction,omitempty"`
+	OrderCreateTransaction          *TransactionDefinition    `json:"orderCreateTransaction,omitempty"`
+	OrderFillTransaction            *TransactionDefinition    `json:"orderFillTransaction,omitempty"`
+	OrderReissueTransaction         *TransactionDefinition    `json:"orderReissueTransaction,omitempty"`
+	OrderReissueRejectTransaction   *TransactionDefinition    `json:"orderReissueRejectTransaction,omitempty"`
+	ReplacingOrderCancelTransaction *TransactionDefinition    `json:"replacingOrderCancelTransaction,omitempty"`
+	RelatedTransactionIDs           []TransactionIDDefinition `json:"relatedTransactionIDs,omitempty"`
+	LastTransactionID               TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
+}
+
 /* Errors */
 
 type PostOrdersBadRequestError struct {
@@ -115,6 +134,32 @@ type PostOrdersNotFoundError struct {
 }
 
 func (r *PostOrdersNotFoundError) Error() string {
+	// TODO: エラーを整える
+	return r.ErrorMessage
+}
+
+type PutOrderSpecifierBadRequestError struct {
+	OrderRejectTransaction *TransactionDefinition    `json:"orderRejectTransaction"`
+	RelatedTransactionIDs  []TransactionIDDefinition `json:"relatedTransactionIDs"`
+	LastTransactionID      TransactionIDDefinition   `json:"lastTransactionID"`
+	ErrorCode              string                    `json:"errorCode"`
+	ErrorMessage           string                    `json:"errorMessage"`
+}
+
+func (r *PutOrderSpecifierBadRequestError) Error() string {
+	// TODO: エラーを整える
+	return r.ErrorMessage
+}
+
+type PutOrderSpecifierNotFoundError struct {
+	OrderCancelRejectTransaction *TransactionDefinition    `json:"orderCancelRejectTransaction"`
+	RelatedTransactionIDs        []TransactionIDDefinition `json:"relatedTransactionIDs"`
+	LastTransactionID            TransactionIDDefinition   `json:"lastTransactionID"`
+	ErrorCode                    string                    `json:"errorCode"`
+	ErrorMessage                 string                    `json:"errorMessage"`
+}
+
+func (r *PutOrderSpecifierNotFoundError) Error() string {
 	// TODO: エラーを整える
 	return r.ErrorMessage
 }
@@ -267,7 +312,39 @@ func (r *ReceiverOrderSpecifier) Get() (*GetOrderSpecifierSchema, error) {
 	return data.(*GetOrderSpecifierSchema), nil
 }
 
-// TODO: PUT /v3/accounts/{accountID}/orders/{orderSpecifier}
+// PUT /v3/accounts/{accountID}/orders/{orderSpecifier}
+func (r *ReceiverOrderSpecifier) Put(params *PutOrderSpecifierParams) (*PutOrderSpecifierSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "PUT",
+			endPoint: "/v3/accounts/" + r.AccountID + "/orders/" + r.OrderSpecifier,
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+			body: params.Body,
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Put order specifier canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 201:
+		data = new(PutOrderSpecifierSchema)
+	case 400:
+		data = new(PutOrderSpecifierBadRequestError)
+	case 404:
+		data = new(PutOrderSpecifierNotFoundError)
+	}
+
+	data, err = parseResponse(resp, data, r.Connection.strict)
+	if err != nil {
+		return nil, xerrors.Errorf("Put order specifier failed: %w", err)
+	}
+	return data.(*PutOrderSpecifierSchema), nil
+}
 
 // TODO: PUT /v3/accounts/{accountID}/orders/{orderSpecifier}/cancel
 
