@@ -60,6 +60,20 @@ func (r *ReceiverOrderSpecifier) Cancel() *ReceiverOrderSpecifierCancel {
 	}
 }
 
+type ReceiverOrderSpecifierClientExtensions struct {
+	AccountID      string
+	Connection     *Connection
+	OrderSpecifier string
+}
+
+func (r *ReceiverOrderSpecifier) ClientExtensions() *ReceiverOrderSpecifierClientExtensions {
+	return &ReceiverOrderSpecifierClientExtensions{
+		AccountID:      r.AccountID,
+		Connection:     r.Connection,
+		OrderSpecifier: r.OrderSpecifier,
+	}
+}
+
 // Params
 
 type PostOrdersBodyParams struct {
@@ -84,6 +98,15 @@ type PutOrderSpecifierBodyParams struct {
 
 type PutOrderSpecifierParams struct {
 	Body PutOrderSpecifierBodyParams
+}
+
+type PutOrderSpecifierClientExtensionsBodyParams struct {
+	ClientExtensions      *ClientExtensionsDefinition `json:"clientExtensions"`
+	TradeClientExtensions *ClientExtensionsDefinition `json:"tradeClientExtensions"`
+}
+
+type PutOrderSpecifierClientExtensionsParams struct {
+	Body *PutOrderSpecifierClientExtensionsBodyParams
 }
 
 /* Schemas */
@@ -128,6 +151,12 @@ type PutOrderSpecifierCancelSchema struct {
 	OrderCancelTransaction *TransactionDefinition    `json:"orderCancelTransaction,omitempty"`
 	RelatedTransactionIDs  []TransactionIDDefinition `json:"relatedTransactionIDs,omitempty"`
 	LastTransactionID      TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
+}
+
+type PutOrderSpecifierClientExtensionsSchema struct {
+	OrderClientExtensionsModifyTransaction *TransactionDefinition    `json:"orderClientExtensionsModifyTransaction,omitempty"`
+	LastTransactionID                      TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
+	RelatedTransactionIDs                  []TransactionIDDefinition `json:"relatedTransactionIDs,omitempty"`
 }
 
 /* Errors */
@@ -193,6 +222,32 @@ type PutOrderSpecifierCancelNotFoundError struct {
 }
 
 func (r *PutOrderSpecifierCancelNotFoundError) Error() string {
+	// TODO: エラーを整える
+	return r.ErrorMessage
+}
+
+type PutOrderSpecifierClientExtensionsBadRequestError struct {
+	OrderClientExtensionsModifyRejectTransaction *TransactionDefinition    `json:"orderClientExtensionsModifyRejectTransaction,omitempty"`
+	LastTransactionID                            TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
+	RelatedTransactionIDs                        []TransactionIDDefinition `json:"relatedTransactionIDs,omitempty"`
+	ErrorCode                                    string                    `json:"errorCode,omitempty"`
+	ErrorMessage                                 string                    `json:"errorMessage,omitempty"`
+}
+
+func (r *PutOrderSpecifierClientExtensionsBadRequestError) Error() string {
+	// TODO: エラーを整える
+	return r.ErrorMessage
+}
+
+type PutOrderSpecifierClientExtensionsNotFoundError struct {
+	OrderClientExtensionsModifyRejectTransaction *TransactionDefinition    `json:"orderClientExtensionsModifyRejectTransaction,omitempty"`
+	LastTransactionID                            TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
+	RelatedTransactionIDs                        []TransactionIDDefinition `json:"relatedTransactionIDs,omitempty"`
+	ErrorCode                                    string                    `json:"errorCode,omitempty"`
+	ErrorMessage                                 string                    `json:"errorMessage,omitempty"`
+}
+
+func (r *PutOrderSpecifierClientExtensionsNotFoundError) Error() string {
 	// TODO: エラーを整える
 	return r.ErrorMessage
 }
@@ -410,4 +465,36 @@ func (r *ReceiverOrderSpecifierCancel) Put() (*PutOrderSpecifierCancelSchema, er
 	return data.(*PutOrderSpecifierCancelSchema), nil
 }
 
-// TODO: PUT /v3/accounts/{accountID}/orders/{orderSpecifier}/clientExtensions
+// PUT /v3/accounts/{accountID}/orders/{orderSpecifier}/clientExtensions
+func (r *ReceiverOrderSpecifierClientExtensions) Put(params *PutOrderSpecifierClientExtensionsParams) (*PutOrderSpecifierClientExtensionsSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "PUT",
+			endPoint: "/v3/accounts/" + r.AccountID + "/orders/" + r.OrderSpecifier + "/clientExtensions",
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+			body: params.Body,
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Put order specifier client extensions canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		data = new(PutOrderSpecifierClientExtensionsSchema)
+	case 400:
+		data = new(PutOrderSpecifierClientExtensionsBadRequestError)
+	case 404:
+		data = new(PutOrderSpecifierClientExtensionsNotFoundError)
+	}
+
+	data, err = parseResponse(resp, data, r.Connection.strict)
+	if err != nil {
+		return nil, xerrors.Errorf("Put order specifier client extensions failed: %w", err)
+	}
+	return data.(*PutOrderSpecifierClientExtensionsSchema), nil
+}
