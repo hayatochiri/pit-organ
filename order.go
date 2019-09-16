@@ -46,6 +46,20 @@ func (r *ReceiverOrders) OrderSpecifier(orderSpecifier string) *ReceiverOrderSpe
 	}
 }
 
+type ReceiverOrderSpecifierCancel struct {
+	AccountID      string
+	Connection     *Connection
+	OrderSpecifier string
+}
+
+func (r *ReceiverOrderSpecifier) Cancel() *ReceiverOrderSpecifierCancel {
+	return &ReceiverOrderSpecifierCancel{
+		AccountID:      r.AccountID,
+		Connection:     r.Connection,
+		OrderSpecifier: r.OrderSpecifier,
+	}
+}
+
 // Params
 
 type PostOrdersBodyParams struct {
@@ -110,6 +124,12 @@ type PutOrderSpecifierSchema struct {
 	LastTransactionID               TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
 }
 
+type PutOrderSpecifierCancelSchema struct {
+	OrderCancelTransaction *TransactionDefinition    `json:"orderCancelTransaction,omitempty"`
+	RelatedTransactionIDs  []TransactionIDDefinition `json:"relatedTransactionIDs,omitempty"`
+	LastTransactionID      TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
+}
+
 /* Errors */
 
 type PostOrdersBadRequestError struct {
@@ -160,6 +180,19 @@ type PutOrderSpecifierNotFoundError struct {
 }
 
 func (r *PutOrderSpecifierNotFoundError) Error() string {
+	// TODO: エラーを整える
+	return r.ErrorMessage
+}
+
+type PutOrderSpecifierCancelNotFoundError struct {
+	OrderCancelRejectTransaction *TransactionDefinition    `json:"orderCancelRejectTransaction,omitempty"`
+	RelatedTransactionIDs        []TransactionIDDefinition `json:"relatedTransactionIDs,omitempty"`
+	LastTransactionID            TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
+	ErrorCode                    string                    `json:"errorCode,omitempty"`
+	ErrorMessage                 string                    `json:"errorMessage,omitempty"`
+}
+
+func (r *PutOrderSpecifierCancelNotFoundError) Error() string {
 	// TODO: エラーを整える
 	return r.ErrorMessage
 }
@@ -346,6 +379,35 @@ func (r *ReceiverOrderSpecifier) Put(params *PutOrderSpecifierParams) (*PutOrder
 	return data.(*PutOrderSpecifierSchema), nil
 }
 
-// TODO: PUT /v3/accounts/{accountID}/orders/{orderSpecifier}/cancel
+// PUT /v3/accounts/{accountID}/orders/{orderSpecifier}/cancel
+func (r *ReceiverOrderSpecifierCancel) Put() (*PutOrderSpecifierCancelSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "PUT",
+			endPoint: "/v3/accounts/" + r.AccountID + "/orders/" + r.OrderSpecifier + "/cancel",
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Put order specifier cancel canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		data = new(PutOrderSpecifierCancelSchema)
+	case 404:
+		data = new(PutOrderSpecifierCancelNotFoundError)
+	}
+
+	data, err = parseResponse(resp, data, r.Connection.strict)
+	if err != nil {
+		return nil, xerrors.Errorf("Put order specifier cancel failed: %w", err)
+	}
+	return data.(*PutOrderSpecifierCancelSchema), nil
+}
 
 // TODO: PUT /v3/accounts/{accountID}/orders/{orderSpecifier}/clientExtensions
