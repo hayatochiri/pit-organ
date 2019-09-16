@@ -10,7 +10,7 @@ type Deprecated interface{}
 // Account Definitions
 //
 
-type AccountIDDefinition string
+type AccountIDDefinition = string
 
 type AccountDefinition struct {
 	ID                          AccountIDDefinition                   `json:"id,omitempty"`
@@ -80,7 +80,7 @@ type AccountPropertiesDefinition struct {
 	Tags         []string            `json:"tags,omitempty"`
 }
 
-type GuaranteedStopLossOrderModeDefinition string
+type GuaranteedStopLossOrderModeDefinition = string
 
 type AccountSummaryDefinition struct {
 	ID                          AccountIDDefinition                   `json:"id,omitempty"`
@@ -150,15 +150,15 @@ type AccountChangesDefinition struct {
 	Transactions    []*TransactionDefinition  `json:"transactions,omitempty"`
 }
 
-type AccountFinancingModeDefinition string
+type AccountFinancingModeDefinition = string
 
-type PositionAggregationModeDefinition string
+type PositionAggregationModeDefinition = string
 
 //
 // Instrument Definitions
 //
 
-type CandlestickGranularityDefinition string
+type CandlestickGranularityDefinition = string
 
 const (
 	S5  CandlestickGranularityDefinition = "S5"  // 5 second candlesticks, minute alignment
@@ -184,7 +184,7 @@ const (
 	M   CandlestickGranularityDefinition = "M"   // 1 month candlesticks, aligned to first day of the month
 )
 
-type WeeklyAlignmentDefinition string
+type WeeklyAlignmentDefinition = string
 
 const (
 	Monday    WeeklyAlignmentDefinition = "Monday"
@@ -303,6 +303,18 @@ type TrailingStopLossOrderDefinition = OrderDefinition
 // type OrderRequestDefinition
 // TODO: Implemented by: MarketOrderRequest, LimitOrderRequest, StopOrderRequest, MarketIfTouchedOrderRequest, TakeProfitOrderRequest, StopLossOrderRequest, TrailingStopLossOrderRequest
 
+type OrderRequestDefinition interface {
+	orderRequest()
+}
+
+func (MarketOrderRequestDefinition) orderRequest()           {}
+func (LimitOrderRequestDefinition) orderRequest()            {}
+func (StopOrderRequestDefinition) orderRequest()             {}
+func (MarketIfTouchedOrderRequestDefinition) orderRequest()  {}
+func (TakeProfitOrderRequestDefinition) orderRequest()       {}
+func (StopLossOrderRequestDefinition) orderRequest()         {}
+func (TrailingStopLossOrderRequestDefinition) orderRequest() {}
+
 type MarketOrderRequestDefinition struct {
 	Type                   OrderTypeDefinition                `json:"type,omitempty"`
 	Instrument             InstrumentNameDefinition           `json:"instrument,omitempty"`
@@ -404,26 +416,26 @@ type TrailingStopLossOrderRequestDefinition struct {
 
 // Order-related Definitions
 
-type OrderTypeDefinition string
+type OrderTypeDefinition = string
 
-type CancellableOrderTypeDefinition string
+type CancellableOrderTypeDefinition = string
 
-type OrderStateDefinition string
+type OrderStateDefinition = string
 
-type OrderStateFilterDefinition string
+type OrderStateFilterDefinition = string
 
 type OrderIdentifierDefinition struct {
 	OrderID       string `json:"orderID,omitempty"`
 	ClientOrderID string `json:"clientOrderID,omitempty"`
 }
 
-type OrderSpecifierDefinition string
+type OrderSpecifierDefinition = string
 
-type TimeInForceDefinition string
+type TimeInForceDefinition = string
 
-type OrderPositionFillDefinition string
+type OrderPositionFillDefinition = string
 
-type OrderTriggerConditionDefinition string
+type OrderTriggerConditionDefinition = string
 
 type DynamicOrderStateDefinition struct {
 	ID                     string               `json:"id,omitempty"`
@@ -454,13 +466,13 @@ type GuaranteedStopLossOrderEntryDataDefinition struct {
 // Trade Definitions
 //
 
-type TradeIDDefinition string
+type TradeIDDefinition = string
 
-type TradeStateDefinition string
+type TradeStateDefinition = string
 
-type TradeStateFilterDefinition string
+type TradeStateFilterDefinition = string
 
-type TradeSpecifierDefinition string
+type TradeSpecifierDefinition = string
 
 type TradeDefinition struct {
 	ID                    TradeIDDefinition                `json:"id,omitempty"`
@@ -514,7 +526,7 @@ type CalculatedTradeStateDefinition struct {
 	MarginUsed   AccountUnitsDefinition `json:"marginUsed,omitempty"`
 }
 
-type TradePLDefinition string
+type TradePLDefinition = string
 
 //
 // Position Definitions
@@ -639,15 +651,15 @@ type TransactionDefinition struct {
 
 // Transaction-related Definitions
 
-type TransactionIDDefinition string
+type TransactionIDDefinition = string
 
-type TransactionTypeDefinition string
+type TransactionTypeDefinition = string
 
-type FundingReasonDefinition string
+type FundingReasonDefinition = string
 
-type ClientTagDefinition string
+type ClientTagDefinition = string
 
-type ClientCommentDefinition string
+type ClientCommentDefinition = string
 
 type ClientExtensionsDefinition struct {
 	ID      string                  `json:"id,omitempty"`
@@ -708,7 +720,7 @@ type MarketOrderMarginCloseoutDefinition struct {
 	Reason MarketOrderMarginCloseoutReasonDefinition `json:"reason,omitempty"`
 }
 
-type MarketOrderMarginCloseoutReasonDefinition string
+type MarketOrderMarginCloseoutReasonDefinition = string
 
 type MarketOrderDelayedTradeCloseDefinition struct {
 	TradeID             TradeIDDefinition       `json:"tradeID,omitempty"`
@@ -742,11 +754,11 @@ type PositionFinancingDefinition struct {
 	OpenTradeFinancings []*OpenTradeFinancingDefinition `json:"openTradeFinancings,omitempty"`
 }
 
-type RequestIDDefinition string
+type RequestIDDefinition = string
 
-type TransactionRejectReasonDefinition string
+type TransactionRejectReasonDefinition = string
 
-type TransactionFilterDefinition string
+type TransactionFilterDefinition = string
 
 const (
 	OrderTransaction                             TransactionFilterDefinition = "ORDER"                                 //	Order-related Transactions. These are the Transactions that create, cancel, fill or trigger Orders
@@ -815,14 +827,14 @@ type PriceDefinition struct {
 	UnitsAvailable             *UnitsAvailableDefinition             `json:"unitsAvailable,omitempty"`
 }
 
-type PriceValueDefinition string
+type PriceValueDefinition = string
 
 type PriceBucketDefinition struct {
 	Price     PriceValueDefinition `json:"price,omitempty"`
 	Liquidity json.Number          `json:"liquidity,omitempty"`
 }
 
-type PriceStatusDefinition string
+type PriceStatusDefinition = string
 
 type QuoteHomeConversionFactorsDefinition struct {
 	PositiveUnits DecimalNumberDefinition `json:"positiveUnits,omitempty"`
@@ -853,15 +865,15 @@ type PricingHeartbeatDefinition struct {
 // Primitives Definitions
 //
 
-type DecimalNumberDefinition string
+type DecimalNumberDefinition = string
 
-type AccountUnitsDefinition string
+type AccountUnitsDefinition = string
 
-type CurrencyDefinition string
+type CurrencyDefinition = string
 
-type InstrumentNameDefinition string
+type InstrumentNameDefinition = string
 
-type InstrumentTypeDefinition string
+type InstrumentTypeDefinition = string
 
 type InstrumentDefinition struct {
 	Name                        InstrumentNameDefinition        `json:"name,omitempty"`
@@ -881,9 +893,9 @@ type InstrumentDefinition struct {
 	Tags Deprecated `json:"tags,omitempty"`
 }
 
-type DateTimeDefinition string
+type DateTimeDefinition = string
 
-type AcceptDatetimeFormatDefinition string
+type AcceptDatetimeFormatDefinition = string
 
 type InstrumentCommissionDefinition struct {
 	Commission        DecimalNumberDefinition `json:"commission,omitempty"`
@@ -896,4 +908,4 @@ type GuaranteedStopLossOrderLevelRestrictionDefinition struct {
 	PriceRange DecimalNumberDefinition `json:"priceRange,omitempty"`
 }
 
-type DirectionDefinition string
+type DirectionDefinition = string

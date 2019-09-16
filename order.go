@@ -49,7 +49,7 @@ func (r *ReceiverOrders) OrderSpecifier(orderSpecifier string) *ReceiverOrderSpe
 // Params
 
 type PostOrdersBodyParams struct {
-	Order interface{} `json:"order"`
+	Order OrderRequestDefinition `json:"order"`
 }
 
 type PostOrdersParams struct {
