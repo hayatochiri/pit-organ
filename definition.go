@@ -303,6 +303,18 @@ type TrailingStopLossOrderDefinition = OrderDefinition
 // type OrderRequestDefinition
 // TODO: Implemented by: MarketOrderRequest, LimitOrderRequest, StopOrderRequest, MarketIfTouchedOrderRequest, TakeProfitOrderRequest, StopLossOrderRequest, TrailingStopLossOrderRequest
 
+type OrderRequestDefinition interface {
+	orderRequest()
+}
+
+func (MarketOrderRequestDefinition) orderRequest()           {}
+func (LimitOrderRequestDefinition) orderRequest()            {}
+func (StopOrderRequestDefinition) orderRequest()             {}
+func (MarketIfTouchedOrderRequestDefinition) orderRequest()  {}
+func (TakeProfitOrderRequestDefinition) orderRequest()       {}
+func (StopLossOrderRequestDefinition) orderRequest()         {}
+func (TrailingStopLossOrderRequestDefinition) orderRequest() {}
+
 type MarketOrderRequestDefinition struct {
 	Type                   OrderTypeDefinition                `json:"type,omitempty"`
 	Instrument             InstrumentNameDefinition           `json:"instrument,omitempty"`
