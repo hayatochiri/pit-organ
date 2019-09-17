@@ -74,7 +74,7 @@ func (r *ReceiverOrderSpecifier) ClientExtensions() *ReceiverOrderSpecifierClien
 	}
 }
 
-// Params
+/* Params */
 
 type PostOrdersBodyParams struct {
 	Order OrderRequestDefinition `json:"order"`
