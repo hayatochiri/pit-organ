@@ -494,6 +494,8 @@ type TradeDefinition struct {
 	TakeProfitOrder       *TakeProfitOrderDefinition       `json:"takeProfitOrder,omitempty"`
 	StopLossOrder         *StopLossOrderDefinition         `json:"stopLossOrder,omitempty"`
 	TrailingStopLossOrder *TrailingStopLossOrderDefinition `json:"trailingStopLossOrder,omitempty"`
+
+	Dividend Deprecated `json:"dividend,omitempty"`
 }
 
 type TradeSummaryDefinition struct {
