@@ -74,17 +74,17 @@ type PutPositionsInstrumentCloseParams struct {
 /* Schemas */
 
 type GetPositionsSchema struct {
-	Positions         []PositionDefinition    `json:"positions,omitempty"`
+	Positions         []*PositionDefinition   `json:"positions,omitempty"`
 	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
 type GetOpenPositionsSchema struct {
-	Positions         []PositionDefinition    `json:"positions,omitempty"`
+	Positions         []*PositionDefinition   `json:"positions,omitempty"`
 	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
 type GetPositionsInstrumentSchema struct {
-	Position          PositionDefinition      `json:"position,omitempty"`
+	Position          *PositionDefinition     `json:"position,omitempty"`
 	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
