@@ -30,6 +30,20 @@ func (r *ReceiverAccountID) OpenPositions() *ReceiverOpenPositions {
 	}
 }
 
+type ReceiverPositionsInstrument struct {
+	AccountID  string
+	Connection *Connection
+	Instrument string
+}
+
+func (r *ReceiverPositions) Instrument(instrument string) *ReceiverPositionsInstrument {
+	return &ReceiverPositionsInstrument{
+		AccountID:  r.AccountID,
+		Connection: r.Connection,
+		Instrument: instrument,
+	}
+}
+
 /* Params */
 
 /* Schemas */
@@ -41,6 +55,11 @@ type GetPositionsSchema struct {
 
 type GetOpenPositionsSchema struct {
 	Positions         []PositionDefinition    `json:"positions,omitempty"`
+	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
+}
+
+type GetPositionsInstrumentSchema struct {
+	Position          PositionDefinition      `json:"position,omitempty"`
 	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
@@ -106,6 +125,33 @@ func (r *ReceiverOpenPositions) Get() (*GetOpenPositionsSchema, error) {
 	return data.(*GetOpenPositionsSchema), nil
 }
 
-// TODO: GET /v3/accounts/{accountID}/positions/{instrument}
+// GET /v3/accounts/{accountID}/positions/{instrument}
+func (r *ReceiverPositionsInstrument) Get() (*GetPositionsInstrumentSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "Get",
+			endPoint: "/v3/accounts/" + r.AccountID + "/positions/" + r.Instrument,
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Get positions instrument canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		data = new(GetPositionsInstrumentSchema)
+	}
+
+	data, err = parseResponse(resp, data, r.Connection.strict)
+	if err != nil {
+		return nil, xerrors.Errorf("Get positions instrument failed: %w", err)
+	}
+	return data.(*GetPositionsInstrumentSchema), nil
+}
 
 // TODO: PUT /v3/accounts/{accountID}/positions/{instrument}/close
