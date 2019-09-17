@@ -44,7 +44,32 @@ func (r *ReceiverPositions) Instrument(instrument string) *ReceiverPositionsInst
 	}
 }
 
+type ReceiverPositionsInstrumentClose struct {
+	AccountID  string
+	Connection *Connection
+	Instrument string
+}
+
+func (r *ReceiverPositionsInstrument) Close() *ReceiverPositionsInstrumentClose {
+	return &ReceiverPositionsInstrumentClose{
+		AccountID:  r.AccountID,
+		Connection: r.Connection,
+		Instrument: r.Instrument,
+	}
+}
+
 /* Params */
+
+type PutPositionsInstrumentCloseBodyParams struct {
+	LongUnits             string                      `json:"longUnits,omitempty"`
+	LongClientExtensions  *ClientExtensionsDefinition `json:"longClientExtensions,omitempty"`
+	ShortUnits            string                      `json:"shortUnits,omitempty"`
+	ShortClientExtensions *ClientExtensionsDefinition `json:"shortClientExtensions,omitempty"`
+}
+
+type PutPositionsInstrumentCloseParams struct {
+	Body *PutPositionsInstrumentCloseBodyParams
+}
 
 /* Schemas */
 
@@ -63,7 +88,46 @@ type GetPositionsInstrumentSchema struct {
 	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
+type PutPositionsInstrumentCloseSchema struct {
+	LongOrderCreateTransaction  *TransactionDefinition    `json:"longOrderCreateTransaction,omitempty"`
+	LongOrderFillTransaction    *TransactionDefinition    `json:"longOrderFillTransaction,omitempty"`
+	LongOrderCancelTransaction  *TransactionDefinition    `json:"longOrderCancelTransaction,omitempty"`
+	ShortOrderCreateTransaction *TransactionDefinition    `json:"shortOrderCreateTransaction,omitempty"`
+	ShortOrderFillTransaction   *TransactionDefinition    `json:"shortOrderFillTransaction,omitempty"`
+	ShortOrderCancelTransaction *TransactionDefinition    `json:"shortOrderCancelTransaction,omitempty"`
+	RelatedTransactionIDs       []TransactionIDDefinition `json:"relatedTransactionIDs,omitempty"`
+	LastTransactionID           TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
+}
+
 /* Errors */
+
+type PutPositionsInstrumentCloseBadRequestError struct {
+	LongOrderRejectTransaction  *TransactionDefinition    `json:"longOrderRejectTransaction,omitempty"`
+	ShortOrderRejectTransaction *TransactionDefinition    `json:"shortOrderRejectTransaction,omitempty"`
+	RelatedTransactionIDs       []TransactionIDDefinition `json:"relatedTransactionIDs,omitempty"`
+	LastTransactionID           TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
+	ErrorCode                   string                    `json:"errorCode,omitempty"`
+	ErrorMessage                string                    `json:"errorMessage,omitempty"`
+}
+
+func (r *PutPositionsInstrumentCloseBadRequestError) Error() string {
+	// TODO: エラーを整える
+	return r.ErrorMessage
+}
+
+type PutPositionsInstrumentCloseNotFoundError struct {
+	LongOrderRejectTransaction  *TransactionDefinition    `json:"longOrderRejectTransaction,omitempty"`
+	ShortOrderRejectTransaction *TransactionDefinition    `json:"shortOrderRejectTransaction,omitempty"`
+	RelatedTransactionIDs       []TransactionIDDefinition `json:"relatedTransactionIDs,omitempty"`
+	LastTransactionID           TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
+	ErrorCode                   string                    `json:"errorCode,omitempty"`
+	ErrorMessage                string                    `json:"errorMessage,omitempty"`
+}
+
+func (r *PutPositionsInstrumentCloseNotFoundError) Error() string {
+	// TODO: エラーを整える
+	return r.ErrorMessage
+}
 
 /* API */
 
@@ -154,4 +218,36 @@ func (r *ReceiverPositionsInstrument) Get() (*GetPositionsInstrumentSchema, erro
 	return data.(*GetPositionsInstrumentSchema), nil
 }
 
-// TODO: PUT /v3/accounts/{accountID}/positions/{instrument}/close
+// PUT /v3/accounts/{accountID}/positions/{instrument}/close
+func (r *ReceiverPositionsInstrumentClose) Put(params *PutPositionsInstrumentCloseParams) (*PutPositionsInstrumentCloseSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "PUT",
+			endPoint: "/v3/accounts/" + r.AccountID + "/positions/" + r.Instrument + "/close",
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+			body: params.Body,
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Put positions instrument close canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		data = new(PutPositionsInstrumentCloseSchema)
+	case 400:
+		data = new(PutPositionsInstrumentCloseBadRequestError)
+	case 404:
+		data = new(PutPositionsInstrumentCloseNotFoundError)
+	}
+
+	data, err = parseResponse(resp, data, r.Connection.strict)
+	if err != nil {
+		return nil, xerrors.Errorf("Put positions instrument close failed: %w", err)
+	}
+	return data.(*PutPositionsInstrumentCloseSchema), nil
+}
