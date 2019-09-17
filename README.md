@@ -40,7 +40,7 @@ $ ./run [command]
 | <ul><li>[x] </li></ul>  | PUT    | [/v3/accounts/{accountID}/positions/{instrument}/close](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverPositionsInstrumentClose.Put)                   |
 | <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/pricing](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverPricing.Get)                                                         |
 | <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/pricing/stream](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverPricingStream.Get)                                            |
-| <ul><li>[ ] </li></ul>  | GET    | /v3/accounts/{accountID}/trades                                                                                                                                    |
+| <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/trades](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverTrades.Get)                                                           |
 | <ul><li>[ ] </li></ul>  | GET    | /v3/accounts/{accountID}/openTrades                                                                                                                                |
 | <ul><li>[ ] </li></ul>  | GET    | /v3/accounts/{accountID}/trades/{tradeSpecifier}                                                                                                                   |
 | <ul><li>[ ] </li></ul>  | PUT    | /v3/accounts/{accountID}/trades/{tradeSpecifier}/close                                                                                                             |
