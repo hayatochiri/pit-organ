@@ -73,3 +73,35 @@ func Test_PositionsInstrument(t *testing.T) {
 
 	t.Logf("Response:\n%s", spew.Sdump(data))
 }
+
+func Test_PositionsInstrumentClose(t *testing.T) {
+	connection := newConnection(t, OandaPractice)
+	accountID := Getenv("ACCOUNT_ID")
+	accountIDReceiver := connection.Accounts().AccountID(accountID)
+
+	{
+		params := &PostOrdersParams{
+			Body: PostOrdersBodyParams{
+				Order: MarketOrderRequestDefinition{Type: "MARKET", Instrument: "USD_JPY", Units: "1"},
+			},
+		}
+
+		_, err := accountIDReceiver.Orders().Post(params)
+		if err != nil {
+			t.Fatalf("Error occurred.\n%+v", err)
+		}
+	}
+
+	params := &PutPositionsInstrumentCloseParams{
+		Body: &PutPositionsInstrumentCloseBodyParams{
+			LongUnits: "ALL",
+		},
+	}
+
+	data, err := accountIDReceiver.Positions().Instrument("USD_JPY").Close().Put(params)
+	if err != nil {
+		t.Fatalf("Error occurred.\n%+v", err)
+	}
+
+	t.Logf("Response:\n%s", spew.Sdump(data))
+}
