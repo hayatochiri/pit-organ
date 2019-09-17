@@ -34,10 +34,10 @@ $ ./run [command]
 | <ul><li>[x] </li></ul>  | PUT    | [/v3/accounts/{accountID}/orders/{orderSpecifier}](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverOrderSpecifier.Put)                                  |
 | <ul><li>[x] </li></ul>  | PUT    | [/v3/accounts/{accountID}/orders/{orderSpecifier}/cancel](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverOrderSpecifierCancel.Put)                     |
 | <ul><li>[x] </li></ul>  | PUT    | [/v3/accounts/{accountID}/orders/{orderSpecifier}/clientExtensions](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverOrderSpecifierClientExtensions.Put) |
-| <ul><li>[ ] </li></ul>  | GET    | /v3/accounts/{accountID}/positions                                                                                                                                 |
-| <ul><li>[ ] </li></ul>  | GET    | /v3/accounts/{accountID}/openPositions                                                                                                                             |
-| <ul><li>[ ] </li></ul>  | GET    | /v3/accounts/{accountID}/positions/{instrument}                                                                                                                    |
-| <ul><li>[ ] </li></ul>  | PUT    | /v3/accounts/{accountID}/positions/{instrument}/close                                                                                                              |
+| <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/positions](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverPositions.Get)                                                     |
+| <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/openPositions](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverOpenPositions.Get)                                             |
+| <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/positions/{instrument}](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverPositionsInstrument.Get)                              |
+| <ul><li>[x] </li></ul>  | PUT    | [/v3/accounts/{accountID}/positions/{instrument}/close](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverPositionsInstrumentClose.Put)                   |
 | <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/pricing](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverPricing.Get)                                                         |
 | <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/pricing/stream](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverPricingStream.Get)                                            |
 | <ul><li>[ ] </li></ul>  | GET    | /v3/accounts/{accountID}/trades                                                                                                                                    |
