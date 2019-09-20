@@ -20,6 +20,32 @@ func (r *ReceiverAccountID) Trades() *ReceiverTrades {
 	}
 }
 
+type ReceiverOpenTrades struct {
+	AccountID  string
+	Connection *Connection
+}
+
+func (r *ReceiverAccountID) OpenTrades() *ReceiverOpenTrades {
+	return &ReceiverOpenTrades{
+		AccountID:  r.AccountID,
+		Connection: r.Connection,
+	}
+}
+
+type ReceiverTradeSpecifier struct {
+	AccountID      string
+	Connection     *Connection
+	TradeSpecifier string
+}
+
+func (r *ReceiverTrades) TradeSpecifier(tradeSpecifier string) *ReceiverTradeSpecifier {
+	return &ReceiverTradeSpecifier{
+		AccountID:      r.AccountID,
+		Connection:     r.Connection,
+		TradeSpecifier: tradeSpecifier,
+	}
+}
+
 /* Params */
 
 type GetTradesParams struct {
@@ -34,6 +60,16 @@ type GetTradesParams struct {
 
 type GetTradesSchema struct {
 	Trades            []*TradeDefinition      `json:"trades,omitempty"`
+	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
+}
+
+type GetOpenTradesSchema struct {
+	Trades            []*TradeDefinition      `json:"trades,omitempty"`
+	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
+}
+
+type GetTradeSpecifierSchema struct {
+	Trade             TradeDefinition         `json:"trade,omitempty"`
 	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
@@ -95,9 +131,63 @@ func (r *ReceiverTrades) Get(params *GetTradesParams) (*GetTradesSchema, error) 
 	return data.(*GetTradesSchema), nil
 }
 
-// TODO: GET /v3/accounts/{accountID}/openTrades
+// GET /v3/accounts/{accountID}/openTrades
+func (r *ReceiverOpenTrades) Get() (*GetOpenTradesSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "Get",
+			endPoint: "/v3/accounts/" + r.AccountID + "/openTrades",
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Get open trades canceled: %w", err)
+	}
+	defer resp.Body.Close()
 
-// TODO: GET /v3/accounts/{accountID}/trades/{tradeSpecifier}
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		data = new(GetOpenTradesSchema)
+	}
+
+	data, err = parseResponse(resp, data, r.Connection.strict)
+	if err != nil {
+		return nil, xerrors.Errorf("Get open trades failed: %w", err)
+	}
+	return data.(*GetOpenTradesSchema), nil
+}
+
+// GET /v3/accounts/{accountID}/trades/{tradeSpecifier}
+func (r *ReceiverTradeSpecifier) Get() (*GetTradeSpecifierSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "Get",
+			endPoint: "/v3/accounts/" + r.AccountID + "/trades/" + r.TradeSpecifier,
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Get trade specifier canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		data = new(GetTradeSpecifierSchema)
+	}
+
+	data, err = parseResponse(resp, data, r.Connection.strict)
+	if err != nil {
+		return nil, xerrors.Errorf("Get trade specifier failed: %w", err)
+	}
+	return data.(*GetTradeSpecifierSchema), nil
+}
 
 // TODO: PUT /v3/accounts/{accountID}/trades/{tradeSpecifier}/close
 
