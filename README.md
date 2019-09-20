@@ -41,8 +41,8 @@ $ ./run [command]
 | <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/pricing](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverPricing.Get)                                                         |
 | <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/pricing/stream](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverPricingStream.Get)                                            |
 | <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/trades](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverTrades.Get)                                                           |
-| <ul><li>[ ] </li></ul>  | GET    | /v3/accounts/{accountID}/openTrades                                                                                                                                |
-| <ul><li>[ ] </li></ul>  | GET    | /v3/accounts/{accountID}/trades/{tradeSpecifier}                                                                                                                   |
+| <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/openTrades](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverOpenTrades.Get)                                                   |
+| <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/trades/{tradeSpecifier}](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverTradeSpecifier.Get)                                  |
 | <ul><li>[ ] </li></ul>  | PUT    | /v3/accounts/{accountID}/trades/{tradeSpecifier}/close                                                                                                             |
 | <ul><li>[ ] </li></ul>  | PUT    | /v3/accounts/{accountID}/trades/{tradeSpecifier}/clientExtensions                                                                                                  |
 | <ul><li>[ ] </li></ul>  | PUT    | /v3/accounts/{accountID}/trades/{tradeSpecifier}/orders                                                                                                            |
