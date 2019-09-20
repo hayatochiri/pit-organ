@@ -86,10 +86,10 @@ type PostOrdersParams struct {
 
 type GetOrdersParams struct {
 	IDs        []string
-	State      interface{}
-	Instrument interface{}
+	State      string
+	Instrument string
 	Count      int
-	BeforeID   interface{}
+	BeforeID   string
 }
 
 type PutOrderSpecifierBodyParams struct {
@@ -304,20 +304,20 @@ func (r *ReceiverOrders) Get(params *GetOrdersParams) (*GetOrdersSchema, error) 
 					q = append(q, query{key: "ids", value: strings.Join(params.IDs, ",")})
 				}
 
-				if str, ok := params.State.(string); ok {
-					q = append(q, query{key: "state", value: str})
+				if len(params.State) > 0 {
+					q = append(q, query{key: "state", value: params.State})
 				}
 
-				if str, ok := params.Instrument.(string); ok {
-					q = append(q, query{key: "instrument", value: str})
+				if len(params.Instrument) > 0 {
+					q = append(q, query{key: "instrument", value: params.Instrument})
 				}
 
 				if params.Count != 0 {
 					q = append(q, query{key: "count", value: strconv.Itoa(params.Count)})
 				}
 
-				if str, ok := params.BeforeID.(string); ok {
-					q = append(q, query{key: "beforeID", value: str})
+				if len(params.BeforeID) > 0 {
+					q = append(q, query{key: "beforeID", value: params.BeforeID})
 				}
 
 				return q
