@@ -32,6 +32,20 @@ func (r *ReceiverAccountID) OpenTrades() *ReceiverOpenTrades {
 	}
 }
 
+type ReceiverTradeSpecifier struct {
+	AccountID      string
+	Connection     *Connection
+	TradeSpecifier string
+}
+
+func (r *ReceiverTrades) TradeSpecifier(tradeSpecifier string) *ReceiverTradeSpecifier {
+	return &ReceiverTradeSpecifier{
+		AccountID:      r.AccountID,
+		Connection:     r.Connection,
+		TradeSpecifier: tradeSpecifier,
+	}
+}
+
 /* Params */
 
 type GetTradesParams struct {
@@ -51,6 +65,11 @@ type GetTradesSchema struct {
 
 type GetOpenTradesSchema struct {
 	Trades            []*TradeDefinition      `json:"trades,omitempty"`
+	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
+}
+
+type GetTradeSpecifierSchema struct {
+	Trade             TradeDefinition         `json:"trade,omitempty"`
 	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
@@ -141,7 +160,34 @@ func (r *ReceiverOpenTrades) Get() (*GetOpenTradesSchema, error) {
 	return data.(*GetOpenTradesSchema), nil
 }
 
-// TODO: GET /v3/accounts/{accountID}/trades/{tradeSpecifier}
+// GET /v3/accounts/{accountID}/trades/{tradeSpecifier}
+func (r *ReceiverTradeSpecifier) Get() (*GetTradeSpecifierSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "Get",
+			endPoint: "/v3/accounts/" + r.AccountID + "/trades/" + r.TradeSpecifier,
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Get trade specifier canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		data = new(GetTradeSpecifierSchema)
+	}
+
+	data, err = parseResponse(resp, data, r.Connection.strict)
+	if err != nil {
+		return nil, xerrors.Errorf("Get trade specifier failed: %w", err)
+	}
+	return data.(*GetTradeSpecifierSchema), nil
+}
 
 // TODO: PUT /v3/accounts/{accountID}/trades/{tradeSpecifier}/close
 
