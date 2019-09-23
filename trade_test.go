@@ -131,3 +131,41 @@ func Test_TradeSpecifierClose(t *testing.T) {
 
 	t.Logf("Response:\n%s", spew.Sdump(data))
 }
+
+func Test_TradeSpecifierClientExtensions(t *testing.T) {
+	connection := newConnection(t, OandaPractice)
+	accountID := Getenv("ACCOUNT_ID")
+	accountIDReceiver := connection.Accounts().AccountID(accountID)
+
+	order := func() *PostOrdersSchema {
+		params := &PostOrdersParams{
+			Body: PostOrdersBodyParams{
+				Order: MarketOrderRequestDefinition{Type: "MARKET", Instrument: "USD_JPY", Units: "1"},
+			},
+		}
+
+		order, err := accountIDReceiver.Orders().Post(params)
+		if err != nil {
+			t.Fatalf("Error occurred.\n%+v", err)
+		}
+
+		return order
+	}()
+
+	params := &PutTradeSpecifierClientExtensionsParams{
+		Body: &PutTradeSpecifierClientExtensionsBodyParams{
+			ClientExtensions: &ClientExtensionsDefinition{
+				ID:      "Hoge" + order.LastTransactionID,
+				Tag:     "Huga",
+				Comment: "Piyo",
+			},
+		},
+	}
+
+	data, err := accountIDReceiver.Trades().TradeSpecifier(order.LastTransactionID).ClientExtensions().Put(params)
+	if err != nil {
+		t.Fatalf("Error occurred.\n%+v", err)
+	}
+
+	t.Logf("Response:\n%s", spew.Sdump(data))
+}

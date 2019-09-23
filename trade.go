@@ -60,6 +60,20 @@ func (r *ReceiverTradeSpecifier) Close() *ReceiverTradeSpecifierClose {
 	}
 }
 
+type ReceiverTradeSpecifierClientExtensions struct {
+	AccountID      string
+	Connection     *Connection
+	TradeSpecifier string
+}
+
+func (r *ReceiverTradeSpecifier) ClientExtensions() *ReceiverTradeSpecifierClientExtensions {
+	return &ReceiverTradeSpecifierClientExtensions{
+		AccountID:      r.AccountID,
+		Connection:     r.Connection,
+		TradeSpecifier: r.TradeSpecifier,
+	}
+}
+
 /* Params */
 
 type GetTradesParams struct {
@@ -76,6 +90,14 @@ type PutTradeSpecifierCloseBodyParams struct {
 
 type PutTradeSpecifierCloseParams struct {
 	Body *PutTradeSpecifierCloseBodyParams
+}
+
+type PutTradeSpecifierClientExtensionsBodyParams struct {
+	ClientExtensions *ClientExtensionsDefinition `json:"clientExtensions,omitempty"`
+}
+
+type PutTradeSpecifierClientExtensionsParams struct {
+	Body *PutTradeSpecifierClientExtensionsBodyParams
 }
 
 /* Schemas */
@@ -103,6 +125,12 @@ type PutTradeSpecifierCloseSchema struct {
 	LastTransactionID      TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
 }
 
+type PutTradeSpecifierClientExtensionsSchema struct {
+	TradeClientExtensionsModifyTransaction *TransactionDefinition    `json:"tradeClientExtensionsModifyTransaction,omitempty"`
+	RelatedTransactionIDs                  []TransactionIDDefinition `json:"relatedTransactionIDs,omitempty"`
+	LastTransactionID                      TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
+}
+
 /* Errors */
 
 type PutTradeSpecifierCloseBadRequestError struct {
@@ -125,6 +153,32 @@ type PutTradeSpecifierCloseNotFoundError struct {
 }
 
 func (r *PutTradeSpecifierCloseNotFoundError) Error() string {
+	// TODO: エラーを整える
+	return r.ErrorMessage
+}
+
+type PutTradeSpecifierClientExtensionsBadRequestError struct {
+	TradeClientExtensionsModifyRejectTransaction *TransactionDefinition    `json:"tradeClientExtensionsModifyRejectTransaction,omitempty"`
+	LastTransactionID                            TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
+	RelatedTransactionIDs                        []TransactionIDDefinition `json:"relatedTransactionIDs,omitempty"`
+	ErrorCode                                    string                    `json:"errorCode,omitempty"`
+	ErrorMessage                                 string                    `json:"errorMessage,omitempty"`
+}
+
+func (r *PutTradeSpecifierClientExtensionsBadRequestError) Error() string {
+	// TODO: エラーを整える
+	return r.ErrorMessage
+}
+
+type PutTradeSpecifierClientExtensionsNotFoundError struct {
+	TradeClientExtensionsModifyRejectTransaction *TransactionDefinition    `json:"tradeClientExtensionsModifyRejectTransaction,omitempty"`
+	LastTransactionID                            TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
+	RelatedTransactionIDs                        []TransactionIDDefinition `json:"relatedTransactionIDs,omitempty"`
+	ErrorCode                                    string                    `json:"errorCode,omitempty"`
+	ErrorMessage                                 string                    `json:"errorMessage,omitempty"`
+}
+
+func (r *PutTradeSpecifierClientExtensionsNotFoundError) Error() string {
 	// TODO: エラーを整える
 	return r.ErrorMessage
 }
@@ -277,6 +331,38 @@ func (r *ReceiverTradeSpecifierClose) Put(params *PutTradeSpecifierCloseParams) 
 	return data.(*PutTradeSpecifierCloseSchema), nil
 }
 
-// TODO: PUT /v3/accounts/{accountID}/trades/{tradeSpecifier}/clientExtensions
+// PUT /v3/accounts/{accountID}/trades/{tradeSpecifier}/clientExtensions
+func (r *ReceiverTradeSpecifierClientExtensions) Put(params *PutTradeSpecifierClientExtensionsParams) (*PutTradeSpecifierClientExtensionsSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "PUT",
+			endPoint: "/v3/accounts/" + r.AccountID + "/trades/" + r.TradeSpecifier + "/clientExtensions",
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+			body: params.Body,
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Put trade specifier client extensions canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		data = new(PutTradeSpecifierClientExtensionsSchema)
+	case 400:
+		data = new(PutTradeSpecifierClientExtensionsBadRequestError)
+	case 404:
+		data = new(PutTradeSpecifierClientExtensionsNotFoundError)
+	}
+
+	data, err = parseResponse(resp, data, r.Connection.strict)
+	if err != nil {
+		return nil, xerrors.Errorf("Put trade specifier client extensions failed: %w", err)
+	}
+	return data.(*PutTradeSpecifierClientExtensionsSchema), nil
+}
 
 // TODO: PUT /v3/accounts/{accountID}/trades/{tradeSpecifier}/orders
