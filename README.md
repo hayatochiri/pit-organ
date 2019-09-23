@@ -43,7 +43,7 @@ $ ./run [command]
 | <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/trades](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverTrades.Get)                                                           |
 | <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/openTrades](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverOpenTrades.Get)                                                   |
 | <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/trades/{tradeSpecifier}](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverTradeSpecifier.Get)                                  |
-| <ul><li>[ ] </li></ul>  | PUT    | /v3/accounts/{accountID}/trades/{tradeSpecifier}/close                                                                                                             |
+| <ul><li>[x] </li></ul>  | PUT    | [/v3/accounts/{accountID}/trades/{tradeSpecifier}/close](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverTradeSpecifierClose.Put)                       |
 | <ul><li>[ ] </li></ul>  | PUT    | /v3/accounts/{accountID}/trades/{tradeSpecifier}/clientExtensions                                                                                                  |
 | <ul><li>[ ] </li></ul>  | PUT    | /v3/accounts/{accountID}/trades/{tradeSpecifier}/orders                                                                                                            |
 | <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/transactions](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverTransactions.Get)                                               |
