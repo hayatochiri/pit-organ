@@ -69,7 +69,7 @@ type GetOpenTradesSchema struct {
 }
 
 type GetTradeSpecifierSchema struct {
-	Trade             TradeDefinition         `json:"trade,omitempty"`
+	Trade             *TradeDefinition        `json:"trade,omitempty"`
 	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
