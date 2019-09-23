@@ -46,6 +46,20 @@ func (r *ReceiverTrades) TradeSpecifier(tradeSpecifier string) *ReceiverTradeSpe
 	}
 }
 
+type ReceiverTradeSpecifierClose struct {
+	AccountID      string
+	Connection     *Connection
+	TradeSpecifier string
+}
+
+func (r *ReceiverTradeSpecifier) Close() *ReceiverTradeSpecifierClose {
+	return &ReceiverTradeSpecifierClose{
+		AccountID:      r.AccountID,
+		Connection:     r.Connection,
+		TradeSpecifier: r.TradeSpecifier,
+	}
+}
+
 /* Params */
 
 type GetTradesParams struct {
@@ -54,6 +68,14 @@ type GetTradesParams struct {
 	Instrument string
 	Count      int
 	BeforeID   string
+}
+
+type PutTradeSpecifierCloseBodyParams struct {
+	Units string `json:"units,omitempty"`
+}
+
+type PutTradeSpecifierCloseParams struct {
+	Body *PutTradeSpecifierCloseBodyParams
 }
 
 /* Schemas */
@@ -73,7 +95,39 @@ type GetTradeSpecifierSchema struct {
 	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
+type PutTradeSpecifierCloseSchema struct {
+	OrderCreateTransaction *TransactionDefinition    `json:"orderCreateTransaction,omitempty"`
+	OrderFillTransaction   *TransactionDefinition    `json:"orderFillTransaction,omitempty"`
+	OrderCancelTransaction *TransactionDefinition    `json:"orderCancelTransaction,omitempty"`
+	RelatedTransactionIDs  []TransactionIDDefinition `json:"relatedTransactionIDs,omitempty"`
+	LastTransactionID      TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
+}
+
 /* Errors */
+
+type PutTradeSpecifierCloseBadRequestError struct {
+	OrderRejectTransaction *TransactionDefinition `json:"orderRejectTransaction,omitempty"`
+	ErrorCode              string                 `json:"errorCode,omitempty"`
+	ErrorMessage           string                 `json:"errorMessage,omitempty"`
+}
+
+func (r *PutTradeSpecifierCloseBadRequestError) Error() string {
+	// TODO: エラーを整える
+	return r.ErrorMessage
+}
+
+type PutTradeSpecifierCloseNotFoundError struct {
+	OrderRejectTransaction *TransactionDefinition    `json:"orderRejectTransaction,omitempty"`
+	LastTransactionID      TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
+	RelatedTransactionIDs  []TransactionIDDefinition `json:"relatedTransactionIDs,omitempty"`
+	ErrorCode              string                    `json:"errorCode,omitempty"`
+	ErrorMessage           string                    `json:"errorMessage,omitempty"`
+}
+
+func (r *PutTradeSpecifierCloseNotFoundError) Error() string {
+	// TODO: エラーを整える
+	return r.ErrorMessage
+}
 
 /* API */
 
@@ -189,7 +243,39 @@ func (r *ReceiverTradeSpecifier) Get() (*GetTradeSpecifierSchema, error) {
 	return data.(*GetTradeSpecifierSchema), nil
 }
 
-// TODO: PUT /v3/accounts/{accountID}/trades/{tradeSpecifier}/close
+// PUT /v3/accounts/{accountID}/trades/{tradeSpecifier}/close
+func (r *ReceiverTradeSpecifierClose) Put(params *PutTradeSpecifierCloseParams) (*PutTradeSpecifierCloseSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "PUT",
+			endPoint: "/v3/accounts/" + r.AccountID + "/trades/" + r.TradeSpecifier + "/close",
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+			body: params.Body,
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Put trade specifier close canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		data = new(PutTradeSpecifierCloseSchema)
+	case 400:
+		data = new(PutTradeSpecifierCloseBadRequestError)
+	case 404:
+		data = new(PutTradeSpecifierCloseNotFoundError)
+	}
+
+	data, err = parseResponse(resp, data, r.Connection.strict)
+	if err != nil {
+		return nil, xerrors.Errorf("Put trade specifier close failed: %w", err)
+	}
+	return data.(*PutTradeSpecifierCloseSchema), nil
+}
 
 // TODO: PUT /v3/accounts/{accountID}/trades/{tradeSpecifier}/clientExtensions
 
