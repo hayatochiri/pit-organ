@@ -74,6 +74,20 @@ func (r *ReceiverTradeSpecifier) ClientExtensions() *ReceiverTradeSpecifierClien
 	}
 }
 
+type ReceiverTradeSpecifierOrders struct {
+	AccountID      string
+	Connection     *Connection
+	TradeSpecifier string
+}
+
+func (r *ReceiverTradeSpecifier) Orders() *ReceiverTradeSpecifierOrders {
+	return &ReceiverTradeSpecifierOrders{
+		AccountID:      r.AccountID,
+		Connection:     r.Connection,
+		TradeSpecifier: r.TradeSpecifier,
+	}
+}
+
 /* Params */
 
 type GetTradesParams struct {
@@ -98,6 +112,16 @@ type PutTradeSpecifierClientExtensionsBodyParams struct {
 
 type PutTradeSpecifierClientExtensionsParams struct {
 	Body *PutTradeSpecifierClientExtensionsBodyParams
+}
+
+type PutTradeSpecifierOrdersBodyParams struct {
+	TakeProfit       *TakeProfitDetailsDefinition       `json:"takeProfit,omitempty"`
+	StopLoss         *StopLossDetailsDefinition         `json:"stopLoss,omitempty"`
+	TrailingStopLoss *TrailingStopLossDetailsDefinition `json:"trailingStopLoss,omitempty"`
+}
+
+type PutTradeSpecifierOrdersParams struct {
+	Body *PutTradeSpecifierOrdersBodyParams
 }
 
 /* Schemas */
@@ -129,6 +153,21 @@ type PutTradeSpecifierClientExtensionsSchema struct {
 	TradeClientExtensionsModifyTransaction *TransactionDefinition    `json:"tradeClientExtensionsModifyTransaction,omitempty"`
 	RelatedTransactionIDs                  []TransactionIDDefinition `json:"relatedTransactionIDs,omitempty"`
 	LastTransactionID                      TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
+}
+
+type PutTradeSpecifierOrdersSchema struct {
+	TakeProfitOrderCancelTransaction        *TransactionDefinition    `json:"takeProfitOrderCancelTransaction,omitempty"`
+	TakeProfitOrderTransaction              *TransactionDefinition    `json:"takeProfitOrderTransaction,omitempty"`
+	TakeProfitOrderFillTransaction          *TransactionDefinition    `json:"takeProfitOrderFillTransaction,omitempty"`
+	TakeProfitOrderCreatedCancelTransaction *TransactionDefinition    `json:"takeProfitOrderCreatedCancelTransaction,omitempty"`
+	StopLossOrderCancelTransaction          *TransactionDefinition    `json:"stopLossOrderCancelTransaction,omitempty"`
+	StopLossOrderTransaction                *TransactionDefinition    `json:"stopLossOrderTransaction,omitempty"`
+	StopLossOrderFillTransaction            *TransactionDefinition    `json:"stopLossOrderFillTransaction,omitempty"`
+	StopLossOrderCreatedCancelTransaction   *TransactionDefinition    `json:"stopLossOrderCreatedCancelTransaction,omitempty"`
+	TrailingStopLossOrderCancelTransaction  *TransactionDefinition    `json:"trailingStopLossOrderCancelTransaction,omitempty"`
+	TrailingStopLossOrderTransaction        *TransactionDefinition    `json:"trailingStopLossOrderTransaction,omitempty"`
+	RelatedTransactionIDs                   []TransactionIDDefinition `json:"relatedTransactionIDs,omitempty"`
+	LastTransactionID                       TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
 }
 
 /* Errors */
@@ -179,6 +218,24 @@ type PutTradeSpecifierClientExtensionsNotFoundError struct {
 }
 
 func (r *PutTradeSpecifierClientExtensionsNotFoundError) Error() string {
+	// TODO: エラーを整える
+	return r.ErrorMessage
+}
+
+type PutTradeSpecifierOrdersBadRequestError struct {
+	TakeProfitOrderCancelRejectTransaction       *TransactionDefinition    `json:"takeProfitOrderCancelRejectTransaction,omitempty"`
+	TakeProfitOrderRejectTransaction             *TransactionDefinition    `json:"takeProfitOrderRejectTransaction,omitempty"`
+	StopLossOrderCancelRejectTransaction         *TransactionDefinition    `json:"stopLossOrderCancelRejectTransaction,omitempty"`
+	StopLossOrderRejectTransaction               *TransactionDefinition    `json:"stopLossOrderRejectTransaction,omitempty"`
+	TrailingStopLossOrderCancelRejectTransaction *TransactionDefinition    `json:"trailingStopLossOrderCancelRejectTransaction,omitempty"`
+	TrailingStopLossOrderRejectTransaction       *TransactionDefinition    `json:"trailingStopLossOrderRejectTransaction,omitempty"`
+	LastTransactionID                            TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
+	RelatedTransactionIDs                        []TransactionIDDefinition `json:"relatedTransactionIDs,omitempty"`
+	ErrorCode                                    string                    `json:"errorCode,omitempty"`
+	ErrorMessage                                 string                    `json:"errorMessage,omitempty"`
+}
+
+func (r *PutTradeSpecifierOrdersBadRequestError) Error() string {
 	// TODO: エラーを整える
 	return r.ErrorMessage
 }
@@ -365,4 +422,34 @@ func (r *ReceiverTradeSpecifierClientExtensions) Put(params *PutTradeSpecifierCl
 	return data.(*PutTradeSpecifierClientExtensionsSchema), nil
 }
 
-// TODO: PUT /v3/accounts/{accountID}/trades/{tradeSpecifier}/orders
+// PUT /v3/accounts/{accountID}/trades/{tradeSpecifier}/orders
+func (r *ReceiverTradeSpecifierOrders) Put(params *PutTradeSpecifierOrdersParams) (*PutTradeSpecifierOrdersSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "PUT",
+			endPoint: "/v3/accounts/" + r.AccountID + "/trades/" + r.TradeSpecifier + "/orders",
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+			body: params.Body,
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Put trade specifier orders canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		data = new(PutTradeSpecifierOrdersSchema)
+	case 400:
+		data = new(PutTradeSpecifierOrdersBadRequestError)
+	}
+
+	data, err = parseResponse(resp, data, r.Connection.strict)
+	if err != nil {
+		return nil, xerrors.Errorf("Put trade specifier orders failed: %w", err)
+	}
+	return data.(*PutTradeSpecifierOrdersSchema), nil
+}
