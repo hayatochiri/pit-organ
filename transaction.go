@@ -52,6 +52,18 @@ func (r *ReceiverTransactions) Idrange() *ReceiverTransactionsIdrange {
 	}
 }
 
+type ReceiverTransactionsSinceID struct {
+	AccountID  string
+	Connection *Connection
+}
+
+func (r *ReceiverTransactions) SinceID() *ReceiverTransactionsSinceID {
+	return &ReceiverTransactionsSinceID{
+		AccountID:  r.AccountID,
+		Connection: r.Connection,
+	}
+}
+
 type ReceiverTransactionsStream struct {
 	AccountID  string
 	Connection *Connection
@@ -79,6 +91,10 @@ type GetTransactionsIdrangeParams struct {
 	Type []TransactionFilterDefinition
 }
 
+type GetTransactionsSinceIDParams struct {
+	ID string
+}
+
 type GetTransactionsStreamParams struct {
 	BufferSize int
 }
@@ -103,6 +119,11 @@ type GetTransactionsIdrangeSchema struct {
 type GetTransactionIDSchema struct {
 	Transaction       *TransactionDefinition  `json:"transaction,omitempty"`
 	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
+}
+
+type GetTransactionsSinceIDSchema struct {
+	Transactions      []*TransactionDefinition `json:"transactions,omitempty"`
+	LastTransactionID TransactionIDDefinition  `json:"lastTransactionID,omitempty"`
 }
 
 /* Streams */
@@ -262,7 +283,44 @@ func (r *ReceiverTransactionsIdrange) Get(params *GetTransactionsIdrangeParams) 
 	return data.(*GetTransactionsIdrangeSchema), nil
 }
 
-// TODO: GET /v3/accounts/{accountID}/transactions/sinceid
+// GET /v3/accounts/{accountID}/transactions/sinceid
+func (r *ReceiverTransactionsSinceID) Get(params *GetTransactionsSinceIDParams) (*GetTransactionsSinceIDSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "GET",
+			endPoint: "/v3/accounts/" + r.AccountID + "/transactions/sinceid",
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+			queries: func() []query {
+				q := make([]query, 0, 1)
+
+				// id
+				if params.ID != "" {
+					q = append(q, query{key: "id", value: params.ID})
+				}
+
+				return q
+			}(),
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Get transactions sinceid canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		data = new(GetTransactionsSinceIDSchema)
+	}
+
+	data, err = parseResponse(resp, data, r.Connection.strict)
+	if err != nil {
+		return nil, xerrors.Errorf("Get transactions sinceid failed: %w", err)
+	}
+	return data.(*GetTransactionsSinceIDSchema), nil
+}
 
 // GET /v3/accounts/{accountID}/transactions/stream
 //

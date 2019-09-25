@@ -79,6 +79,22 @@ func Test_IdrangeParams(t *testing.T) {
 	})
 }
 
+func Test_TransactionsSinceID(t *testing.T) {
+	connection := newConnection(t, OandaPractice)
+	accountID := Getenv("ACCOUNT_ID")
+
+	params := &GetTransactionsSinceIDParams{
+		ID: "100",
+	}
+
+	data, err := connection.Accounts().AccountID(accountID).Transactions().SinceID().Get(params)
+	if err != nil {
+		t.Fatalf("Get transactions since id failed.\n%+v", err)
+	}
+
+	t.Logf("Response:\n%s", spew.Sdump(data))
+}
+
 func Test_TransactionsStream(t *testing.T) {
 	t.Run("Success", func(t *testing.T) {
 		connection := newConnection(t, OandaPractice)
