@@ -31,6 +31,10 @@ type requestParams struct {
 	body     interface{}
 }
 
+func Int(v int) *int          { return &v }
+func String(v string) *string { return &v }
+func Bool(v bool) *bool       { return &v }
+
 func (c *Connection) request(params *requestParams) (*http.Response, error) {
 	destURL := oandaBaseURL(c.Environemnt).rest
 	destURL.Path = path.Join(destURL.Path, params.endPoint)

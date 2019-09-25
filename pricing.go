@@ -41,8 +41,8 @@ func (r *ReceiverPricing) Stream() *ReceiverPricingStream {
 type GetPricingParams struct {
 	Instruments            []string
 	Since                  time.Time
-	IncludeUnitsAvailable  interface{} // bool or nil(default=true)
-	IncludeHomeConversions interface{} // bool or nil(default=false)
+	IncludeUnitsAvailable  *bool
+	IncludeHomeConversions *bool
 }
 
 type GetPricingStreamParams struct {
@@ -81,11 +81,11 @@ func (r *ReceiverPricing) Get(params *GetPricingParams) (*GetPricingSchema, erro
 			queries: func() []query {
 				q := make([]query, 0, 4)
 				q = append(q, query{key: "instruments", value: strings.Join(params.Instruments, ",")})
-				if b, ok := params.IncludeUnitsAvailable.(bool); ok {
-					q = append(q, query{key: "includeUnitsAvailable", value: strconv.FormatBool(b)})
+				if params.IncludeUnitsAvailable != nil {
+					q = append(q, query{key: "includeUnitsAvailable", value: strconv.FormatBool(*params.IncludeUnitsAvailable)})
 				}
-				if b, ok := params.IncludeHomeConversions.(bool); ok {
-					q = append(q, query{key: "includeHomeConversions", value: strconv.FormatBool(b)})
+				if params.IncludeHomeConversions != nil {
+					q = append(q, query{key: "includeHomeConversions", value: strconv.FormatBool(*params.IncludeHomeConversions)})
 				}
 				if !params.Since.IsZero() {
 					q = append(q, query{key: "since", value: params.Since.Format(time.RFC3339Nano)})
