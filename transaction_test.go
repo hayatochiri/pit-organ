@@ -2,6 +2,7 @@ package pitOrgan
 
 import (
 	"github.com/davecgh/go-spew/spew"
+	"strconv"
 	"testing"
 	"time"
 )
@@ -83,8 +84,17 @@ func Test_TransactionsSinceID(t *testing.T) {
 	connection := newConnection(t, OandaPractice)
 	accountID := Getenv("ACCOUNT_ID")
 
+	lastTransaction := func() int {
+		data, err := connection.Accounts().AccountID(accountID).Transactions().Get(new(GetTransactionsParams))
+		if err != nil {
+			t.Fatalf("Get transactions failed.\n%+v", err)
+		}
+
+		return data.Count
+	}()
+
 	params := &GetTransactionsSinceIDParams{
-		ID: "100",
+		ID: strconv.Itoa(lastTransaction - 2),
 	}
 
 	data, err := connection.Accounts().AccountID(accountID).Transactions().SinceID().Get(params)
