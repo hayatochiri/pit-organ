@@ -22,6 +22,17 @@ func Test_Transactions(t *testing.T) {
 	})
 }
 
+func Test_TransactionID(t *testing.T) {
+	connection := newConnection(t, OandaPractice)
+	accountID := Getenv("ACCOUNT_ID")
+	data, err := connection.Accounts().AccountID(accountID).Transactions().TransactionID("1").Get()
+	if err != nil {
+		t.Fatalf("Get transactions id failed.\n%+v", err)
+	}
+
+	t.Logf("Response:\n%s", spew.Sdump(data))
+}
+
 func Test_TransactionsIdrange(t *testing.T) {
 	t.Run("Success", func(t *testing.T) {
 		connection := newConnection(t, OandaPractice)
