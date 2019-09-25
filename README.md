@@ -49,5 +49,5 @@ $ ./run [command]
 | <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/transactions](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverTransactions.Get)                                               |
 | <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/transactions/{transactionID}](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverTransactionID.Get)                              |
 | <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/transactions/idrange](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverTransactionsIdrange.Get)                                |
-| <ul><li>[ ] </li></ul>  | GET    | /v3/accounts/{accountID}/transactions/sinceid                                                                                                                      |
+| <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/transactions/sinceid](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverTransactionsSinceID.Get)                                |
 | <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/transactions/stream](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverTransactionsStream.Get)                                  |
