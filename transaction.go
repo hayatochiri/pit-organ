@@ -26,6 +26,20 @@ func (r *ReceiverAccountID) Transactions() *ReceiverTransactions {
 	}
 }
 
+type ReceiverTransactionID struct {
+	AccountID     string
+	Connection    *Connection
+	TransactionID string
+}
+
+func (r *ReceiverTransactions) TransactionID(transactionID string) *ReceiverTransactionID {
+	return &ReceiverTransactionID{
+		AccountID:     r.AccountID,
+		Connection:    r.Connection,
+		TransactionID: transactionID,
+	}
+}
+
 type ReceiverTransactionsIdrange struct {
 	AccountID  string
 	Connection *Connection
@@ -84,6 +98,11 @@ type GetTransactionsSchema struct {
 type GetTransactionsIdrangeSchema struct {
 	Transactions      []*TransactionDefinition `json:"transactions,omitempty"`
 	LastTransactionID TransactionIDDefinition  `json:"lastTransactionID,omitempty"`
+}
+
+type GetTransactionIDSchema struct {
+	Transaction       *TransactionDefinition  `json:"transaction,omitempty"`
+	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
 /* Streams */
@@ -157,7 +176,34 @@ func (r *ReceiverTransactions) Get(params *GetTransactionsParams) (*GetTransacti
 	return data.(*GetTransactionsSchema), nil
 }
 
-// TODO: GET /v3/accounts/{accountID}/transactions/{transactionID}
+// GET /v3/accounts/{accountID}/transactions/{transactionID}
+func (r *ReceiverTransactionID) Get() (*GetTransactionIDSchema, error) {
+	resp, err := r.Connection.request(
+		&requestParams{
+			method:   "GET",
+			endPoint: "/v3/accounts/" + r.AccountID + "/transactions/" + r.TransactionID,
+			headers: []header{
+				{key: "Accept-Datetime-Format", value: "RFC3339"},
+			},
+		},
+	)
+	if err != nil {
+		return nil, xerrors.Errorf("Get transactions id canceled: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var data interface{}
+	switch resp.StatusCode {
+	case 200:
+		data = new(GetTransactionIDSchema)
+	}
+
+	data, err = parseResponse(resp, data, r.Connection.strict)
+	if err != nil {
+		return nil, xerrors.Errorf("Get transactions id failed: %w", err)
+	}
+	return data.(*GetTransactionIDSchema), nil
+}
 
 // GET /v3/accounts/{accountID}/transactions/idrange
 //
