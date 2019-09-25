@@ -84,8 +84,8 @@ type GetAccountInstrumentsParams struct {
 }
 
 type PatchAccountConfigurationBodyParams struct {
-	Alias      interface{} `json:"alias,omitempty"`
-	MarginRate interface{} `json:"marginRate,omitempty"`
+	Alias      string `json:"alias,omitempty"`
+	MarginRate string `json:"marginRate,omitempty"`
 }
 
 type PatchAccountConfigurationParams struct {

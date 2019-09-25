@@ -71,16 +71,16 @@ func (r *ReceiverInstrument) PositionBook() *ReceiverInstrumentPositionBook {
 /* Params */
 
 type GetInstrumentCandlesParams struct {
-	PriceMid          interface{} // bool or nil
-	PriceBid          interface{} // bool or nil
-	PriceAsk          interface{} // bool or nil
+	PriceMid          bool
+	PriceBid          bool
+	PriceAsk          bool
 	Granularity       CandlestickGranularityDefinition
 	Count             int
 	From              time.Time
 	To                time.Time
-	Smooth            interface{} // bool or nil(default=false)
-	IncludeFirst      interface{} // bool or nil(default=true)
-	DailyAlignment    interface{} // int or nil(default=17)
+	Smooth            *bool
+	IncludeFirst      *bool
+	DailyAlignment    *int
 	AlignmentTimezone string
 	WeeklyAlignment   WeeklyAlignmentDefinition
 }
@@ -146,13 +146,13 @@ func (r *ReceiverInstrumentCandles) Get(params *GetInstrumentCandlesParams) (*Ge
 
 				// price
 				price := make([]byte, 0, 3)
-				if b, ok := params.PriceMid.(bool); ok && b {
+				if params.PriceMid {
 					price = append(price, 'M')
 				}
-				if b, ok := params.PriceBid.(bool); ok && b {
+				if params.PriceBid {
 					price = append(price, 'B')
 				}
-				if b, ok := params.PriceAsk.(bool); ok && b {
+				if params.PriceAsk {
 					price = append(price, 'A')
 				}
 				if len(price) > 0 {
@@ -180,18 +180,18 @@ func (r *ReceiverInstrumentCandles) Get(params *GetInstrumentCandlesParams) (*Ge
 				}
 
 				// smooth
-				if b, ok := params.Smooth.(bool); ok {
-					q = append(q, query{key: "smooth", value: strconv.FormatBool(b)})
+				if params.Smooth != nil {
+					q = append(q, query{key: "smooth", value: strconv.FormatBool(*params.Smooth)})
 				}
 
 				// includeFirst
-				if b, ok := params.IncludeFirst.(bool); ok {
-					q = append(q, query{key: "includeFirst", value: strconv.FormatBool(b)})
+				if params.IncludeFirst != nil {
+					q = append(q, query{key: "includeFirst", value: strconv.FormatBool(*params.IncludeFirst)})
 				}
 
 				// dailyAlignment
-				if da, ok := params.DailyAlignment.(int); ok {
-					q = append(q, query{key: "dailyAlignment", value: strconv.Itoa(da)})
+				if params.DailyAlignment != nil {
+					q = append(q, query{key: "dailyAlignment", value: strconv.Itoa(*params.DailyAlignment)})
 				}
 
 				// alignmentTimezone
