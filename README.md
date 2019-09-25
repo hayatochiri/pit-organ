@@ -47,7 +47,7 @@ $ ./run [command]
 | <ul><li>[x] </li></ul>  | PUT    | [/v3/accounts/{accountID}/trades/{tradeSpecifier}/clientExtensions](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverTradeSpecifierClientExtensions.Put) |
 | <ul><li>[x] </li></ul>  | PUT    | [/v3/accounts/{accountID}/trades/{tradeSpecifier}/orders](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverTradeSpecifierOrders.Put)                     |
 | <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/transactions](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverTransactions.Get)                                               |
-| <ul><li>[ ] </li></ul>  | GET    | /v3/accounts/{accountID}/transactions/{transactionID}                                                                                                              |
+| <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/transactions/{transactionID}](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverTransactionID.Get)                              |
 | <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/transactions/idrange](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverTransactionsIdrange.Get)                                |
 | <ul><li>[ ] </li></ul>  | GET    | /v3/accounts/{accountID}/transactions/sinceid                                                                                                                      |
 | <ul><li>[x] </li></ul>  | GET    | [/v3/accounts/{accountID}/transactions/stream](https://godoc.org/github.com/hayatochiri/pit-organ#ReceiverTransactionsStream.Get)                                  |
