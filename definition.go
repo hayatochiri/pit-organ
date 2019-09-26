@@ -646,9 +646,11 @@ type TransactionDefinition struct {
 	Units                         DecimalNumberDefinition                 `json:"units,omitempty"`
 	UserID                        *int                                    `json:"userID,omitempty"`
 
-	RequestedUnits Deprecated `json:"requestedUnits,omitempty"`
-	FullVWAP       Deprecated `json:"fullVWAP,omitempty"`
-	PartialFill    Deprecated `json:"partialFill,omitempty"`
+	RequestedUnits          Deprecated `json:"requestedUnits,omitempty"`
+	FullVWAP                Deprecated `json:"fullVWAP,omitempty"`
+	PartialFill             Deprecated `json:"partialFill,omitempty"`
+	TradeCloseTransactionID Deprecated `json:"tradeCloseTransactionID,omitempty"`
+	ClosedTradeID           Deprecated `json:"closedTradeID,omitempty"`
 }
 
 // Transaction-related Definitions
@@ -710,6 +712,8 @@ type TradeReduceDefinition struct {
 	Financing              AccountUnitsDefinition  `json:"financing,omitempty"`
 	GuaranteedExecutionFee AccountUnitsDefinition  `json:"guaranteedExecutionFee,omitempty"`
 	HalfSpreadCost         AccountUnitsDefinition  `json:"halfSpreadCost,omitempty"`
+
+	ClientTradeID Deprecated `json:"clientTradeID,omitempty"`
 }
 
 type MarketOrderTradeCloseDefinition struct {
