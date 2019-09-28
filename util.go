@@ -105,9 +105,15 @@ func (c *Connection) stream(params *requestParams) (*http.Response, error) {
 	return resp, nil
 }
 
-func parseBody(body []byte, statusCode int, data interface{}, strict bool) (interface{}, error) {
+func parseResponse(resp *http.Response, data interface{}, strict bool) (interface{}, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		return nil, xerrors.Errorf("Read response body failed: %w", err)
+	}
+
 	var errMessage string
-	switch statusCode {
+	switch resp.StatusCode {
 	case 200, 201:
 		errMessage = ""
 		if data == nil {
@@ -136,7 +142,7 @@ func parseBody(body []byte, statusCode int, data interface{}, strict bool) (inte
 	// TODO: 405
 	// TODO: 416
 	default:
-		return nil, xerrors.Errorf("Unexpected status code(%d)", statusCode)
+		return nil, xerrors.Errorf("Unexpected status code(%d)", resp.StatusCode)
 	}
 
 	if err := json.Unmarshal(body, data); err != nil {
@@ -149,21 +155,11 @@ func parseBody(body []byte, statusCode int, data interface{}, strict bool) (inte
 		}
 	}
 
-	if statusCode/100 != 2 {
+	if resp.StatusCode/100 != 2 {
 		return nil, xerrors.Errorf("%s: %w", errMessage, data)
 	}
 
 	return data, nil
-}
-
-func parseResponse(resp *http.Response, data interface{}, strict bool) (interface{}, error) {
-	body, err := ioutil.ReadAll(resp.Body)
-
-	if err != nil {
-		return nil, xerrors.Errorf("Read response body failed: %w", err)
-	}
-
-	return parseBody(body, resp.StatusCode, data, strict)
 }
 
 func compareJson(jsonObj interface{}, jsonStr []byte) error {
