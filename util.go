@@ -163,6 +163,13 @@ func parseResponse(resp *http.Response, data interface{}, strict bool) (interfac
 		return nil, xerrors.Errorf("%s: %w", errMessage, data)
 	}
 
+	{
+		sm := data.(schemas)
+		if err := sm.setHeaders(resp); err != nil {
+			return nil, xerrors.Errorf("Set headers failed: %w", err)
+		}
+	}
+
 	return data, nil
 }
 
