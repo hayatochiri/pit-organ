@@ -39,6 +39,16 @@ type schemas interface {
 	setHeaders(*http.Response) error
 }
 
+func copyHeader(resp *http.Response, header string) ([]string, error) {
+	src, ok := resp.Header[header]
+	if !ok {
+		return nil, xerrors.Errorf("Header \"%s\" does not exist", header)
+	}
+	dst := make([]string, len(src))
+	copy(dst, src)
+	return dst, nil
+}
+
 func (c *Connection) request(params *requestParams) (*http.Response, error) {
 	destURL := oandaBaseURL(c.Environemnt).rest
 	destURL.Path = path.Join(destURL.Path, params.endPoint)
