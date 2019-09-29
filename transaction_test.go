@@ -1,6 +1,7 @@
 package pitOrgan
 
 import (
+	"context"
 	"github.com/davecgh/go-spew/spew"
 	"strconv"
 	"testing"
@@ -14,7 +15,7 @@ func Test_Transactions(t *testing.T) {
 		params := &GetTransactionsParams{
 			PageSize: 1000,
 		}
-		data, err := connection.Accounts().AccountID(accountID).Transactions().Get(params)
+		data, err := connection.Accounts().AccountID(accountID).Transactions().Get(context.Background(), params)
 		if err != nil {
 			t.Fatalf("Get transactions failed.\n%+v", err)
 		}
@@ -26,7 +27,7 @@ func Test_Transactions(t *testing.T) {
 func Test_TransactionID(t *testing.T) {
 	connection := newConnection(t, OandaPractice)
 	accountID := Getenv("ACCOUNT_ID")
-	data, err := connection.Accounts().AccountID(accountID).Transactions().TransactionID("1").Get()
+	data, err := connection.Accounts().AccountID(accountID).Transactions().TransactionID("1").Get(context.Background())
 	if err != nil {
 		t.Fatalf("Get transactions id failed.\n%+v", err)
 	}
@@ -42,7 +43,7 @@ func Test_TransactionsIdrange(t *testing.T) {
 			From: 1,
 			To:   165,
 		}
-		data, err := connection.Accounts().AccountID(accountID).Transactions().Idrange().Get(params)
+		data, err := connection.Accounts().AccountID(accountID).Transactions().Idrange().Get(context.Background(), params)
 		if err != nil {
 			t.Fatalf("Get transactions idrange failed.\n%+v", err)
 		}
@@ -57,6 +58,7 @@ func Test_IdrangeParams(t *testing.T) {
 		accountID := Getenv("ACCOUNT_ID")
 		transactionAPI := connection.Accounts().AccountID(accountID).Transactions()
 		data, err := transactionAPI.Get(
+			context.Background(),
 			&GetTransactionsParams{Type: []TransactionFilterDefinition{
 				OrderTransaction,
 				CloseTransaction,
@@ -72,7 +74,7 @@ func Test_IdrangeParams(t *testing.T) {
 		}
 
 		for _, param := range params {
-			_, err := transactionAPI.Idrange().Get(param)
+			_, err := transactionAPI.Idrange().Get(context.Background(), param)
 			if err != nil {
 				t.Errorf("Get transactions idrange failed.\nParam:\n%s\nError:\n%+v", spew.Sdump(param), err)
 			}
@@ -85,7 +87,7 @@ func Test_TransactionsSinceID(t *testing.T) {
 	accountID := Getenv("ACCOUNT_ID")
 
 	lastTransaction := func() int {
-		data, err := connection.Accounts().AccountID(accountID).Transactions().Get(new(GetTransactionsParams))
+		data, err := connection.Accounts().AccountID(accountID).Transactions().Get(context.Background(), new(GetTransactionsParams))
 		if err != nil {
 			t.Fatalf("Get transactions failed.\n%+v", err)
 		}
@@ -97,7 +99,7 @@ func Test_TransactionsSinceID(t *testing.T) {
 		ID: strconv.Itoa(lastTransaction - 2),
 	}
 
-	data, err := connection.Accounts().AccountID(accountID).Transactions().SinceID().Get(params)
+	data, err := connection.Accounts().AccountID(accountID).Transactions().SinceID().Get(context.Background(), params)
 	if err != nil {
 		t.Fatalf("Get transactions since id failed.\n%+v", err)
 	}
@@ -125,7 +127,7 @@ func Test_TransactionsStream(t *testing.T) {
 		params := &GetTransactionsStreamParams{
 			BufferSize: 100,
 		}
-		chs, err := api.Transactions().Stream().Get(params)
+		chs, err := api.Transactions().Stream().Get(context.Background(), params)
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}
@@ -139,7 +141,7 @@ func Test_TransactionsStream(t *testing.T) {
 			case err := <-chs.Error:
 				t.Fatalf("Error occurred.\n%+v", err)
 			default:
-				if _, err := api.Orders().Post(orderParams); err != nil {
+				if _, err := api.Orders().Post(context.Background(), orderParams); err != nil {
 					t.Fatalf("Error occurred.\n%+v", err)
 				}
 				time.Sleep(time.Second)

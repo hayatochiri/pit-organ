@@ -1,6 +1,7 @@
 package pitOrgan
 
 import (
+	"context"
 	"github.com/davecgh/go-spew/spew"
 	"testing"
 	"time"
@@ -11,7 +12,7 @@ func Test_InstrumentCandles(t *testing.T) {
 		connection := newConnection(t, OandaPractice)
 		params := &GetInstrumentCandlesParams{}
 
-		data, err := connection.Instruments().Instrument("EUR_USD").Candles().Get(params)
+		data, err := connection.Instruments().Instrument("EUR_USD").Candles().Get(context.Background(), params)
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}
@@ -54,7 +55,7 @@ func Test_InstrumentCandles(t *testing.T) {
 		t.Run("SuccessPatterns"+pattern.name, func(t *testing.T) {
 			connection := newConnection(t, OandaPractice)
 
-			data, err := connection.Instruments().Instrument("USD_JPY").Candles().Get(pattern.params)
+			data, err := connection.Instruments().Instrument("USD_JPY").Candles().Get(context.Background(), pattern.params)
 			if err != nil {
 				t.Fatalf("Error occurred.\n%+v", err)
 			}
@@ -70,7 +71,7 @@ func Test_InstrumentOrderBook(t *testing.T) {
 		connection := newConnection(t, OandaPractice)
 		params := &GetInstrumentOrderBookParams{}
 
-		data, err := connection.Instruments().Instrument("USD_JPY").OrderBook().Get(params)
+		data, err := connection.Instruments().Instrument("USD_JPY").OrderBook().Get(context.Background(), params)
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}
@@ -85,7 +86,7 @@ func Test_InstrumentOrderBook(t *testing.T) {
 		refTime := time.Date(2018, time.Month(8), 14, 9, 0, 0, 0, time.UTC)
 		params := &GetInstrumentOrderBookParams{Time: refTime}
 
-		data, err := connection.Instruments().Instrument("USD_JPY").OrderBook().Get(params)
+		data, err := connection.Instruments().Instrument("USD_JPY").OrderBook().Get(context.Background(), params)
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}
@@ -100,7 +101,7 @@ func Test_InstrumentPositionBook(t *testing.T) {
 		connection := newConnection(t, OandaPractice)
 		params := &GetInstrumentPositionBookParams{}
 
-		data, err := connection.Instruments().Instrument("USD_JPY").PositionBook().Get(params)
+		data, err := connection.Instruments().Instrument("USD_JPY").PositionBook().Get(context.Background(), params)
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}
@@ -115,7 +116,7 @@ func Test_InstrumentPositionBook(t *testing.T) {
 		refTime := time.Date(2018, time.Month(8), 14, 9, 0, 0, 0, time.UTC)
 		params := &GetInstrumentPositionBookParams{Time: refTime}
 
-		data, err := connection.Instruments().Instrument("USD_JPY").PositionBook().Get(params)
+		data, err := connection.Instruments().Instrument("USD_JPY").PositionBook().Get(context.Background(), params)
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}

@@ -1,6 +1,7 @@
 package pitOrgan
 
 import (
+	"context"
 	"github.com/davecgh/go-spew/spew"
 	"testing"
 )
@@ -21,7 +22,7 @@ func Test_Orders(t *testing.T) {
 			},
 		}
 
-		data, err := connection.Accounts().AccountID(accountID).Orders().Post(params)
+		data, err := connection.Accounts().AccountID(accountID).Orders().Post(context.Background(), params)
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}
@@ -43,7 +44,7 @@ func Test_Orders(t *testing.T) {
 		accountID := Getenv("ACCOUNT_ID")
 
 		for _, params := range paramsPatterns {
-			data, err := connection.Accounts().AccountID(accountID).Orders().Get(params)
+			data, err := connection.Accounts().AccountID(accountID).Orders().Get(context.Background(), params)
 			if err != nil {
 				t.Fatalf("Error occurred.\n%+v", err)
 			}
@@ -57,7 +58,7 @@ func Test_PendingOrders(t *testing.T) {
 		connection := newConnection(t, OandaPractice)
 		accountID := Getenv("ACCOUNT_ID")
 
-		data, err := connection.Accounts().AccountID(accountID).PendingOrders().Get()
+		data, err := connection.Accounts().AccountID(accountID).PendingOrders().Get(context.Background())
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}
@@ -73,14 +74,14 @@ func Test_OrderSpecifier(t *testing.T) {
 		accountIDPath := connection.Accounts().AccountID(accountID)
 
 		orderID := func() string {
-			data, err := accountIDPath.Orders().Get(&GetOrdersParams{State: "ALL"})
+			data, err := accountIDPath.Orders().Get(context.Background(), &GetOrdersParams{State: "ALL"})
 			if err != nil {
 				t.Fatalf("Error occurred.\n%+v", err)
 			}
 			return string(data.Orders[0].ID)
 		}()
 
-		data, err := accountIDPath.Orders().OrderSpecifier(orderID).Get()
+		data, err := accountIDPath.Orders().OrderSpecifier(orderID).Get(context.Background())
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}
@@ -106,7 +107,7 @@ func Test_OrderSpecifier(t *testing.T) {
 				},
 			}
 
-			data, err := accountIDPath.Orders().Post(params)
+			data, err := accountIDPath.Orders().Post(context.Background(), params)
 			if err != nil {
 				t.Fatalf("Error occurred.\n%+v", err)
 			}
@@ -126,7 +127,7 @@ func Test_OrderSpecifier(t *testing.T) {
 			},
 		}
 
-		data, err := accountIDPath.Orders().OrderSpecifier(order.LastTransactionID).Put(params)
+		data, err := accountIDPath.Orders().OrderSpecifier(order.LastTransactionID).Put(context.Background(), params)
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}
@@ -153,7 +154,7 @@ func Test_OrderSpecifierCancel(t *testing.T) {
 			},
 		}
 
-		data, err := accountIDPath.Orders().Post(params)
+		data, err := accountIDPath.Orders().Post(context.Background(), params)
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}
@@ -161,7 +162,7 @@ func Test_OrderSpecifierCancel(t *testing.T) {
 		return data
 	}()
 
-	data, err := accountIDPath.Orders().OrderSpecifier(order.LastTransactionID).Cancel().Put()
+	data, err := accountIDPath.Orders().OrderSpecifier(order.LastTransactionID).Cancel().Put(context.Background())
 	if err != nil {
 		t.Fatalf("Error occurred.\n%+v", err)
 	}
@@ -187,7 +188,7 @@ func Test_OrderSpecifierClientExtensions(t *testing.T) {
 			},
 		}
 
-		data, err := accountIDPath.Orders().Post(params)
+		data, err := accountIDPath.Orders().Post(context.Background(), params)
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}
@@ -210,7 +211,7 @@ func Test_OrderSpecifierClientExtensions(t *testing.T) {
 		},
 	}
 
-	data, err := accountIDPath.Orders().OrderSpecifier(order.LastTransactionID).ClientExtensions().Put(params)
+	data, err := accountIDPath.Orders().OrderSpecifier(order.LastTransactionID).ClientExtensions().Put(context.Background(), params)
 	if err != nil {
 		t.Fatalf("Error occurred.\n%+v", err)
 	}

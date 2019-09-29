@@ -1,6 +1,7 @@
 package pitOrgan
 
 import (
+	"context"
 	"github.com/davecgh/go-spew/spew"
 	"testing"
 )
@@ -8,7 +9,7 @@ import (
 func Test_Accounts(t *testing.T) {
 	t.Run("Success", func(t *testing.T) {
 		connection := newConnection(t, OandaPractice)
-		data, err := connection.Accounts().Get()
+		data, err := connection.Accounts().Get(context.Background())
 
 		if err != nil {
 			t.Fatalf("Get accounts failed.\n%+v", err)
@@ -21,7 +22,7 @@ func Test_Accounts(t *testing.T) {
 func Test_AccountID(t *testing.T) {
 	connection := newConnection(t, OandaPractice)
 	accountID := Getenv("ACCOUNT_ID")
-	data, err := connection.Accounts().AccountID(accountID).Get()
+	data, err := connection.Accounts().AccountID(accountID).Get(context.Background())
 
 	if err != nil {
 		t.Fatalf("Get account ID failed.\n%+v", err)
@@ -33,7 +34,7 @@ func Test_AccountID(t *testing.T) {
 func Test_AccountSummary(t *testing.T) {
 	connection := newConnection(t, OandaPractice)
 	accountID := Getenv("ACCOUNT_ID")
-	data, err := connection.Accounts().AccountID(accountID).Summary().Get()
+	data, err := connection.Accounts().AccountID(accountID).Summary().Get(context.Background())
 
 	if err != nil {
 		t.Fatalf("Get account summary failed.\n%+v", err)
@@ -48,7 +49,7 @@ func Test_AccountInstruments(t *testing.T) {
 	params := &GetAccountInstrumentsParams{
 		Instruments: []string{"USD_JPY", "EUR_JPY", "EUR_USD"},
 	}
-	data, err := connection.Accounts().AccountID(accountID).Instruments().Get(params)
+	data, err := connection.Accounts().AccountID(accountID).Instruments().Get(context.Background(), params)
 
 	if err != nil {
 		t.Fatalf("Get account instruments failed.\n%+v", err)
@@ -68,7 +69,7 @@ func Test_AccountConfiguration(t *testing.T) {
 				Alias: expect,
 			},
 		}
-		data, err := connection.Accounts().AccountID(accountID).Configuration().Patch(params)
+		data, err := connection.Accounts().AccountID(accountID).Configuration().Patch(context.Background(), params)
 
 		if err != nil {
 			t.Fatalf("Patch account configuration failed.\n%+v", err)
@@ -91,7 +92,7 @@ func Test_AccountConfiguration(t *testing.T) {
 				MarginRate: expect,
 			},
 		}
-		data, err := connection.Accounts().AccountID(accountID).Configuration().Patch(params)
+		data, err := connection.Accounts().AccountID(accountID).Configuration().Patch(context.Background(), params)
 
 		if err != nil {
 			t.Fatalf("Patch account configuration failed.\n%+v", err)
@@ -116,14 +117,14 @@ func Test_AccountChanges(t *testing.T) {
 				MarginRate: "0.4",
 			},
 		}
-		data, _ := accountIDPath.Configuration().Patch(params)
+		data, _ := accountIDPath.Configuration().Patch(context.Background(), params)
 		return data.LastTransactionID
 	}()
 
 	params := &GetAccountChangesParams{
 		SinceTransactionID: transactionID,
 	}
-	data, err := connection.Accounts().AccountID(accountID).Changes().Get(params)
+	data, err := connection.Accounts().AccountID(accountID).Changes().Get(context.Background(), params)
 
 	if err != nil {
 		t.Fatalf("Get account changes failed.\n%+v", err)

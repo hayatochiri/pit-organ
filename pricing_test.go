@@ -1,6 +1,7 @@
 package pitOrgan
 
 import (
+	"context"
 	"github.com/davecgh/go-spew/spew"
 	"testing"
 )
@@ -11,7 +12,7 @@ func Test_Pricing(t *testing.T) {
 		accountID := Getenv("ACCOUNT_ID")
 
 		params := &GetPricingParams{Instruments: []string{"EUR_USD"}}
-		data, err := connection.Accounts().AccountID(accountID).Pricing().Get(params)
+		data, err := connection.Accounts().AccountID(accountID).Pricing().Get(context.Background(), params)
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}
@@ -29,7 +30,7 @@ func Test_PricingStream(t *testing.T) {
 			BufferSize:  300,
 			Instruments: []string{"EUR_ZAR", "EUR_PLN", "AUD_JPY", "USD_CAD", "USD_NOK", "CAD_SGD", "HKD_JPY", "NZD_JPY", "USD_HUF", "CHF_ZAR", "EUR_CZK", "AUD_HKD", "GBP_NZD", "NZD_HKD", "NZD_CHF", "USD_SAR", "GBP_CAD", "CAD_JPY", "ZAR_JPY", "NZD_SGD", "GBP_ZAR", "NZD_CAD", "USD_INR", "CAD_HKD", "SGD_CHF", "CAD_CHF", "AUD_SGD", "EUR_NOK", "EUR_CHF", "GBP_USD", "USD_MXN", "USD_CHF", "AUD_CHF", "EUR_DKK", "AUD_USD", "CHF_HKD", "USD_THB", "GBP_CHF", "TRY_JPY", "AUD_CAD", "SGD_JPY", "EUR_NZD", "USD_HKD", "EUR_AUD", "USD_DKK", "CHF_JPY", "EUR_SGD", "USD_SGD", "EUR_SEK", "USD_JPY", "EUR_TRY", "USD_CZK", "GBP_AUD", "USD_PLN", "EUR_USD", "AUD_NZD", "SGD_HKD", "EUR_HUF", "NZD_USD", "USD_CNH", "EUR_HKD", "EUR_JPY", "GBP_PLN", "GBP_JPY", "USD_TRY", "EUR_CAD", "USD_SEK", "GBP_SGD", "EUR_GBP", "GBP_HKD", "USD_ZAR"},
 		}
-		chs, err := connection.Accounts().AccountID(accountID).Pricing().Stream().Get(params)
+		chs, err := connection.Accounts().AccountID(accountID).Pricing().Stream().Get(context.Background(), params)
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}
@@ -57,7 +58,7 @@ func Test_PricingStream(t *testing.T) {
 			Instruments: []string{"USD_JPY", "EUR_JPY", "EUR_USD"},
 		}
 
-		chs, err := connection.Accounts().AccountID(accountID).Pricing().Stream().Get(params)
+		chs, err := connection.Accounts().AccountID(accountID).Pricing().Stream().Get(context.Background(), params)
 
 		if err == nil {
 			chs.Close()

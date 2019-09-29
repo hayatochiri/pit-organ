@@ -1,6 +1,7 @@
 package pitOrgan
 
 import (
+	"context"
 	"golang.org/x/xerrors"
 	"net/url"
 	"testing"
@@ -12,7 +13,7 @@ func Test_request(t *testing.T) {
 	t.Run("ConnectionRefused", func(t *testing.T) {
 		connection := newConnection(t, oandaDummy)
 		connection.Timeout = time.Nanosecond // 即タイムアウトさせるため最小の待ち時間にする
-		_, err := connection.Accounts().Get()
+		_, err := connection.Accounts().Get(context.Background())
 
 		if _, ok := nakedError(err).(*url.Error); !ok {
 			t.Fatalf("Connection was not refused.\n%+v", err)
@@ -23,7 +24,7 @@ func Test_request(t *testing.T) {
 	t.Run("Unauthorized", func(t *testing.T) {
 		connection := newConnection(t, OandaPractice)
 		connection.Token = "hogehoge" // 不正なトークンに書き換え
-		_, err := connection.Accounts().Get()
+		_, err := connection.Accounts().Get(context.Background())
 
 		if _, ok := nakedError(err).(*UnauthorizedError); !ok {
 			t.Fatalf("Request was authorized.\n%+v", err)
