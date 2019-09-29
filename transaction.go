@@ -2,6 +2,7 @@ package pitOrgan
 
 import (
 	"bufio"
+	"context"
 	"encoding/json"
 	"golang.org/x/xerrors"
 	"net/url"
@@ -139,8 +140,9 @@ type TransactionsChannels struct {
 // GET /v3/accounts/{accountID}/transactions
 //
 // Get a list of Transactions pages that satisfy a time-based Transaction query.
-func (r *ReceiverTransactions) Get(params *GetTransactionsParams) (*GetTransactionsSchema, error) {
+func (r *ReceiverTransactions) Get(ctx context.Context, params *GetTransactionsParams) (*GetTransactionsSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/transactions",
@@ -197,8 +199,9 @@ func (r *ReceiverTransactions) Get(params *GetTransactionsParams) (*GetTransacti
 }
 
 // GET /v3/accounts/{accountID}/transactions/{transactionID}
-func (r *ReceiverTransactionID) Get() (*GetTransactionIDSchema, error) {
+func (r *ReceiverTransactionID) Get(ctx context.Context) (*GetTransactionIDSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/transactions/" + r.TransactionID,
@@ -228,8 +231,9 @@ func (r *ReceiverTransactionID) Get() (*GetTransactionIDSchema, error) {
 // GET /v3/accounts/{accountID}/transactions/idrange
 //
 // Get a range of Transactions for an Account based on the Transaction IDs.
-func (r *ReceiverTransactionsIdrange) Get(params *GetTransactionsIdrangeParams) (*GetTransactionsIdrangeSchema, error) {
+func (r *ReceiverTransactionsIdrange) Get(ctx context.Context, params *GetTransactionsIdrangeParams) (*GetTransactionsIdrangeSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/transactions/idrange",
@@ -277,8 +281,9 @@ func (r *ReceiverTransactionsIdrange) Get(params *GetTransactionsIdrangeParams) 
 }
 
 // GET /v3/accounts/{accountID}/transactions/sinceid
-func (r *ReceiverTransactionsSinceID) Get(params *GetTransactionsSinceIDParams) (*GetTransactionsSinceIDSchema, error) {
+func (r *ReceiverTransactionsSinceID) Get(ctx context.Context, params *GetTransactionsSinceIDParams) (*GetTransactionsSinceIDSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/transactions/sinceid",
@@ -318,8 +323,9 @@ func (r *ReceiverTransactionsSinceID) Get(params *GetTransactionsSinceIDParams) 
 // GET /v3/accounts/{accountID}/transactions/stream
 //
 // Get a stream of Transactions for an Account starting from when the request is made.
-func (r *ReceiverTransactionsStream) Get(params *GetTransactionsStreamParams) (*TransactionsChannels, error) {
+func (r *ReceiverTransactionsStream) Get(ctx context.Context, params *GetTransactionsStreamParams) (*TransactionsChannels, error) {
 	resp, err := r.Connection.stream(
+		ctx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/transactions/stream",

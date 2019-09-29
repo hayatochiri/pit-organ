@@ -1,6 +1,7 @@
 package pitOrgan
 
 import (
+	"context"
 	"golang.org/x/xerrors"
 	"net/http"
 	"strings"
@@ -250,8 +251,9 @@ func (r *PatchAccountConfigurationForbiddenError) Error() string {
 /* API */
 
 // GET /v3/accounts
-func (r *ReceiverAccounts) Get() (*GetAccountsSchema, error) {
+func (r *ReceiverAccounts) Get(ctx context.Context) (*GetAccountsSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts",
@@ -276,8 +278,9 @@ func (r *ReceiverAccounts) Get() (*GetAccountsSchema, error) {
 }
 
 // GET /v3/accounts/{accountID}
-func (r *ReceiverAccountID) Get() (*GetAccountIDSchema, error) {
+func (r *ReceiverAccountID) Get(ctx context.Context) (*GetAccountIDSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID,
@@ -305,8 +308,9 @@ func (r *ReceiverAccountID) Get() (*GetAccountIDSchema, error) {
 }
 
 // GET /v3/accounts/{accountID}/summary
-func (r *ReceiverAccountSummary) Get() (*GetAccountSummarySchema, error) {
+func (r *ReceiverAccountSummary) Get(ctx context.Context) (*GetAccountSummarySchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/summary",
@@ -334,8 +338,9 @@ func (r *ReceiverAccountSummary) Get() (*GetAccountSummarySchema, error) {
 }
 
 // GET /v3/accounts/{accountID}/instruments
-func (r *ReceiverAccountInstruments) Get(params *GetAccountInstrumentsParams) (*GetAccountInstrumentsSchema, error) {
+func (r *ReceiverAccountInstruments) Get(ctx context.Context, params *GetAccountInstrumentsParams) (*GetAccountInstrumentsSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/instruments",
@@ -366,8 +371,9 @@ func (r *ReceiverAccountInstruments) Get(params *GetAccountInstrumentsParams) (*
 }
 
 // PATCH /v3/accounts/{accountID}/configuration
-func (r *ReceiverAccountConfiguration) Patch(params *PatchAccountConfigurationParams) (*PatchAccountConfigurationSchema, error) {
+func (r *ReceiverAccountConfiguration) Patch(ctx context.Context, params *PatchAccountConfigurationParams) (*PatchAccountConfigurationSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "PATCH",
 			endPoint: "/v3/accounts/" + r.AccountID + "/configuration",
@@ -400,8 +406,9 @@ func (r *ReceiverAccountConfiguration) Patch(params *PatchAccountConfigurationPa
 }
 
 // GET /v3/accounts/{accountID}/changes
-func (r *ReceiverAccountChanges) Get(params *GetAccountChangesParams) (*GetAccountChangesSchema, error) {
+func (r *ReceiverAccountChanges) Get(ctx context.Context, params *GetAccountChangesParams) (*GetAccountChangesSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/changes",

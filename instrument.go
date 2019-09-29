@@ -1,6 +1,7 @@
 package pitOrgan
 
 import (
+	"context"
 	"github.com/peterhellberg/link"
 	"golang.org/x/xerrors"
 	"net/http"
@@ -210,8 +211,9 @@ type GetInstrumentPositionBookSchema struct {
 // GET /v3/instruments/{instrument}/candles
 //
 // Fetch candlestick data for an instrument.
-func (r *ReceiverInstrumentCandles) Get(params *GetInstrumentCandlesParams) (*GetInstrumentCandlesSchema, error) {
+func (r *ReceiverInstrumentCandles) Get(ctx context.Context, params *GetInstrumentCandlesParams) (*GetInstrumentCandlesSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/instruments/" + r.Instrument + "/candles",
@@ -309,8 +311,9 @@ func (r *ReceiverInstrumentCandles) Get(params *GetInstrumentCandlesParams) (*Ge
 // GET /v3/instruments/{instrument}/orderBook
 //
 // Fetch an order book for an instrument.
-func (r *ReceiverInstrumentOrderBook) Get(params *GetInstrumentOrderBookParams) (*GetInstrumentOrderBookSchema, error) {
+func (r *ReceiverInstrumentOrderBook) Get(ctx context.Context, params *GetInstrumentOrderBookParams) (*GetInstrumentOrderBookSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/instruments/" + r.Instrument + "/orderBook",
@@ -353,8 +356,9 @@ func (r *ReceiverInstrumentOrderBook) Get(params *GetInstrumentOrderBookParams) 
 // GET /v3/instruments/{instrument}/positionBook
 //
 // Fetch a position book for an instrument.
-func (r *ReceiverInstrumentPositionBook) Get(params *GetInstrumentPositionBookParams) (*GetInstrumentPositionBookSchema, error) {
+func (r *ReceiverInstrumentPositionBook) Get(ctx context.Context, params *GetInstrumentPositionBookParams) (*GetInstrumentPositionBookSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/instruments/" + r.Instrument + "/positionBook",
