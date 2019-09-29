@@ -174,7 +174,11 @@ func parseResponse(resp *http.Response, data interface{}, strict bool) (interfac
 	}
 
 	{
-		sm := data.(schemas)
+		sm, ok := data.(schemas)
+		if !ok {
+			// TODO: ヘッダ未実装時の回避、全て実装したら消す
+			return data, nil
+		}
 		if err := sm.setHeaders(resp); err != nil {
 			return nil, xerrors.Errorf("Set headers failed: %w", err)
 		}
