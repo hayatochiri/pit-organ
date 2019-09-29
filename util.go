@@ -2,6 +2,7 @@ package pitOrgan
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"github.com/davecgh/go-spew/spew"
 	"golang.org/x/xerrors"
@@ -49,12 +50,15 @@ func copyHeader(resp *http.Response, header string) ([]string, error) {
 	return dst, nil
 }
 
-func (c *Connection) request(params *requestParams) (*http.Response, error) {
+func (c *Connection) request(ctx context.Context, params *requestParams) (*http.Response, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	destURL := oandaBaseURL(c.Environemnt).rest
 	destURL.Path = path.Join(destURL.Path, params.endPoint)
 
 	body, _ := json.Marshal(params.body)
-	req, err := http.NewRequest(params.method, destURL.String(), bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(childCtx, params.method, destURL.String(), bytes.NewBuffer(body))
 	if err != nil {
 		return nil, xerrors.Errorf("Prepare new request failed: %w", err)
 	}
@@ -84,12 +88,14 @@ func (c *Connection) request(params *requestParams) (*http.Response, error) {
 	return resp, nil
 }
 
-func (c *Connection) stream(params *requestParams) (*http.Response, error) {
-	destURL := oandaBaseURL(c.Environemnt).stream
+func (c *Connection) stream(ctx context.Context, params *requestParams) (*http.Response, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
 
+	destURL := oandaBaseURL(c.Environemnt).stream
 	destURL.Path = path.Join(destURL.Path, params.endPoint)
 
-	req, err := http.NewRequest(params.method, destURL.String(), nil)
+	req, err := http.NewRequestWithContext(childCtx, params.method, destURL.String(), nil)
 	if err != nil {
 		return nil, xerrors.Errorf("error in stream method: %w", err)
 	}

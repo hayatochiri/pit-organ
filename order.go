@@ -1,6 +1,7 @@
 package pitOrgan
 
 import (
+	"context"
 	"golang.org/x/xerrors"
 	"strconv"
 	"strings"
@@ -255,8 +256,9 @@ func (r *PutOrderSpecifierClientExtensionsNotFoundError) Error() string {
 /* API */
 
 // POST /v3/accounts/{accountID}/orders
-func (r *ReceiverOrders) Post(params *PostOrdersParams) (*PostOrdersSchema, error) {
+func (r *ReceiverOrders) Post(ctx context.Context, params *PostOrdersParams) (*PostOrdersSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "POST",
 			endPoint: "/v3/accounts/" + r.AccountID + "/orders",
@@ -289,8 +291,9 @@ func (r *ReceiverOrders) Post(params *PostOrdersParams) (*PostOrdersSchema, erro
 }
 
 // GET /v3/accounts/{accountID}/orders
-func (r *ReceiverOrders) Get(params *GetOrdersParams) (*GetOrdersSchema, error) {
+func (r *ReceiverOrders) Get(ctx context.Context, params *GetOrdersParams) (*GetOrdersSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/orders",
@@ -343,8 +346,9 @@ func (r *ReceiverOrders) Get(params *GetOrdersParams) (*GetOrdersSchema, error) 
 }
 
 // GET /v3/accounts/{accountID}/pendingOrders
-func (r *ReceiverPendingOrders) Get() (*GetPendingOrdersSchema, error) {
+func (r *ReceiverPendingOrders) Get(ctx context.Context) (*GetPendingOrdersSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/pendingOrders",
@@ -372,8 +376,9 @@ func (r *ReceiverPendingOrders) Get() (*GetPendingOrdersSchema, error) {
 }
 
 // GET /v3/accounts/{accountID}/orders/{orderSpecifier}
-func (r *ReceiverOrderSpecifier) Get() (*GetOrderSpecifierSchema, error) {
+func (r *ReceiverOrderSpecifier) Get(ctx context.Context) (*GetOrderSpecifierSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/orders/" + r.OrderSpecifier,
@@ -401,8 +406,9 @@ func (r *ReceiverOrderSpecifier) Get() (*GetOrderSpecifierSchema, error) {
 }
 
 // PUT /v3/accounts/{accountID}/orders/{orderSpecifier}
-func (r *ReceiverOrderSpecifier) Put(params *PutOrderSpecifierParams) (*PutOrderSpecifierSchema, error) {
+func (r *ReceiverOrderSpecifier) Put(ctx context.Context, params *PutOrderSpecifierParams) (*PutOrderSpecifierSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "PUT",
 			endPoint: "/v3/accounts/" + r.AccountID + "/orders/" + r.OrderSpecifier,
@@ -435,8 +441,9 @@ func (r *ReceiverOrderSpecifier) Put(params *PutOrderSpecifierParams) (*PutOrder
 }
 
 // PUT /v3/accounts/{accountID}/orders/{orderSpecifier}/cancel
-func (r *ReceiverOrderSpecifierCancel) Put() (*PutOrderSpecifierCancelSchema, error) {
+func (r *ReceiverOrderSpecifierCancel) Put(ctx context.Context) (*PutOrderSpecifierCancelSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "PUT",
 			endPoint: "/v3/accounts/" + r.AccountID + "/orders/" + r.OrderSpecifier + "/cancel",
@@ -466,8 +473,9 @@ func (r *ReceiverOrderSpecifierCancel) Put() (*PutOrderSpecifierCancelSchema, er
 }
 
 // PUT /v3/accounts/{accountID}/orders/{orderSpecifier}/clientExtensions
-func (r *ReceiverOrderSpecifierClientExtensions) Put(params *PutOrderSpecifierClientExtensionsParams) (*PutOrderSpecifierClientExtensionsSchema, error) {
+func (r *ReceiverOrderSpecifierClientExtensions) Put(ctx context.Context, params *PutOrderSpecifierClientExtensionsParams) (*PutOrderSpecifierClientExtensionsSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "PUT",
 			endPoint: "/v3/accounts/" + r.AccountID + "/orders/" + r.OrderSpecifier + "/clientExtensions",

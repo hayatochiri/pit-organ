@@ -1,6 +1,7 @@
 package pitOrgan
 
 import (
+	"context"
 	"github.com/davecgh/go-spew/spew"
 	"strconv"
 	"testing"
@@ -23,7 +24,7 @@ func Test_Trades(t *testing.T) {
 			},
 		}
 
-		_, err := accountIDReceiver.Orders().Post(params)
+		_, err := accountIDReceiver.Orders().Post(context.Background(), params)
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}
@@ -31,7 +32,7 @@ func Test_Trades(t *testing.T) {
 
 	params := &GetTradesParams{}
 
-	data, err := accountIDReceiver.Trades().Get(params)
+	data, err := accountIDReceiver.Trades().Get(context.Background(), params)
 	if err != nil {
 		t.Fatalf("Error occurred.\n%+v", err)
 	}
@@ -56,13 +57,13 @@ func Test_OpenTrades(t *testing.T) {
 			},
 		}
 
-		_, err := accountIDReceiver.Orders().Post(params)
+		_, err := accountIDReceiver.Orders().Post(context.Background(), params)
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}
 	}
 
-	data, err := accountIDReceiver.OpenTrades().Get()
+	data, err := accountIDReceiver.OpenTrades().Get(context.Background())
 	if err != nil {
 		t.Fatalf("Error occurred.\n%+v", err)
 	}
@@ -85,7 +86,7 @@ func Test_TradeSpecifier(t *testing.T) {
 				},
 			},
 		}
-		order, err := accountIDReceiver.Orders().Post(params)
+		order, err := accountIDReceiver.Orders().Post(context.Background(), params)
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}
@@ -93,7 +94,7 @@ func Test_TradeSpecifier(t *testing.T) {
 		return order
 	}()
 
-	data, err := accountIDReceiver.Trades().TradeSpecifier(order.LastTransactionID).Get()
+	data, err := accountIDReceiver.Trades().TradeSpecifier(order.LastTransactionID).Get(context.Background())
 	if err != nil {
 		t.Fatalf("Error occurred.\n%+v", err)
 	}
@@ -113,7 +114,7 @@ func Test_TradeSpecifierClose(t *testing.T) {
 			},
 		}
 
-		order, err := accountIDReceiver.Orders().Post(params)
+		order, err := accountIDReceiver.Orders().Post(context.Background(), params)
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}
@@ -125,7 +126,7 @@ func Test_TradeSpecifierClose(t *testing.T) {
 		Body: &PutTradeSpecifierCloseBodyParams{},
 	}
 
-	data, err := accountIDReceiver.Trades().TradeSpecifier(order.LastTransactionID).Close().Put(params)
+	data, err := accountIDReceiver.Trades().TradeSpecifier(order.LastTransactionID).Close().Put(context.Background(), params)
 	if err != nil {
 		t.Fatalf("Error occurred.\n%+v", err)
 	}
@@ -145,7 +146,7 @@ func Test_TradeSpecifierClientExtensions(t *testing.T) {
 			},
 		}
 
-		order, err := accountIDReceiver.Orders().Post(params)
+		order, err := accountIDReceiver.Orders().Post(context.Background(), params)
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}
@@ -163,7 +164,7 @@ func Test_TradeSpecifierClientExtensions(t *testing.T) {
 		},
 	}
 
-	data, err := accountIDReceiver.Trades().TradeSpecifier(order.LastTransactionID).ClientExtensions().Put(params)
+	data, err := accountIDReceiver.Trades().TradeSpecifier(order.LastTransactionID).ClientExtensions().Put(context.Background(), params)
 	if err != nil {
 		t.Fatalf("Error occurred.\n%+v", err)
 	}
@@ -183,7 +184,7 @@ func Test_TradeSpecifierOrders(t *testing.T) {
 			},
 		}
 
-		order, err := accountIDReceiver.Orders().Post(params)
+		order, err := accountIDReceiver.Orders().Post(context.Background(), params)
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}
@@ -210,7 +211,7 @@ func Test_TradeSpecifierOrders(t *testing.T) {
 		},
 	}
 
-	data, err := accountIDReceiver.Trades().TradeSpecifier(order.LastTransactionID).Orders().Put(params)
+	data, err := accountIDReceiver.Trades().TradeSpecifier(order.LastTransactionID).Orders().Put(context.Background(), params)
 	if err != nil {
 		t.Fatalf("Error occurred.\n%+v", err)
 	}

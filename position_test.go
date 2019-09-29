@@ -1,6 +1,7 @@
 package pitOrgan
 
 import (
+	"context"
 	"github.com/davecgh/go-spew/spew"
 	"testing"
 )
@@ -9,7 +10,7 @@ func Test_Positions(t *testing.T) {
 	connection := newConnection(t, OandaPractice)
 	accountID := Getenv("ACCOUNT_ID")
 
-	data, err := connection.Accounts().AccountID(accountID).Positions().Get()
+	data, err := connection.Accounts().AccountID(accountID).Positions().Get(context.Background())
 	if err != nil {
 		t.Fatalf("Error occurred.\n%+v", err)
 	}
@@ -34,13 +35,13 @@ func Test_OpenPositions(t *testing.T) {
 			},
 		}
 
-		_, err := accountIDReceiver.Orders().Post(params)
+		_, err := accountIDReceiver.Orders().Post(context.Background(), params)
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}
 	}
 
-	data, err := accountIDReceiver.OpenPositions().Get()
+	data, err := accountIDReceiver.OpenPositions().Get(context.Background())
 	if err != nil {
 		t.Fatalf("Error occurred.\n%+v", err)
 	}
@@ -60,13 +61,13 @@ func Test_PositionsInstrument(t *testing.T) {
 			},
 		}
 
-		_, err := accountIDReceiver.Orders().Post(params)
+		_, err := accountIDReceiver.Orders().Post(context.Background(), params)
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}
 	}
 
-	data, err := accountIDReceiver.Positions().Instrument("EUR_JPY").Get()
+	data, err := accountIDReceiver.Positions().Instrument("EUR_JPY").Get(context.Background())
 	if err != nil {
 		t.Fatalf("Error occurred.\n%+v", err)
 	}
@@ -86,7 +87,7 @@ func Test_PositionsInstrumentClose(t *testing.T) {
 			},
 		}
 
-		_, err := accountIDReceiver.Orders().Post(params)
+		_, err := accountIDReceiver.Orders().Post(context.Background(), params)
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}
@@ -98,7 +99,7 @@ func Test_PositionsInstrumentClose(t *testing.T) {
 		},
 	}
 
-	data, err := accountIDReceiver.Positions().Instrument("USD_JPY").Close().Put(params)
+	data, err := accountIDReceiver.Positions().Instrument("USD_JPY").Close().Put(context.Background(), params)
 	if err != nil {
 		t.Fatalf("Error occurred.\n%+v", err)
 	}

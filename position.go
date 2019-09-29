@@ -1,6 +1,7 @@
 package pitOrgan
 
 import (
+	"context"
 	"golang.org/x/xerrors"
 )
 
@@ -132,8 +133,9 @@ func (r *PutPositionsInstrumentCloseNotFoundError) Error() string {
 /* API */
 
 // GET /v3/accounts/{accountID}/positions
-func (r *ReceiverPositions) Get() (*GetPositionsSchema, error) {
+func (r *ReceiverPositions) Get(ctx context.Context) (*GetPositionsSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "Get",
 			endPoint: "/v3/accounts/" + r.AccountID + "/positions",
@@ -161,8 +163,9 @@ func (r *ReceiverPositions) Get() (*GetPositionsSchema, error) {
 }
 
 // GET /v3/accounts/{accountID}/openPositions
-func (r *ReceiverOpenPositions) Get() (*GetOpenPositionsSchema, error) {
+func (r *ReceiverOpenPositions) Get(ctx context.Context) (*GetOpenPositionsSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "Get",
 			endPoint: "/v3/accounts/" + r.AccountID + "/openPositions",
@@ -190,8 +193,9 @@ func (r *ReceiverOpenPositions) Get() (*GetOpenPositionsSchema, error) {
 }
 
 // GET /v3/accounts/{accountID}/positions/{instrument}
-func (r *ReceiverPositionsInstrument) Get() (*GetPositionsInstrumentSchema, error) {
+func (r *ReceiverPositionsInstrument) Get(ctx context.Context) (*GetPositionsInstrumentSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "Get",
 			endPoint: "/v3/accounts/" + r.AccountID + "/positions/" + r.Instrument,
@@ -219,8 +223,9 @@ func (r *ReceiverPositionsInstrument) Get() (*GetPositionsInstrumentSchema, erro
 }
 
 // PUT /v3/accounts/{accountID}/positions/{instrument}/close
-func (r *ReceiverPositionsInstrumentClose) Put(params *PutPositionsInstrumentCloseParams) (*PutPositionsInstrumentCloseSchema, error) {
+func (r *ReceiverPositionsInstrumentClose) Put(ctx context.Context, params *PutPositionsInstrumentCloseParams) (*PutPositionsInstrumentCloseSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "PUT",
 			endPoint: "/v3/accounts/" + r.AccountID + "/positions/" + r.Instrument + "/close",

@@ -2,6 +2,7 @@ package pitOrgan
 
 import (
 	"bufio"
+	"context"
 	"encoding/json"
 	"golang.org/x/xerrors"
 	"strconv"
@@ -70,8 +71,9 @@ type PriceChannels struct {
 /* API */
 
 // GET /v3/accounts/{accountID}/pricing
-func (r *ReceiverPricing) Get(params *GetPricingParams) (*GetPricingSchema, error) {
+func (r *ReceiverPricing) Get(ctx context.Context, params *GetPricingParams) (*GetPricingSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/pricing",
@@ -113,8 +115,9 @@ func (r *ReceiverPricing) Get(params *GetPricingParams) (*GetPricingSchema, erro
 }
 
 // GET /v3/accounts/{accountID}/pricing/stream
-func (r *ReceiverPricingStream) Get(params *GetPricingStreamParams) (*PriceChannels, error) {
+func (r *ReceiverPricingStream) Get(ctx context.Context, params *GetPricingStreamParams) (*PriceChannels, error) {
 	resp, err := r.Connection.stream(
+		ctx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/pricing/stream",

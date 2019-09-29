@@ -1,6 +1,7 @@
 package pitOrgan
 
 import (
+	"context"
 	"golang.org/x/xerrors"
 	"strconv"
 	"strings"
@@ -243,8 +244,9 @@ func (r *PutTradeSpecifierOrdersBadRequestError) Error() string {
 /* API */
 
 // GET /v3/accounts/{accountID}/trades
-func (r *ReceiverTrades) Get(params *GetTradesParams) (*GetTradesSchema, error) {
+func (r *ReceiverTrades) Get(ctx context.Context, params *GetTradesParams) (*GetTradesSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "Get",
 			endPoint: "/v3/accounts/" + r.AccountID + "/trades",
@@ -297,8 +299,9 @@ func (r *ReceiverTrades) Get(params *GetTradesParams) (*GetTradesSchema, error) 
 }
 
 // GET /v3/accounts/{accountID}/openTrades
-func (r *ReceiverOpenTrades) Get() (*GetOpenTradesSchema, error) {
+func (r *ReceiverOpenTrades) Get(ctx context.Context) (*GetOpenTradesSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "Get",
 			endPoint: "/v3/accounts/" + r.AccountID + "/openTrades",
@@ -326,8 +329,9 @@ func (r *ReceiverOpenTrades) Get() (*GetOpenTradesSchema, error) {
 }
 
 // GET /v3/accounts/{accountID}/trades/{tradeSpecifier}
-func (r *ReceiverTradeSpecifier) Get() (*GetTradeSpecifierSchema, error) {
+func (r *ReceiverTradeSpecifier) Get(ctx context.Context) (*GetTradeSpecifierSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "Get",
 			endPoint: "/v3/accounts/" + r.AccountID + "/trades/" + r.TradeSpecifier,
@@ -355,8 +359,9 @@ func (r *ReceiverTradeSpecifier) Get() (*GetTradeSpecifierSchema, error) {
 }
 
 // PUT /v3/accounts/{accountID}/trades/{tradeSpecifier}/close
-func (r *ReceiverTradeSpecifierClose) Put(params *PutTradeSpecifierCloseParams) (*PutTradeSpecifierCloseSchema, error) {
+func (r *ReceiverTradeSpecifierClose) Put(ctx context.Context, params *PutTradeSpecifierCloseParams) (*PutTradeSpecifierCloseSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "PUT",
 			endPoint: "/v3/accounts/" + r.AccountID + "/trades/" + r.TradeSpecifier + "/close",
@@ -389,8 +394,9 @@ func (r *ReceiverTradeSpecifierClose) Put(params *PutTradeSpecifierCloseParams) 
 }
 
 // PUT /v3/accounts/{accountID}/trades/{tradeSpecifier}/clientExtensions
-func (r *ReceiverTradeSpecifierClientExtensions) Put(params *PutTradeSpecifierClientExtensionsParams) (*PutTradeSpecifierClientExtensionsSchema, error) {
+func (r *ReceiverTradeSpecifierClientExtensions) Put(ctx context.Context, params *PutTradeSpecifierClientExtensionsParams) (*PutTradeSpecifierClientExtensionsSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "PUT",
 			endPoint: "/v3/accounts/" + r.AccountID + "/trades/" + r.TradeSpecifier + "/clientExtensions",
@@ -423,8 +429,9 @@ func (r *ReceiverTradeSpecifierClientExtensions) Put(params *PutTradeSpecifierCl
 }
 
 // PUT /v3/accounts/{accountID}/trades/{tradeSpecifier}/orders
-func (r *ReceiverTradeSpecifierOrders) Put(params *PutTradeSpecifierOrdersParams) (*PutTradeSpecifierOrdersSchema, error) {
+func (r *ReceiverTradeSpecifierOrders) Put(ctx context.Context, params *PutTradeSpecifierOrdersParams) (*PutTradeSpecifierOrdersSchema, error) {
 	resp, err := r.Connection.request(
+		ctx,
 		&requestParams{
 			method:   "PUT",
 			endPoint: "/v3/accounts/" + r.AccountID + "/trades/" + r.TradeSpecifier + "/orders",

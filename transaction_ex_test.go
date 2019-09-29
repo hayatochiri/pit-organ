@@ -1,6 +1,7 @@
 package pitOrgan_test
 
 import (
+	"context"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/hayatochiri/pit-organ"
 	"log"
@@ -17,7 +18,7 @@ func ExampleReceiverTransactions_Get() {
 	params := &pitOrgan.GetTransactionsParams{
 		PageSize: 1000,
 	}
-	data, err := connection.Accounts().AccountID("AccountID").Transactions().Get(params)
+	data, err := connection.Accounts().AccountID("AccountID").Transactions().Get(context.Background(), params)
 	if err != nil {
 		log.Fatalf("%+v", err)
 	}
@@ -36,7 +37,7 @@ func ExampleReceiverTransactionsIdrange_Get() {
 		From: 1,
 		To:   165,
 	}
-	data, err := connection.Accounts().AccountID("AccountID").Transactions().Idrange().Get(params)
+	data, err := connection.Accounts().AccountID("AccountID").Transactions().Idrange().Get(context.Background(), params)
 	if err != nil {
 		log.Fatalf("%+v", err)
 	}
@@ -53,6 +54,7 @@ func ExampleReceiverTransactionsIdrange_Get_idrangeParams() {
 	api := connection.Accounts().AccountID("accountID").Transactions()
 
 	data, err := api.Get(
+		context.Background(),
 		&pitOrgan.GetTransactionsParams{Type: []pitOrgan.TransactionFilterDefinition{
 			pitOrgan.OrderTransaction,
 			pitOrgan.CloseTransaction,
@@ -68,7 +70,7 @@ func ExampleReceiverTransactionsIdrange_Get_idrangeParams() {
 	}
 
 	for _, param := range params {
-		data, err := api.Idrange().Get(param)
+		data, err := api.Idrange().Get(context.Background(), param)
 		if err != nil {
 			log.Fatalf("%+v", err)
 		}
@@ -86,7 +88,7 @@ func ExampleReceiverTransactionsStream_Get() {
 	params := &pitOrgan.GetTransactionsStreamParams{
 		BufferSize: 100,
 	}
-	chs, err := connection.Accounts().AccountID("AccountID").Transactions().Stream().Get(params)
+	chs, err := connection.Accounts().AccountID("AccountID").Transactions().Stream().Get(context.Background(), params)
 	if err != nil {
 		log.Fatalf("%+v", err)
 	}
