@@ -2,6 +2,7 @@ package pitOrgan
 
 import (
 	"golang.org/x/xerrors"
+	"net/http"
 	"strings"
 )
 
@@ -96,33 +97,125 @@ type GetAccountChangesParams struct {
 	SinceTransactionID TransactionIDDefinition
 }
 
+/* Headers */
+
+type GetAccountsHeaders struct {
+	RequestID string
+}
+
+func (s *GetAccountsSchema) setHeaders(resp *http.Response) error {
+	s.Headers = new(GetAccountsHeaders)
+	if h, err := copyHeader(resp, "Requestid"); err == nil {
+		s.Headers.RequestID = h[0]
+	} else {
+		return xerrors.Errorf("Parse headers failed: %w", err)
+	}
+	return nil
+}
+
+type GetAccountIDHeaders struct {
+	RequestID string
+}
+
+func (s *GetAccountIDSchema) setHeaders(resp *http.Response) error {
+	s.Headers = new(GetAccountIDHeaders)
+	if h, err := copyHeader(resp, "Requestid"); err == nil {
+		s.Headers.RequestID = h[0]
+	} else {
+		return xerrors.Errorf("Parse headers failed: %w", err)
+	}
+	return nil
+}
+
+type GetAccountSummaryHeaders struct {
+	RequestID string
+}
+
+func (s *GetAccountSummarySchema) setHeaders(resp *http.Response) error {
+	s.Headers = new(GetAccountSummaryHeaders)
+	if h, err := copyHeader(resp, "Requestid"); err == nil {
+		s.Headers.RequestID = h[0]
+	} else {
+		return xerrors.Errorf("Parse headers failed: %w", err)
+	}
+	return nil
+}
+
+type GetAccountInstrumentsHeaders struct {
+	RequestID string
+}
+
+func (s *GetAccountInstrumentsSchema) setHeaders(resp *http.Response) error {
+	s.Headers = new(GetAccountInstrumentsHeaders)
+	if h, err := copyHeader(resp, "Requestid"); err == nil {
+		s.Headers.RequestID = h[0]
+	} else {
+		return xerrors.Errorf("Parse headers failed: %w", err)
+	}
+	return nil
+}
+
+type PatchAccountConfigurationHeaders struct {
+	RequestID string
+}
+
+func (s *PatchAccountConfigurationSchema) setHeaders(resp *http.Response) error {
+	s.Headers = new(PatchAccountConfigurationHeaders)
+	if h, err := copyHeader(resp, "Requestid"); err == nil {
+		s.Headers.RequestID = h[0]
+	} else {
+		return xerrors.Errorf("Parse headers failed: %w", err)
+	}
+	return nil
+}
+
+type GetAccountChangesHeaders struct {
+	RequestID string
+}
+
+func (s *GetAccountChangesSchema) setHeaders(resp *http.Response) error {
+	s.Headers = new(GetAccountChangesHeaders)
+	if h, err := copyHeader(resp, "Requestid"); err == nil {
+		s.Headers.RequestID = h[0]
+	} else {
+		return xerrors.Errorf("Parse headers failed: %w", err)
+	}
+	return nil
+}
+
 /* Schemas */
 
 type GetAccountsSchema struct {
+	Headers  *GetAccountsHeaders
 	Accounts []*AccountPropertiesDefinition `json:"accounts,omitempty"`
 }
 
 type GetAccountIDSchema struct {
+	Headers           *GetAccountIDHeaders
 	Account           *AccountDefinition      `json:"account,omitempty"`
 	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
 type GetAccountSummarySchema struct {
+	Headers           *GetAccountSummaryHeaders
 	Account           *AccountSummaryDefinition `json:"account,omitempty"`
 	LastTransactionID TransactionIDDefinition   `json:"lastTransactionID,omitempty"`
 }
 
 type GetAccountInstrumentsSchema struct {
+	Headers           *GetAccountInstrumentsHeaders
 	Instruments       []*InstrumentDefinition `json:"instruments,omitempty"`
 	LastTransactionID TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
 type PatchAccountConfigurationSchema struct {
+	Headers                    *PatchAccountConfigurationHeaders
 	ClientConfigureTransaction *TransactionDefinition  `json:"clientConfigureTransaction,omitempty"`
 	LastTransactionID          TransactionIDDefinition `json:"lastTransactionID,omitempty"`
 }
 
 type GetAccountChangesSchema struct {
+	Headers           *GetAccountChangesHeaders
 	Changes           *AccountChangesDefinition      `json:"changes,omitempty"`
 	State             *AccountChangesStateDefinition `json:"state,omitempty"`
 	LastTransactionID TransactionIDDefinition        `json:"lastTransactionID,omitempty"`

@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"encoding/json"
 	"golang.org/x/xerrors"
-	"io/ioutil"
 	"net/url"
 	"strconv"
 	"strings"
@@ -264,18 +263,12 @@ func (r *ReceiverTransactionsIdrange) Get(params *GetTransactionsIdrangeParams) 
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, xerrors.Errorf("Read response body failed: %w", err)
-	}
-
 	var data interface{}
 	switch resp.StatusCode {
 	case 200:
 		data = new(GetTransactionsIdrangeSchema)
 	}
-	data, err = parseBody(body, resp.StatusCode, data, r.Connection.strict)
-	// HTTPステータスコードが200以外ならエラーとしてreturnされる
+	data, err = parseResponse(resp, data, r.Connection.strict)
 	if err != nil {
 		return nil, xerrors.Errorf("Get transactions idrange failed: %w", err)
 	}

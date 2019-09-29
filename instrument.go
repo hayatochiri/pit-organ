@@ -3,6 +3,7 @@ package pitOrgan
 import (
 	"github.com/peterhellberg/link"
 	"golang.org/x/xerrors"
+	"net/http"
 	"net/url"
 	"strconv"
 	"time"
@@ -93,9 +94,100 @@ type GetInstrumentPositionBookParams struct {
 	Time time.Time // The time of the snapshot to fetch. If not specified, then the most recent snapshot is fetched.
 }
 
+/* Headers */
+
+type GetInstrumentCandlesHeaders struct {
+	RequestID string
+}
+
+func (s *GetInstrumentCandlesSchema) setHeaders(resp *http.Response) error {
+	s.Headers = new(GetInstrumentCandlesHeaders)
+	if h, err := copyHeader(resp, "Requestid"); err == nil {
+		s.Headers.RequestID = h[0]
+	} else {
+		return xerrors.Errorf("Parse headers failed: %w", err)
+	}
+	return nil
+}
+
+type GetInstrumentOrderBookHeaders struct {
+	RequestID string
+	Link      map[string]time.Time
+}
+
+func (s *GetInstrumentOrderBookSchema) setHeaders(resp *http.Response) error {
+	s.Headers = new(GetInstrumentOrderBookHeaders)
+
+	if h, err := copyHeader(resp, "Requestid"); err == nil {
+		s.Headers.RequestID = h[0]
+	} else {
+		return xerrors.Errorf("Parse headers failed: %w", err)
+	}
+
+	if l, err := copyHeader(resp, "Link"); err == nil {
+		links := link.Parse(l[0])
+		s.Headers.Link = make(map[string]time.Time, len(links))
+		for n, l := range links {
+			u, err := url.Parse(l.URI)
+			if err != nil {
+				return xerrors.Errorf("Parse orderbook header failed: %w", err)
+			}
+			if refTimes, ok := u.Query()["time"]; ok {
+				refTime, err := time.Parse(time.RFC3339, refTimes[0])
+				if err != nil {
+					return xerrors.Errorf("Parse orderbook %#v time: %w", n, err)
+				}
+				s.Headers.Link[n] = refTime
+			}
+		}
+	} else {
+		return xerrors.Errorf("Parse headers failed: %w", err)
+	}
+
+	return nil
+}
+
+type GetInstrumentPositionBookHeaders struct {
+	RequestID string
+	Link      map[string]time.Time
+}
+
+func (s *GetInstrumentPositionBookSchema) setHeaders(resp *http.Response) error {
+	s.Headers = new(GetInstrumentPositionBookHeaders)
+
+	if h, err := copyHeader(resp, "Requestid"); err == nil {
+		s.Headers.RequestID = h[0]
+	} else {
+		return xerrors.Errorf("Parse headers failed: %w", err)
+	}
+
+	if l, err := copyHeader(resp, "Link"); err == nil {
+		links := link.Parse(l[0])
+		s.Headers.Link = make(map[string]time.Time, len(links))
+		for n, l := range links {
+			u, err := url.Parse(l.URI)
+			if err != nil {
+				return xerrors.Errorf("Parse positionbook header failed: %w", err)
+			}
+			if refTimes, ok := u.Query()["time"]; ok {
+				refTime, err := time.Parse(time.RFC3339, refTimes[0])
+				if err != nil {
+					return xerrors.Errorf("Parse positionbook %#v time: %w", n, err)
+				}
+				s.Headers.Link[n] = refTime
+			}
+		}
+	} else {
+		return xerrors.Errorf("Parse headers failed: %w", err)
+	}
+
+	return nil
+}
+
 /* Schemas */
 
 type GetInstrumentCandlesSchema struct {
+	Headers     *GetInstrumentCandlesHeaders
 	Instrument  InstrumentNameDefinition         `json:"instrument,omitempty"`
 	Granularity CandlestickGranularityDefinition `json:"granularity,omitempty"`
 	Candles     []*CandlestickDefinition         `json:"candles,omitempty"`
@@ -103,26 +195,14 @@ type GetInstrumentCandlesSchema struct {
 
 type GetInstrumentOrderBookSchema struct {
 	// The instrument’s order book
+	Headers   *GetInstrumentOrderBookHeaders
 	OrderBook *OrderBookDefinition `json:"orderBook,omitempty"`
-	Headers   struct {
-		RequestID string
-		Link      struct {
-			Prev time.Time
-			Next time.Time
-		}
-	}
 }
 
 type GetInstrumentPositionBookSchema struct {
 	// The instrument’s position book
+	Headers      *GetInstrumentPositionBookHeaders
 	PositionBook *PositionBookDefinition `json:"positionBook,omitempty"`
-	Headers      struct {
-		RequestID string
-		Link      struct {
-			Prev time.Time
-			Next time.Time
-		}
-	}
 }
 
 /* API */
@@ -260,33 +340,7 @@ func (r *ReceiverInstrumentOrderBook) Get(params *GetInstrumentOrderBookParams) 
 	var data interface{}
 	switch resp.StatusCode {
 	case 200:
-		schema := new(GetInstrumentOrderBookSchema)
-		if reqID, ok := resp.Header["Requestid"]; ok {
-			schema.Headers.RequestID = reqID[0]
-		}
-		if links, ok := resp.Header["Link"]; ok {
-			for _, l := range link.Parse(links[0]) {
-				u, err := url.Parse(l.URI)
-				if err != nil {
-					return nil, xerrors.Errorf("Parse orderbook header failed: %w", err)
-				}
-				if refTimes, ok := u.Query()["time"]; ok {
-					refTime, err := time.Parse(time.RFC3339, refTimes[0])
-					if err != nil {
-						return nil, xerrors.Errorf("Parse orderbook %#v time: %w", l.Rel, err)
-					}
-					switch l.Rel {
-					case "prev":
-						schema.Headers.Link.Prev = refTime
-					case "next":
-						schema.Headers.Link.Next = refTime
-					default:
-						return nil, xerrors.Errorf("Unexpected orderbook link %#v <%#v>", l.Rel, l.URI)
-					}
-				}
-			}
-		}
-		data = schema
+		data = new(GetInstrumentOrderBookSchema)
 	}
 
 	data, err = parseResponse(resp, data, r.Connection.strict)
@@ -330,33 +384,7 @@ func (r *ReceiverInstrumentPositionBook) Get(params *GetInstrumentPositionBookPa
 	var data interface{}
 	switch resp.StatusCode {
 	case 200:
-		schema := new(GetInstrumentPositionBookSchema)
-		if reqID, ok := resp.Header["Requestid"]; ok {
-			schema.Headers.RequestID = reqID[0]
-		}
-		if links, ok := resp.Header["Link"]; ok {
-			for _, l := range link.Parse(links[0]) {
-				u, err := url.Parse(l.URI)
-				if err != nil {
-					return nil, xerrors.Errorf("Parse positionbook header failed: %w", err)
-				}
-				if refTimes, ok := u.Query()["time"]; ok {
-					refTime, err := time.Parse(time.RFC3339, refTimes[0])
-					if err != nil {
-						return nil, xerrors.Errorf("Parse positionbook %#v time: %w", l.Rel, err)
-					}
-					switch l.Rel {
-					case "prev":
-						schema.Headers.Link.Prev = refTime
-					case "next":
-						schema.Headers.Link.Next = refTime
-					default:
-						return nil, xerrors.Errorf("Unexpected positionbook link %#v <%#v>", l.Rel, l.URI)
-					}
-				}
-			}
-		}
-		data = schema
+		data = new(GetInstrumentPositionBookSchema)
 	}
 
 	data, err = parseResponse(resp, data, r.Connection.strict)
@@ -369,17 +397,17 @@ func (r *ReceiverInstrumentPositionBook) Get(params *GetInstrumentPositionBookPa
 /* Utils */
 
 func (s *GetInstrumentOrderBookSchema) PrevParams() *GetInstrumentOrderBookParams {
-	return &GetInstrumentOrderBookParams{Time: s.Headers.Link.Prev}
+	return &GetInstrumentOrderBookParams{Time: s.Headers.Link["prev"]}
 }
 
 func (s *GetInstrumentOrderBookSchema) NextParams() *GetInstrumentOrderBookParams {
-	return &GetInstrumentOrderBookParams{Time: s.Headers.Link.Next}
+	return &GetInstrumentOrderBookParams{Time: s.Headers.Link["next"]}
 }
 
 func (s *GetInstrumentPositionBookSchema) PrevParams() *GetInstrumentPositionBookParams {
-	return &GetInstrumentPositionBookParams{Time: s.Headers.Link.Prev}
+	return &GetInstrumentPositionBookParams{Time: s.Headers.Link["prev"]}
 }
 
 func (s *GetInstrumentPositionBookSchema) NextParams() *GetInstrumentPositionBookParams {
-	return &GetInstrumentPositionBookParams{Time: s.Headers.Link.Next}
+	return &GetInstrumentPositionBookParams{Time: s.Headers.Link["next"]}
 }

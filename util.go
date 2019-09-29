@@ -35,6 +35,20 @@ func Int(v int) *int          { return &v }
 func String(v string) *string { return &v }
 func Bool(v bool) *bool       { return &v }
 
+type schemas interface {
+	setHeaders(*http.Response) error
+}
+
+func copyHeader(resp *http.Response, header string) ([]string, error) {
+	src, ok := resp.Header[header]
+	if !ok {
+		return nil, xerrors.Errorf("Header \"%s\" does not exist", header)
+	}
+	dst := make([]string, len(src))
+	copy(dst, src)
+	return dst, nil
+}
+
 func (c *Connection) request(params *requestParams) (*http.Response, error) {
 	destURL := oandaBaseURL(c.Environemnt).rest
 	destURL.Path = path.Join(destURL.Path, params.endPoint)
@@ -105,9 +119,15 @@ func (c *Connection) stream(params *requestParams) (*http.Response, error) {
 	return resp, nil
 }
 
-func parseBody(body []byte, statusCode int, data interface{}, strict bool) (interface{}, error) {
+func parseResponse(resp *http.Response, data interface{}, strict bool) (interface{}, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		return nil, xerrors.Errorf("Read response body failed: %w", err)
+	}
+
 	var errMessage string
-	switch statusCode {
+	switch resp.StatusCode {
 	case 200, 201:
 		errMessage = ""
 		if data == nil {
@@ -136,7 +156,7 @@ func parseBody(body []byte, statusCode int, data interface{}, strict bool) (inte
 	// TODO: 405
 	// TODO: 416
 	default:
-		return nil, xerrors.Errorf("Unexpected status code(%d)", statusCode)
+		return nil, xerrors.Errorf("Unexpected status code(%d)", resp.StatusCode)
 	}
 
 	if err := json.Unmarshal(body, data); err != nil {
@@ -149,21 +169,22 @@ func parseBody(body []byte, statusCode int, data interface{}, strict bool) (inte
 		}
 	}
 
-	if statusCode/100 != 2 {
+	if resp.StatusCode/100 != 2 {
 		return nil, xerrors.Errorf("%s: %w", errMessage, data)
 	}
 
-	return data, nil
-}
-
-func parseResponse(resp *http.Response, data interface{}, strict bool) (interface{}, error) {
-	body, err := ioutil.ReadAll(resp.Body)
-
-	if err != nil {
-		return nil, xerrors.Errorf("Read response body failed: %w", err)
+	{
+		sm, ok := data.(schemas)
+		if !ok {
+			// TODO: ヘッダ未実装時の回避、全て実装したら消す
+			return data, nil
+		}
+		if err := sm.setHeaders(resp); err != nil {
+			return nil, xerrors.Errorf("Set headers failed: %w", err)
+		}
 	}
 
-	return parseBody(body, resp.StatusCode, data, strict)
+	return data, nil
 }
 
 func compareJson(jsonObj interface{}, jsonStr []byte) error {
