@@ -3,6 +3,8 @@ package pitOrgan
 import (
 	"context"
 	"golang.org/x/xerrors"
+	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 )
@@ -110,9 +112,39 @@ type PutOrderSpecifierClientExtensionsParams struct {
 	Body *PutOrderSpecifierClientExtensionsBodyParams
 }
 
+/* Headers */
+
+type PostOrdersHeaders struct {
+	RequestID string
+	Location  string
+}
+
+func (s *PostOrdersSchema) setHeaders(resp *http.Response) error {
+	s.Headers = new(PostOrdersHeaders)
+
+	if h, err := copyHeader(resp, "Requestid"); err == nil {
+		s.Headers.RequestID = h[0]
+	} else {
+		return xerrors.Errorf("Parse headers failed: %w", err)
+	}
+
+	if h, err := copyHeader(resp, "Location"); err == nil {
+		u, err := url.Parse(h[0])
+		if err != nil {
+			return xerrors.Errorf("Parse orderbook header failed: %w", err)
+		}
+		s.Headers.Location = u.Path
+	} else {
+		return xerrors.Errorf("Parse headers failed: %w", err)
+	}
+
+	return nil
+}
+
 /* Schemas */
 
 type PostOrdersSchema struct {
+	Headers                       *PostOrdersHeaders
 	OrderCreateTransaction        *TransactionDefinition    `json:"orderCreateTransaction,omitempty"`
 	OrderFillTransaction          *TransactionDefinition    `json:"orderFillTransaction,omitempty"`
 	OrderCancelTransaction        *TransactionDefinition    `json:"orderCancelTransaction,omitempty"`
