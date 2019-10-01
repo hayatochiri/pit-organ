@@ -3,8 +3,7 @@
 version: '3'
 services:
   pit-organ:
-    image: pit-organ
-    build: ./
+    image: hayatochiri/golang-devenv:1.13.1-alpine3.10
     container_name: pit-organ
     volumes:
       - .:/go/src/github.com/hayatochiri/pit-organ
