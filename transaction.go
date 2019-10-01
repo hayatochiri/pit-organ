@@ -129,10 +129,11 @@ type GetTransactionsSinceIDSchema struct {
 /* Streams */
 
 type TransactionsChannels struct {
-	Transaction <-chan *TransactionDefinition
-	Error       <-chan error
-	close       chan<- struct{}
-	closeWait   *sync.WaitGroup
+	TransactionCh <-chan *TransactionDefinition
+	lastError     error
+	errorCh       <-chan error
+	close         context.CancelFunc
+	closeWait     *sync.WaitGroup
 }
 
 /* API */
@@ -324,8 +325,10 @@ func (r *ReceiverTransactionsSinceID) Get(ctx context.Context, params *GetTransa
 //
 // Get a stream of Transactions for an Account starting from when the request is made.
 func (r *ReceiverTransactionsStream) Get(ctx context.Context, params *GetTransactionsStreamParams) (*TransactionsChannels, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+
 	resp, err := r.Connection.stream(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/transactions/stream",
@@ -339,7 +342,10 @@ func (r *ReceiverTransactionsStream) Get(ctx context.Context, params *GetTransac
 	}
 
 	if resp.StatusCode != 200 {
-		defer resp.Body.Close()
+		defer func() {
+			resp.Body.Close()
+			cancel()
+		}()
 		var err interface{}
 		_, err = parseResponse(resp, err, r.Connection.strict)
 		return nil, xerrors.Errorf("Get transactions stream failed: %w", err)
@@ -348,8 +354,7 @@ func (r *ReceiverTransactionsStream) Get(ctx context.Context, params *GetTransac
 	closeWait := new(sync.WaitGroup)
 
 	transactionCh := make(chan *TransactionDefinition, params.BufferSize)
-	errorCh := make(chan error, 2)
-	closeCh := make(chan struct{})
+	errorCh := make(chan error, 3)
 
 	// closeChがcloseされたらstreamを終了するgoroutine
 	// 下記の readre.ReadBytes はデータを受信しないと処理が進まないため
@@ -357,10 +362,11 @@ func (r *ReceiverTransactionsStream) Get(ctx context.Context, params *GetTransac
 	go func() {
 		defer func() {
 			resp.Body.Close()
+			cancel()
 			closeWait.Done()
 		}()
 		closeWait.Add(1)
-		_, _ = <-closeCh
+		<-childCtx.Done()
 	}()
 
 	// 受信したデータ(JSON)を構造体にしてreaderCh channelに送信するgoroutine
@@ -368,6 +374,7 @@ func (r *ReceiverTransactionsStream) Get(ctx context.Context, params *GetTransac
 	go func() {
 		defer func() {
 			close(readerCh)
+			cancel()
 			closeWait.Done()
 		}()
 		closeWait.Add(1)
@@ -377,7 +384,7 @@ func (r *ReceiverTransactionsStream) Get(ctx context.Context, params *GetTransac
 			line, err := reader.ReadBytes('\n')
 			if err != nil {
 				select {
-				case _, _ = <-closeCh:
+				case <-childCtx.Done():
 				default:
 					errorCh <- xerrors.Errorf("Read response stream failed: %w", err)
 				}
@@ -392,6 +399,7 @@ func (r *ReceiverTransactionsStream) Get(ctx context.Context, params *GetTransac
 	go func() {
 		defer func() {
 			close(transactionCh)
+			cancel()
 			closeWait.Done()
 		}()
 		closeWait.Add(1)
@@ -401,7 +409,7 @@ func (r *ReceiverTransactionsStream) Get(ctx context.Context, params *GetTransac
 
 		for {
 			select {
-			case _, _ = <-closeCh:
+			case <-childCtx.Done():
 				return
 			case line := <-readerCh:
 				received = true
@@ -430,18 +438,29 @@ func (r *ReceiverTransactionsStream) Get(ctx context.Context, params *GetTransac
 	}()
 
 	return &TransactionsChannels{
-		Transaction: transactionCh,
-		Error:       errorCh,
-		close:       closeCh,
-		closeWait:   closeWait,
+		TransactionCh: transactionCh,
+		lastError:     nil,
+		errorCh:       errorCh,
+		close:         cancel,
+		closeWait:     closeWait,
 	}, nil
 }
 
 /* Utils */
 
 func (ch *TransactionsChannels) Close() {
-	close(ch.close)
+	ch.close()
 	ch.closeWait.Wait()
+}
+
+func (ch *TransactionsChannels) Err() error {
+	if ch.lastError == nil {
+		select {
+		case ch.lastError = <-ch.errorCh:
+		default:
+		}
+	}
+	return ch.lastError
 }
 
 func (s *GetTransactionsSchema) IdrangeParams() ([]*GetTransactionsIdrangeParams, error) {

@@ -124,10 +124,13 @@ func Test_TransactionsStream(t *testing.T) {
 			},
 		}
 
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
 		params := &GetTransactionsStreamParams{
 			BufferSize: 100,
 		}
-		chs, err := api.Transactions().Stream().Get(context.Background(), params)
+
+		chs, err := api.Transactions().Stream().Get(ctx, params)
 		if err != nil {
 			t.Fatalf("Error occurred.\n%+v", err)
 		}
@@ -135,16 +138,17 @@ func Test_TransactionsStream(t *testing.T) {
 
 		for i := 1; i <= 5; {
 			select {
-			case transaction := <-chs.Transaction:
+			case transaction := <-chs.TransactionCh:
 				t.Logf("Stream:\n%s", spew.Sdump(transaction))
 				i++
-			case err := <-chs.Error:
-				t.Fatalf("Error occurred.\n%+v", err)
 			default:
 				if _, err := api.Orders().Post(context.Background(), orderParams); err != nil {
 					t.Fatalf("Error occurred.\n%+v", err)
 				}
 				time.Sleep(time.Second)
+			}
+			if err := chs.Err(); err != nil {
+				t.Fatalf("Error occurred.\n%+v", err)
 			}
 		}
 	})

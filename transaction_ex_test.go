@@ -85,10 +85,12 @@ func ExampleReceiverTransactionsStream_Get() {
 		Timeout:     time.Second * 10,
 	}
 
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
 	params := &pitOrgan.GetTransactionsStreamParams{
 		BufferSize: 100,
 	}
-	chs, err := connection.Accounts().AccountID("AccountID").Transactions().Stream().Get(context.Background(), params)
+	chs, err := connection.Accounts().AccountID("AccountID").Transactions().Stream().Get(ctx, params)
 	if err != nil {
 		log.Fatalf("%+v", err)
 	}
@@ -96,10 +98,12 @@ func ExampleReceiverTransactionsStream_Get() {
 
 	for {
 		select {
-		case transaction := <-chs.Transaction:
+		case transaction := <-chs.TransactionCh:
 			spew.Dump(transaction)
-		case err := <-chs.Error:
-			log.Fatalf("%+v", err)
 		}
+	}
+
+	if err := chs.Err(); err != nil {
+		log.Fatalf("%+v", err)
 	}
 }
