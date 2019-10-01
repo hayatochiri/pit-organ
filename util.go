@@ -89,13 +89,10 @@ func (c *Connection) request(ctx context.Context, params *requestParams) (*http.
 }
 
 func (c *Connection) stream(ctx context.Context, params *requestParams) (*http.Response, error) {
-	childCtx, cancel := context.WithCancel(ctx)
-	defer cancel()
-
 	destURL := oandaBaseURL(c.Environemnt).stream
 	destURL.Path = path.Join(destURL.Path, params.endPoint)
 
-	req, err := http.NewRequestWithContext(childCtx, params.method, destURL.String(), nil)
+	req, err := http.NewRequestWithContext(ctx, params.method, destURL.String(), nil)
 	if err != nil {
 		return nil, xerrors.Errorf("error in stream method: %w", err)
 	}
