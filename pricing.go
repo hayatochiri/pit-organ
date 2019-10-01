@@ -62,9 +62,10 @@ type GetPricingSchema struct {
 /* Streams */
 
 type PriceChannels struct {
-	Price     <-chan *PriceDefinition
-	Error     <-chan error
-	close     chan<- struct{}
+	PriceCh   <-chan *PriceDefinition
+	lastError error
+	errorCh   <-chan error
+	close     context.CancelFunc
 	closeWait *sync.WaitGroup
 }
 
@@ -116,8 +117,10 @@ func (r *ReceiverPricing) Get(ctx context.Context, params *GetPricingParams) (*G
 
 // GET /v3/accounts/{accountID}/pricing/stream
 func (r *ReceiverPricingStream) Get(ctx context.Context, params *GetPricingStreamParams) (*PriceChannels, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+
 	resp, err := r.Connection.stream(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/pricing/stream",
@@ -134,7 +137,10 @@ func (r *ReceiverPricingStream) Get(ctx context.Context, params *GetPricingStrea
 	}
 
 	if resp.StatusCode != 200 {
-		defer resp.Body.Close()
+		defer func() {
+			resp.Body.Close()
+			cancel()
+		}()
 		var err interface{}
 		_, err = parseResponse(resp, err, r.Connection.strict)
 		return nil, xerrors.Errorf("Get pricing stream failed: %w", err)
@@ -143,8 +149,7 @@ func (r *ReceiverPricingStream) Get(ctx context.Context, params *GetPricingStrea
 	closeWait := new(sync.WaitGroup)
 
 	priceCh := make(chan *PriceDefinition, params.BufferSize)
-	errorCh := make(chan error, 2)
-	closeCh := make(chan struct{})
+	errorCh := make(chan error, 3)
 
 	// closeChがcloseされたらstreamを終了するgoroutine
 	// 下記の readre.ReadBytes はデータを受信しないと処理が進まないため
@@ -152,10 +157,11 @@ func (r *ReceiverPricingStream) Get(ctx context.Context, params *GetPricingStrea
 	go func() {
 		defer func() {
 			resp.Body.Close()
+			cancel()
 			closeWait.Done()
 		}()
 		closeWait.Add(1)
-		_, _ = <-closeCh
+		<-childCtx.Done()
 	}()
 
 	// 受信したデータ(JSON)を構造体にしてreaderCh channelに送信するgoroutine
@@ -163,6 +169,7 @@ func (r *ReceiverPricingStream) Get(ctx context.Context, params *GetPricingStrea
 	go func() {
 		defer func() {
 			close(readerCh)
+			cancel()
 			closeWait.Done()
 		}()
 		closeWait.Add(1)
@@ -172,7 +179,7 @@ func (r *ReceiverPricingStream) Get(ctx context.Context, params *GetPricingStrea
 			line, err := reader.ReadBytes('\n')
 			if err != nil {
 				select {
-				case _, _ = <-closeCh:
+				case <-childCtx.Done():
 				default:
 					errorCh <- xerrors.Errorf("Read response stream failed: %w", err)
 				}
@@ -195,6 +202,7 @@ func (r *ReceiverPricingStream) Get(ctx context.Context, params *GetPricingStrea
 	go func() {
 		defer func() {
 			close(priceCh)
+			cancel()
 			closeWait.Done()
 		}()
 		closeWait.Add(1)
@@ -204,7 +212,7 @@ func (r *ReceiverPricingStream) Get(ctx context.Context, params *GetPricingStrea
 
 		for {
 			select {
-			case _, _ = <-closeCh:
+			case <-childCtx.Done():
 				return
 			case data := <-readerCh:
 				received = true
@@ -225,9 +233,10 @@ func (r *ReceiverPricingStream) Get(ctx context.Context, params *GetPricingStrea
 	}()
 
 	return &PriceChannels{
-		Price:     priceCh,
-		Error:     errorCh,
-		close:     closeCh,
+		PriceCh:   priceCh,
+		lastError: nil,
+		errorCh:   errorCh,
+		close:     cancel,
 		closeWait: closeWait,
 	}, nil
 }
@@ -235,6 +244,16 @@ func (r *ReceiverPricingStream) Get(ctx context.Context, params *GetPricingStrea
 /* Utils */
 
 func (ch *PriceChannels) Close() {
-	close(ch.close)
+	ch.close()
 	ch.closeWait.Wait()
+}
+
+func (ch *PriceChannels) Err() error {
+	if ch.lastError == nil {
+		select {
+		case ch.lastError = <-ch.errorCh:
+		default:
+		}
+	}
+	return ch.lastError
 }
