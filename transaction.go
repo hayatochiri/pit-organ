@@ -420,10 +420,6 @@ func (r *ReceiverTransactionsStream) Get(ctx context.Context, params *GetTransac
 					return
 				}
 
-				if data.Type == "HEARTBEAT" {
-					continue
-				}
-
 				transactionCh <- data
 			case <-timeout.C:
 				timeout.Reset(r.Connection.Timeout)
