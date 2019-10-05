@@ -216,9 +216,6 @@ func (r *ReceiverPricingStream) Get(ctx context.Context, params *GetPricingStrea
 				return
 			case data := <-readerCh:
 				received = true
-				if data.Type == "HEARTBEAT" {
-					continue
-				}
 				priceCh <- data
 			case <-timeout.C:
 				timeout.Reset(r.Connection.Timeout)
