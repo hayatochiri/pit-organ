@@ -204,7 +204,7 @@ func compareJson(jsonObj interface{}, jsonStr []byte) error {
 	}
 
 	if err := deepEqual(expect, actual, []string{reflect.TypeOf(jsonObj).String()}); err != nil {
-		return xerrors.Errorf("Unmarshalled JSON is lacking:\nExpect: %sActual: %s\n: %w", string(jsonStr), string(bytes), err)
+		return xerrors.Errorf("Unmarshalled JSON is lacking:\nExpect: %s\nActual: %s\n: %w", string(jsonStr), string(bytes), err)
 	}
 
 	return nil
