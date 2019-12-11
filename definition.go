@@ -223,7 +223,7 @@ type OrderBookDefinition struct {
 	BucketWidth PriceValueDefinition         `json:"bucketWidth,omitempty"`
 	Buckets     []*OrderBookBucketDefinition `json:"buckets,omitempty"`
 
-	UnixTime Deprecated `json:"unixTime,omitempty"`
+	UnixTime Undefined `json:"unixTime,omitempty"`
 }
 
 type OrderBookBucketDefinition struct {
@@ -239,7 +239,7 @@ type PositionBookDefinition struct {
 	BucketWidth PriceValueDefinition            `json:"bucketWidth,omitempty"`
 	Buckets     []*PositionBookBucketDefinition `json:"buckets,omitempty"`
 
-	UnixTime Deprecated `json:"unixTime,omitempty"`
+	UnixTime Undefined `json:"unixTime,omitempty"`
 }
 
 type PositionBookBucketDefinition struct {
@@ -295,7 +295,7 @@ type OrderDefinition struct {
 	Type                       OrderTypeDefinition                     `json:"type,omitempty"`
 	Units                      DecimalNumberDefinition                 `json:"units,omitempty"`
 
-	PartialFill Deprecated `json:"partialFill"`
+	PartialFill Undefined `json:"partialFill"`
 }
 
 type TakeProfitOrderDefinition = OrderDefinition
@@ -654,11 +654,11 @@ type TransactionDefinition struct {
 	Units                         DecimalNumberDefinition                 `json:"units,omitempty"`
 	UserID                        *int                                    `json:"userID,omitempty"`
 
-	RequestedUnits          Deprecated `json:"requestedUnits,omitempty"`
-	FullVWAP                Deprecated `json:"fullVWAP,omitempty"`
-	PartialFill             Deprecated `json:"partialFill,omitempty"`
-	TradeCloseTransactionID Deprecated `json:"tradeCloseTransactionID,omitempty"`
-	ClosedTradeID           Deprecated `json:"closedTradeID,omitempty"`
+	RequestedUnits          Undefined `json:"requestedUnits,omitempty"`
+	FullVWAP                Undefined `json:"fullVWAP,omitempty"`
+	PartialFill             Undefined `json:"partialFill,omitempty"`
+	TradeCloseTransactionID Undefined `json:"tradeCloseTransactionID,omitempty"`
+	ClosedTradeID           Undefined `json:"closedTradeID,omitempty"`
 }
 
 // Transaction-related Definitions
@@ -721,7 +721,7 @@ type TradeReduceDefinition struct {
 	GuaranteedExecutionFee AccountUnitsDefinition  `json:"guaranteedExecutionFee,omitempty"`
 	HalfSpreadCost         AccountUnitsDefinition  `json:"halfSpreadCost,omitempty"`
 
-	ClientTradeID Deprecated `json:"clientTradeID,omitempty"`
+	ClientTradeID Undefined `json:"clientTradeID,omitempty"`
 }
 
 type MarketOrderTradeCloseDefinition struct {
