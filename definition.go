@@ -55,6 +55,7 @@ type AccountDefinition struct {
 	Orders                      []*OrderDefinition                    `json:"orders,omitempty"`
 
 	Dividend Deprecated `json:"dividend,omitempty"`
+	DividendAdjustment Undefined `json:"dividendAdjustment,omitempty"`
 }
 
 type AccountChangesStateDefinition struct {
@@ -122,6 +123,7 @@ type AccountSummaryDefinition struct {
 	LastTransactionID           TransactionIDDefinition               `json:"lastTransactionID,omitempty"`
 
 	Dividend Deprecated `json:"dividend,omitempty"`
+	DividendAdjustment Undefined `json:"dividendAdjustment,omitempty"`
 }
 
 type CalculatedAccountStateDefinition struct {
@@ -498,6 +500,7 @@ type TradeDefinition struct {
 	TrailingStopLossOrder *TrailingStopLossOrderDefinition `json:"trailingStopLossOrder,omitempty"`
 
 	Dividend Deprecated `json:"dividend,omitempty"`
+	DividendAdjustment Undefined `json:"dividendAdjustment,omitempty"`
 }
 
 type TradeSummaryDefinition struct {
@@ -522,6 +525,7 @@ type TradeSummaryDefinition struct {
 	TrailingStopLossOrderID string                      `json:"trailingStopLossOrderID,omitempty"`
 
 	Dividend Deprecated `json:"dividend,omitempty"`
+	DividendAdjustment Undefined `json:"dividendAdjustment,omitempty"`
 }
 
 type CalculatedTradeStateDefinition struct {
@@ -549,6 +553,7 @@ type PositionDefinition struct {
 	Short                   *PositionSideDefinition  `json:"short,omitempty"`
 
 	Dividend Deprecated `json:"dividend,omitempty"`
+	DividendAdjustment Undefined `json:"dividendAdjustment,omitempty"`
 }
 
 type PositionSideDefinition struct {
@@ -562,6 +567,7 @@ type PositionSideDefinition struct {
 	GuaranteedExecutionFees AccountUnitsDefinition  `json:"guaranteedExecutionFees,omitempty"`
 
 	Dividend Deprecated `json:"dividend,omitempty"`
+	DividendAdjustment Undefined `json:"dividendAdjustment,omitempty"`
 }
 
 type CalculatedPositionStateDefinition struct {
@@ -899,6 +905,7 @@ type InstrumentDefinition struct {
 	Commission                  *InstrumentCommissionDefinition `json:"commission,omitempty"`
 
 	Tags Deprecated `json:"tags,omitempty"`
+	Financing Undefined `json:"financing,omitempty"`
 }
 
 type DateTimeDefinition = string
