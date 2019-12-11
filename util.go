@@ -51,14 +51,11 @@ func copyHeader(resp *http.Response, header string) ([]string, error) {
 }
 
 func (c *Connection) request(ctx context.Context, params *requestParams) (*http.Response, error) {
-	childCtx, cancel := context.WithCancel(ctx)
-	defer cancel()
-
 	destURL := oandaBaseURL(c.Environemnt).rest
 	destURL.Path = path.Join(destURL.Path, params.endPoint)
 
 	body, _ := json.Marshal(params.body)
-	req, err := http.NewRequestWithContext(childCtx, params.method, destURL.String(), bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, params.method, destURL.String(), bytes.NewBuffer(body))
 	if err != nil {
 		return nil, xerrors.Errorf("Prepare new request failed: %w", err)
 	}
