@@ -27,6 +27,7 @@ type AccountDefinition struct {
 	ResettablePLTime            DateTimeDefinition                    `json:"resettablePLTime,omitempty"`
 	Financing                   AccountUnitsDefinition                `json:"financing,omitempty"`
 	Commission                  AccountUnitsDefinition                `json:"commission,omitempty"`
+	Dividend                    AccountUnitsDefinition                `json:"dividend,omitempty"`
 	GuaranteedExecutionFees     AccountUnitsDefinition                `json:"guaranteedExecutionFees,omitempty"`
 	MarginRate                  DecimalNumberDefinition               `json:"marginRate,omitempty"`
 	MarginCallEnterTime         DateTimeDefinition                    `json:"marginCallEnterTime,omitempty"`
@@ -54,7 +55,6 @@ type AccountDefinition struct {
 	Positions                   []*PositionDefinition                 `json:"positions,omitempty"`
 	Orders                      []*OrderDefinition                    `json:"orders,omitempty"`
 
-	Dividend Deprecated `json:"dividend,omitempty"`
 	DividendAdjustment Undefined `json:"dividendAdjustment,omitempty"`
 }
 
@@ -98,6 +98,7 @@ type AccountSummaryDefinition struct {
 	ResettablePLTime            DateTimeDefinition                    `json:"resettablePLTime,omitempty"`
 	Financing                   AccountUnitsDefinition                `json:"financing,omitempty"`
 	Commission                  AccountUnitsDefinition                `json:"commission,omitempty"`
+	Dividend                    AccountUnitsDefinition                `json:"dividend,omitempty"`
 	GuaranteedExecutionFees     AccountUnitsDefinition                `json:"guaranteedExecutionFees,omitempty"`
 	MarginRate                  DecimalNumberDefinition               `json:"marginRate,omitempty"`
 	MarginCallEnterTime         DateTimeDefinition                    `json:"marginCallEnterTime,omitempty"`
@@ -122,7 +123,6 @@ type AccountSummaryDefinition struct {
 	MarginCallPercent           DecimalNumberDefinition               `json:"marginCallPercent,omitempty"`
 	LastTransactionID           TransactionIDDefinition               `json:"lastTransactionID,omitempty"`
 
-	Dividend Deprecated `json:"dividend,omitempty"`
 	DividendAdjustment Undefined `json:"dividendAdjustment,omitempty"`
 }
 
@@ -493,13 +493,13 @@ type TradeDefinition struct {
 	AverageClosePrice     PriceValueDefinition             `json:"averageClosePrice,omitempty"`
 	ClosingTransactionIDs []TransactionIDDefinition        `json:"closingTransactionIDs,omitempty"`
 	Financing             AccountUnitsDefinition           `json:"financing,omitempty"`
+	Dividend              AccountUnitsDefinition           `json:"dividend,omitempty"`
 	CloseTime             DateTimeDefinition               `json:"closeTime,omitempty"`
 	ClientExtensions      *ClientExtensionsDefinition      `json:"clientExtensions,omitempty"`
 	TakeProfitOrder       *TakeProfitOrderDefinition       `json:"takeProfitOrder,omitempty"`
 	StopLossOrder         *StopLossOrderDefinition         `json:"stopLossOrder,omitempty"`
 	TrailingStopLossOrder *TrailingStopLossOrderDefinition `json:"trailingStopLossOrder,omitempty"`
 
-	Dividend Deprecated `json:"dividend,omitempty"`
 	DividendAdjustment Undefined `json:"dividendAdjustment,omitempty"`
 }
 
@@ -518,13 +518,13 @@ type TradeSummaryDefinition struct {
 	AverageClosePrice       PriceValueDefinition        `json:"averageClosePrice,omitempty"`
 	ClosingTransactionIDs   []TransactionIDDefinition   `json:"closingTransactionIDs,omitempty"`
 	Financing               AccountUnitsDefinition      `json:"financing,omitempty"`
+	Dividend                AccountUnitsDefinition      `json:"dividend,omitempty"`
 	CloseTime               DateTimeDefinition          `json:"closeTime,omitempty"`
 	ClientExtensions        *ClientExtensionsDefinition `json:"clientExtensions,omitempty"`
 	TakeProfitOrderID       string                      `json:"takeProfitOrderID,omitempty"`
 	StopLossOrderID         string                      `json:"stopLossOrderID,omitempty"`
 	TrailingStopLossOrderID string                      `json:"trailingStopLossOrderID,omitempty"`
 
-	Dividend Deprecated `json:"dividend,omitempty"`
 	DividendAdjustment Undefined `json:"dividendAdjustment,omitempty"`
 }
 
@@ -548,11 +548,11 @@ type PositionDefinition struct {
 	ResettablePL            AccountUnitsDefinition   `json:"resettablePL,omitempty"`
 	Financing               AccountUnitsDefinition   `json:"financing,omitempty"`
 	Commission              AccountUnitsDefinition   `json:"commission,omitempty"`
+	Dividend                AccountUnitsDefinition   `json:"dividend,omitempty"`
 	GuaranteedExecutionFees AccountUnitsDefinition   `json:"guaranteedExecutionFees,omitempty"`
 	Long                    *PositionSideDefinition  `json:"long,omitempty"`
 	Short                   *PositionSideDefinition  `json:"short,omitempty"`
 
-	Dividend Deprecated `json:"dividend,omitempty"`
 	DividendAdjustment Undefined `json:"dividendAdjustment,omitempty"`
 }
 
@@ -564,9 +564,9 @@ type PositionSideDefinition struct {
 	UnrealizedPL            AccountUnitsDefinition  `json:"unrealizedPL,omitempty"`
 	ResettablePL            AccountUnitsDefinition  `json:"resettablePL,omitempty"`
 	Financing               AccountUnitsDefinition  `json:"financing,omitempty"`
+	Dividend                AccountUnitsDefinition  `json:"dividend,omitempty"`
 	GuaranteedExecutionFees AccountUnitsDefinition  `json:"guaranteedExecutionFees,omitempty"`
 
-	Dividend Deprecated `json:"dividend,omitempty"`
 	DividendAdjustment Undefined `json:"dividendAdjustment,omitempty"`
 }
 
@@ -885,6 +885,11 @@ type AccountUnitsDefinition = string
 
 type CurrencyDefinition = string
 
+type TagDefinition struct {
+	Type string `json:"type,omitempty"`
+	Name string `json:"name,omitempty"`
+}
+
 type InstrumentNameDefinition = string
 
 type InstrumentTypeDefinition = string
@@ -903,8 +908,8 @@ type InstrumentDefinition struct {
 	MaximumOrderUnits           DecimalNumberDefinition         `json:"maximumOrderUnits,omitempty"`
 	MarginRate                  DecimalNumberDefinition         `json:"marginRate,omitempty"`
 	Commission                  *InstrumentCommissionDefinition `json:"commission,omitempty"`
+	Tags                        []*TagDefinition                `json:"tags,omitempty"`
 
-	Tags Deprecated `json:"tags,omitempty"`
 	Financing Undefined `json:"financing,omitempty"`
 }
 
