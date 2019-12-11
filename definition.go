@@ -6,6 +6,8 @@ import (
 
 type Deprecated interface{}
 
+type Undefined interface{}
+
 //
 // Account Definitions
 //
