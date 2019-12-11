@@ -252,8 +252,11 @@ func (r *PatchAccountConfigurationForbiddenError) Error() string {
 
 // GET /v3/accounts
 func (r *ReceiverAccounts) Get(ctx context.Context) (*GetAccountsSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts",
@@ -279,8 +282,11 @@ func (r *ReceiverAccounts) Get(ctx context.Context) (*GetAccountsSchema, error) 
 
 // GET /v3/accounts/{accountID}
 func (r *ReceiverAccountID) Get(ctx context.Context) (*GetAccountIDSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID,
@@ -309,8 +315,11 @@ func (r *ReceiverAccountID) Get(ctx context.Context) (*GetAccountIDSchema, error
 
 // GET /v3/accounts/{accountID}/summary
 func (r *ReceiverAccountSummary) Get(ctx context.Context) (*GetAccountSummarySchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/summary",
@@ -339,8 +348,11 @@ func (r *ReceiverAccountSummary) Get(ctx context.Context) (*GetAccountSummarySch
 
 // GET /v3/accounts/{accountID}/instruments
 func (r *ReceiverAccountInstruments) Get(ctx context.Context, params *GetAccountInstrumentsParams) (*GetAccountInstrumentsSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/instruments",
@@ -372,8 +384,11 @@ func (r *ReceiverAccountInstruments) Get(ctx context.Context, params *GetAccount
 
 // PATCH /v3/accounts/{accountID}/configuration
 func (r *ReceiverAccountConfiguration) Patch(ctx context.Context, params *PatchAccountConfigurationParams) (*PatchAccountConfigurationSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "PATCH",
 			endPoint: "/v3/accounts/" + r.AccountID + "/configuration",
@@ -407,8 +422,11 @@ func (r *ReceiverAccountConfiguration) Patch(ctx context.Context, params *PatchA
 
 // GET /v3/accounts/{accountID}/changes
 func (r *ReceiverAccountChanges) Get(ctx context.Context, params *GetAccountChangesParams) (*GetAccountChangesSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/changes",

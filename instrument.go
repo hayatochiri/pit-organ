@@ -212,8 +212,11 @@ type GetInstrumentPositionBookSchema struct {
 //
 // Fetch candlestick data for an instrument.
 func (r *ReceiverInstrumentCandles) Get(ctx context.Context, params *GetInstrumentCandlesParams) (*GetInstrumentCandlesSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/instruments/" + r.Instrument + "/candles",
@@ -312,8 +315,11 @@ func (r *ReceiverInstrumentCandles) Get(ctx context.Context, params *GetInstrume
 //
 // Fetch an order book for an instrument.
 func (r *ReceiverInstrumentOrderBook) Get(ctx context.Context, params *GetInstrumentOrderBookParams) (*GetInstrumentOrderBookSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/instruments/" + r.Instrument + "/orderBook",
@@ -357,8 +363,11 @@ func (r *ReceiverInstrumentOrderBook) Get(ctx context.Context, params *GetInstru
 //
 // Fetch a position book for an instrument.
 func (r *ReceiverInstrumentPositionBook) Get(ctx context.Context, params *GetInstrumentPositionBookParams) (*GetInstrumentPositionBookSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/instruments/" + r.Instrument + "/positionBook",

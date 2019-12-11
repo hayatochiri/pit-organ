@@ -134,8 +134,11 @@ func (r *PutPositionsInstrumentCloseNotFoundError) Error() string {
 
 // GET /v3/accounts/{accountID}/positions
 func (r *ReceiverPositions) Get(ctx context.Context) (*GetPositionsSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "Get",
 			endPoint: "/v3/accounts/" + r.AccountID + "/positions",
@@ -164,8 +167,11 @@ func (r *ReceiverPositions) Get(ctx context.Context) (*GetPositionsSchema, error
 
 // GET /v3/accounts/{accountID}/openPositions
 func (r *ReceiverOpenPositions) Get(ctx context.Context) (*GetOpenPositionsSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "Get",
 			endPoint: "/v3/accounts/" + r.AccountID + "/openPositions",
@@ -194,8 +200,11 @@ func (r *ReceiverOpenPositions) Get(ctx context.Context) (*GetOpenPositionsSchem
 
 // GET /v3/accounts/{accountID}/positions/{instrument}
 func (r *ReceiverPositionsInstrument) Get(ctx context.Context) (*GetPositionsInstrumentSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "Get",
 			endPoint: "/v3/accounts/" + r.AccountID + "/positions/" + r.Instrument,
@@ -224,8 +233,11 @@ func (r *ReceiverPositionsInstrument) Get(ctx context.Context) (*GetPositionsIns
 
 // PUT /v3/accounts/{accountID}/positions/{instrument}/close
 func (r *ReceiverPositionsInstrumentClose) Put(ctx context.Context, params *PutPositionsInstrumentCloseParams) (*PutPositionsInstrumentCloseSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "PUT",
 			endPoint: "/v3/accounts/" + r.AccountID + "/positions/" + r.Instrument + "/close",

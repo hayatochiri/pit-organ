@@ -142,8 +142,11 @@ type TransactionsChannels struct {
 //
 // Get a list of Transactions pages that satisfy a time-based Transaction query.
 func (r *ReceiverTransactions) Get(ctx context.Context, params *GetTransactionsParams) (*GetTransactionsSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/transactions",
@@ -201,8 +204,11 @@ func (r *ReceiverTransactions) Get(ctx context.Context, params *GetTransactionsP
 
 // GET /v3/accounts/{accountID}/transactions/{transactionID}
 func (r *ReceiverTransactionID) Get(ctx context.Context) (*GetTransactionIDSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/transactions/" + r.TransactionID,
@@ -233,8 +239,11 @@ func (r *ReceiverTransactionID) Get(ctx context.Context) (*GetTransactionIDSchem
 //
 // Get a range of Transactions for an Account based on the Transaction IDs.
 func (r *ReceiverTransactionsIdrange) Get(ctx context.Context, params *GetTransactionsIdrangeParams) (*GetTransactionsIdrangeSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/transactions/idrange",
@@ -283,8 +292,11 @@ func (r *ReceiverTransactionsIdrange) Get(ctx context.Context, params *GetTransa
 
 // GET /v3/accounts/{accountID}/transactions/sinceid
 func (r *ReceiverTransactionsSinceID) Get(ctx context.Context, params *GetTransactionsSinceIDParams) (*GetTransactionsSinceIDSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/transactions/sinceid",

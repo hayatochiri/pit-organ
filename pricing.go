@@ -73,8 +73,11 @@ type PriceChannels struct {
 
 // GET /v3/accounts/{accountID}/pricing
 func (r *ReceiverPricing) Get(ctx context.Context, params *GetPricingParams) (*GetPricingSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/pricing",
