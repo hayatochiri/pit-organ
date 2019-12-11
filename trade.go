@@ -245,8 +245,11 @@ func (r *PutTradeSpecifierOrdersBadRequestError) Error() string {
 
 // GET /v3/accounts/{accountID}/trades
 func (r *ReceiverTrades) Get(ctx context.Context, params *GetTradesParams) (*GetTradesSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "Get",
 			endPoint: "/v3/accounts/" + r.AccountID + "/trades",
@@ -300,8 +303,11 @@ func (r *ReceiverTrades) Get(ctx context.Context, params *GetTradesParams) (*Get
 
 // GET /v3/accounts/{accountID}/openTrades
 func (r *ReceiverOpenTrades) Get(ctx context.Context) (*GetOpenTradesSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "Get",
 			endPoint: "/v3/accounts/" + r.AccountID + "/openTrades",
@@ -330,8 +336,11 @@ func (r *ReceiverOpenTrades) Get(ctx context.Context) (*GetOpenTradesSchema, err
 
 // GET /v3/accounts/{accountID}/trades/{tradeSpecifier}
 func (r *ReceiverTradeSpecifier) Get(ctx context.Context) (*GetTradeSpecifierSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "Get",
 			endPoint: "/v3/accounts/" + r.AccountID + "/trades/" + r.TradeSpecifier,
@@ -360,8 +369,11 @@ func (r *ReceiverTradeSpecifier) Get(ctx context.Context) (*GetTradeSpecifierSch
 
 // PUT /v3/accounts/{accountID}/trades/{tradeSpecifier}/close
 func (r *ReceiverTradeSpecifierClose) Put(ctx context.Context, params *PutTradeSpecifierCloseParams) (*PutTradeSpecifierCloseSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "PUT",
 			endPoint: "/v3/accounts/" + r.AccountID + "/trades/" + r.TradeSpecifier + "/close",
@@ -395,8 +407,11 @@ func (r *ReceiverTradeSpecifierClose) Put(ctx context.Context, params *PutTradeS
 
 // PUT /v3/accounts/{accountID}/trades/{tradeSpecifier}/clientExtensions
 func (r *ReceiverTradeSpecifierClientExtensions) Put(ctx context.Context, params *PutTradeSpecifierClientExtensionsParams) (*PutTradeSpecifierClientExtensionsSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "PUT",
 			endPoint: "/v3/accounts/" + r.AccountID + "/trades/" + r.TradeSpecifier + "/clientExtensions",
@@ -430,8 +445,11 @@ func (r *ReceiverTradeSpecifierClientExtensions) Put(ctx context.Context, params
 
 // PUT /v3/accounts/{accountID}/trades/{tradeSpecifier}/orders
 func (r *ReceiverTradeSpecifierOrders) Put(ctx context.Context, params *PutTradeSpecifierOrdersParams) (*PutTradeSpecifierOrdersSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "PUT",
 			endPoint: "/v3/accounts/" + r.AccountID + "/trades/" + r.TradeSpecifier + "/orders",

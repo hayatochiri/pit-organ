@@ -257,8 +257,11 @@ func (r *PutOrderSpecifierClientExtensionsNotFoundError) Error() string {
 
 // POST /v3/accounts/{accountID}/orders
 func (r *ReceiverOrders) Post(ctx context.Context, params *PostOrdersParams) (*PostOrdersSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "POST",
 			endPoint: "/v3/accounts/" + r.AccountID + "/orders",
@@ -292,8 +295,11 @@ func (r *ReceiverOrders) Post(ctx context.Context, params *PostOrdersParams) (*P
 
 // GET /v3/accounts/{accountID}/orders
 func (r *ReceiverOrders) Get(ctx context.Context, params *GetOrdersParams) (*GetOrdersSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/orders",
@@ -347,8 +353,11 @@ func (r *ReceiverOrders) Get(ctx context.Context, params *GetOrdersParams) (*Get
 
 // GET /v3/accounts/{accountID}/pendingOrders
 func (r *ReceiverPendingOrders) Get(ctx context.Context) (*GetPendingOrdersSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/pendingOrders",
@@ -377,8 +386,11 @@ func (r *ReceiverPendingOrders) Get(ctx context.Context) (*GetPendingOrdersSchem
 
 // GET /v3/accounts/{accountID}/orders/{orderSpecifier}
 func (r *ReceiverOrderSpecifier) Get(ctx context.Context) (*GetOrderSpecifierSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "GET",
 			endPoint: "/v3/accounts/" + r.AccountID + "/orders/" + r.OrderSpecifier,
@@ -407,8 +419,11 @@ func (r *ReceiverOrderSpecifier) Get(ctx context.Context) (*GetOrderSpecifierSch
 
 // PUT /v3/accounts/{accountID}/orders/{orderSpecifier}
 func (r *ReceiverOrderSpecifier) Put(ctx context.Context, params *PutOrderSpecifierParams) (*PutOrderSpecifierSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "PUT",
 			endPoint: "/v3/accounts/" + r.AccountID + "/orders/" + r.OrderSpecifier,
@@ -442,8 +457,11 @@ func (r *ReceiverOrderSpecifier) Put(ctx context.Context, params *PutOrderSpecif
 
 // PUT /v3/accounts/{accountID}/orders/{orderSpecifier}/cancel
 func (r *ReceiverOrderSpecifierCancel) Put(ctx context.Context) (*PutOrderSpecifierCancelSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "PUT",
 			endPoint: "/v3/accounts/" + r.AccountID + "/orders/" + r.OrderSpecifier + "/cancel",
@@ -474,8 +492,11 @@ func (r *ReceiverOrderSpecifierCancel) Put(ctx context.Context) (*PutOrderSpecif
 
 // PUT /v3/accounts/{accountID}/orders/{orderSpecifier}/clientExtensions
 func (r *ReceiverOrderSpecifierClientExtensions) Put(ctx context.Context, params *PutOrderSpecifierClientExtensionsParams) (*PutOrderSpecifierClientExtensionsSchema, error) {
+	childCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	resp, err := r.Connection.request(
-		ctx,
+		childCtx,
 		&requestParams{
 			method:   "PUT",
 			endPoint: "/v3/accounts/" + r.AccountID + "/orders/" + r.OrderSpecifier + "/clientExtensions",
