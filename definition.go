@@ -609,9 +609,9 @@ type TransactionDefinition struct {
 	FundingReason                 FundingReasonDefinition                 `json:"fundingReason,omitempty"`
 	GainQuoteHomeConversionFactor DecimalNumberDefinition                 `json:"gainQuoteHomeConversionFactor,omitempty"`
 	GtdTime                       DateTimeDefinition                      `json:"gtdTime,omitempty"`
-	Guaranteed                    *bool                                   `json:"guaranteed,omitempty"`
+	Guaranteed                    Deprecated                              `json:"guaranteed,omitempty"`
 	GuaranteedExecutionFee        AccountUnitsDefinition                  `json:"guaranteedExecutionFee,omitempty"`
-	GuaranteedExecutionPremium    DecimalNumberDefinition                 `json:"guaranteedExecutionPremium,omitempty"`
+	GuaranteedExecutionPremium    Deprecated                              `json:"guaranteedExecutionPremium,omitempty"`
 	HalfSpreadCost                AccountUnitsDefinition                  `json:"halfSpreadCost,omitempty"`
 	HomeCurrency                  CurrencyDefinition                      `json:"homeCurrency,omitempty"`
 	ID                            TransactionIDDefinition                 `json:"id,omitempty"`
